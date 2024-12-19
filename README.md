@@ -21,11 +21,12 @@ For a more permanent solution, you can create a udev rule to set the correct per
 
 1. sudo vi /etc/udev/rules.d/99-cobi.rules
 
-Add the following line:
+  Add the following line:
 
-KERNEL=="cobi_pcie_card*", MODE="0666"
+  KERNEL=="cobi_pcie_card*", MODE="0666"
 
 2. Save and close the file, then reload the udev rules and trigger them:
-sudo udevadm control --reload-rules
-sudo udevadm trigger
+
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger
 
