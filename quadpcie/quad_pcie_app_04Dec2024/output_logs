@@ -1,0 +1,3555 @@
+
+Accessing device file: /dev/cobi_pcie_card0
+FWID: 0xaa558823
+Writing Data to COBIFIVE
+Status Register: 0x2ea
+initialize
+
+LOOP: 0
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xe215f9c006f
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3316aaf3ef90
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x393db6c6f5bc
+COBIFIVE Best Ham: 0x2baf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x2776f385ad09
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 1
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ff94830e29d
+COBIFIVE Best Ham: 0x2abf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x2032cba91534
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x26721307af2b
+COBIFIVE Best Ham: 0x26f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 2
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3316aaf3ef90
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x1b297b8c22bb
+COBIFIVE Best Ham: 0x38df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x3297b9c23f9
+COBIFIVE Best Ham: 0x24df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3316aaf3ef90
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x2032cba91534
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x312cb6c6f5bc
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18892c7a52f6
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 3
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3cd68463dc04
+COBIFIVE Best Ham: 0x14df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3297b9c23f9
+COBIFIVE Best Ham: 0x24df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x3ffeb7c95d62
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18894c7a52f6
+COBIFIVE Best Ham: 0x17af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x18890c7a52f6
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 4
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x22b6cef2cdcf
+COBIFIVE Best Ham: 0xcdf
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3ffabfc85d62
+COBIFIVE Best Ham: 0xabf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x2032cb2915b4
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x198d4c7952d6
+COBIFIVE Best Ham: 0x37af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2756cb3c30cb
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x198decf850d4
+COBIFIVE Best Ham: 0x26f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 5
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x1b297b8c22bb
+COBIFIVE Best Ham: 0x38df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1b297b8c22bb
+COBIFIVE Best Ham: 0x38df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x312cb6c6f5bc
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x198decf850d4
+COBIFIVE Best Ham: 0x26f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 6
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xea9579c106f
+COBIFIVE Best Ham: 0x1d5f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2032cba91534
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18892c7a52f6
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 7
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3316aaf3ef90
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xe215f9c006f
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xe215f9c006f
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2032cb2915b4
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ffeb7c95d62
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x198decf850d4
+COBIFIVE Best Ham: 0x26f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 8
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xe215f9c006f
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xe215f9c006f
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1b297b8c22bb
+COBIFIVE Best Ham: 0x38df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ffeb7c95d62
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x198decf850d4
+COBIFIVE Best Ham: 0x26f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 9
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3cd6a063dc00
+COBIFIVE Best Ham: 0x34df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ffb4836a29d
+COBIFIVE Best Ham: 0x2bf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18890c7a52f6
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 10
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3316aaf3ef90
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2032cb2915b4
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2032cba91534
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x188da4fa50f4
+COBIFIVE Best Ham: 0x2c6f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 11
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3316aaf3ef90
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x31dea063ff90
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2756ca3c30cb
+COBIFIVE Best Ham: 0x1adf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x393db6c6f5bc
+COBIFIVE Best Ham: 0x2baf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x188da4fa50f4
+COBIFIVE Best Ham: 0x2c6f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 12
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xe215f9c006f
+COBIFIVE Best Ham: 0xd5f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x3295f9c23ff
+COBIFIVE Best Ham: 0x34df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3297b9c23f9
+COBIFIVE Best Ham: 0x24df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x2032cb2915b4
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18892c7a52f6
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 13
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1cd20462dc06
+COBIFIVE Best Ham: 0x24df
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x8a92cc38a34
+COBIFIVE Best Ham: 0x3adf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x198decf850d4
+COBIFIVE Best Ham: 0x26f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+LOOP: 14
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x2e8
+Done writing data to cobi chip.
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1cc9110d3222
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x8
+Reply: 3
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 6
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 9
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xce9550c106f
+COBIFIVE Best Ham: 0x18df
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x10df
+COBIFIVE Chip ID: 0x8
+Reply: 15
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x3ffbcb9207d2
+COBIFIVE Best Ham: 0xabf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x1ceb
+COBIFIVE Chip ID: 0x8
+Reply: 18
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x26e7
+COBIFIVE Chip ID: 0x8
+Reply: 21
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x8
+Reply: 24
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x1fcd3456eacb
+COBIFIVE Best Ham: 0x2b9f
+COBIFIVE Chip ID: 0x8
+Reply: 27
+Status Register: 0x2e8
+CHIP A DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP D DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x2776f385ad09
+COBIFIVE Best Ham: 0x226f
+COBIFIVE Chip ID: 0x8
+Reply: 30
+Status Register: 0x2ff
+Done Fetching Data.
+
+Accessing device file: /dev/cobi_pcie_card1
+FWID: 0xaa558822
+Not Quad Cobifive Card
+
+Accessing device file: /dev/cobi_pcie_card2
+FWID: 0xaa558822
+Not Quad Cobifive Card
+No device found at /dev/cobi_pcie_card3
