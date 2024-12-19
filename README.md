@@ -5,8 +5,10 @@ M.2 PCIe card
 Quad PCIe card
 
 PCIe driver installation instructions
+
 (First, go to the BIOS setting (hit F2 key when booting) and disable secure login option)
 1. sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
+
 note: You may have to run 'uname -r' first, and then copy the info to the above command line
 2. sudo depmod -a
 3. sudo vi /etc/modules
