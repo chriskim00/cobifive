@@ -1,0 +1,1000 @@
+ 1038  xhost +SI:localuser:otheruser
+ 1039  whoami
+ 1040  xhost +SI:localuser:developer
+ 1041  sudo ./quartus
+ 1042  xhost +
+ 1043  cd Documents/QuartusPrime/quartus/bin/
+ 1044  sudo ./quartus
+ 1045  tigervncserver -xstartup /usr/bin/gnome-session
+ 1046  cd Documents/
+ 1047  cd ucb_c
+ 1048  ls
+ 1049  cd usb_c_demo_app/
+ 1050  cd linux-x86_64/
+ 1051  sudo ./data_app
+ 1052  cd /.
+ 1053  cd home/developer/Documents/pci_driver_cobi_dualres/
+ 1054  ls
+ 1055  cd pci_driver_24072024/
+ 1056  make clean
+ 1057  make
+ 1058  make install
+ 1059  ls
+ 1060  make
+ 1061  ls
+ 1062  make clean
+ 1063  ls
+ 1064  make all
+ 1065  ls
+ 1066  cd /.
+ 1067  ls
+ 1068  cd usr
+ 1069  ls
+ 1070  cd local/
+ 1071  ls
+ 1072  cd include/
+ 1073  ls
+ 1074  cd /.
+ 1075  cd usr/
+ 1076  ls
+ 1077  cd include/
+ 1078  ls
+ 1079  find . -name uaccess.h
+ 1080  cd linux/
+ 1081  find . -name uaccess.h
+ 1082  cd ..
+ 1083  cd include/
+ 1084  find . -name uaccess.h
+ 1085  find . -name slab.h
+ 1086  find . -name cdev.h
+ 1087  cd ..
+ 1088  cd src/
+ 1089  ls
+ 1090  cd linux-headers-6.8.0-40-generic/
+ 1091  ls
+ 1092  cd include/
+ 1093  ls
+ 1094  cd ..
+ 1095  ls
+ 1096  cd arch/
+ 1097  ls
+ 1098  cd x86/
+ 1099  ls
+ 1100  cd include/
+ 1101  ls
+ 1102  cd asm
+ 1103  ls
+ 1104  find . -name rwonce.h
+ 1105  ls
+ 1106  cd ..
+ 1107  ls
+ 1108  cd generated/
+ 1109  ls
+ 1110  cd asm
+ 1111  ls
+ 1112  cd /.
+ 1113  ls
+ 1114  cd home/developer/Documents/pci_driver_cobi_dualres/
+ 1115  cd pci_driver_24072024/
+ 1116  ls
+ 1117  make clean
+ 1118  make
+ 1119  ls
+ 1120  make clean
+ 1121  make all
+ 1122  ls
+ 1123  make clean
+ 1124  x86_64-linux-gnu-gcc-12 --version
+ 1125  cd Documents/pci_driver_cobi_dualres/pci_driver_24072024/
+ 1126  ls
+ 1127  make
+ 1128  ls
+ 1129  sudo dmesg
+ 1130  sudo dmesg tail
+ 1131  make clean
+ 1132  make all
+ 1133  cat /proc/version
+ 1134  gcc --version
+ 1135  make clean
+ 1136  make
+ 1137  lsa
+ 1138  ls
+ 1139  ls pci_driver.ko
+ 1140  make install
+ 1141  make clean
+ 1142  make all
+ 1143  make -C /lib/modules/$(uname -r)/build M=$(pwd) modules V=1
+ 1144  ls
+ 1145  make -C /lib/modules/$(uname -r)/build M=$(pwd) modules V=1
+ 1146  ls
+ 1147  dmesg | grep pci_driver
+ 1148  sudo dmesg | grep pci_driver
+ 1149  cd .. 
+ 1150  cd ..
+ 1151  pci_driver_version2a/
+ 1152  cd pci_driver_version2a/
+ 1153  ls
+ 1154  cd pci_driver_24072024/
+ 1155  ls
+ 1156  make clean
+ 1157  ls
+ 1158  make
+ 1159  make clean
+ 1160  make
+ 1161  ls
+ 1162  make clean
+ 1163  ls
+ 1164  make
+ 1165  cd ..
+ 1166  cd pci_driver_cobi_dualres/
+ 1167  cd pci_driver_24072024/
+ 1168  make clean
+ 1169  ls
+ 1170  make all
+ 1171  ls
+ 1172  make clean
+ 1173  ls
+ 1174  make
+ 1175  ls
+ 1176  make clean
+ 1177  make al
+ 1178  make all
+ 1179  ls
+ 1180  uname -r
+ 1181  cd /.
+ 1182  cd usr
+ 1183  ls
+ 1184  cd src
+ 1185  ls
+ 1186  cd /.
+ 1187  cd home/developer/Documents/pci_driver_cobi_dualres/pci_driver_24072024/
+ 1188  ls
+ 1189  make clean
+ 1190  make
+ 1191  ls
+ 1192  make -C /lib/modules/6.8.0-40-generic/build M=/home/developer/Documents/pci_driver_cobi_dualres/pci_driver_24072024 clean
+ 1193  make -C /lib/modules/6.8.0-40-generic/build M=/home/developer/Documents/pci_driver_cobi_dualres/pci_driver_24072024 modules V=1
+ 1194  make -C /lib/modules/6.8.0-40-generic/build M=/home/developer/Documents/pci_driver_cobi_dualres/pci_driver_24072024 modules V=1 2>&1 | tee build_errors.log
+ 1195  cd Documents
+ 1196  cd /Documents
+ 1197  cd /.
+ 1198  cd home/developer/Documents/
+ 1199  cd pci_driver_version2a/pci_driver_24072024/
+ 1200  ls
+ 1201  make clean
+ 1202  make
+ 1203  cd ..
+ 1204  cd..
+ 1205  cd ..
+ 1206  pci_driver_cobi_dualres/ls
+ 1207  cd pci_driver_cobi_dualres
+ 1208  cd pci_driver_24072024/
+ 1209  ls
+ 1210  make clean
+ 1211  make
+ 1212  ls
+ 1213  g++ -o user_app user_app.c
+ 1214  ls
+ 1215  sudo ./user_app
+ 1216  g++ -o user_app user_app.c
+ 1217  sudo ./user_app
+ 1218  sudo reboot
+ 1219  make clean
+ 1220  make
+ 1221  make clean
+ 1222  make
+ 1223  cd Documents/pci_driver_cobi_dualres/pci_driver_24072024/
+ 1224  ls
+ 1225  sudo ./user_app
+ 1226  lspci
+ 1227  lspci -k
+ 1228  make clean
+ 1229  make
+ 1230  cd ..
+ 1231  cd pci_driver_version2a/
+ 1232  ls
+ 1233  cd pci_driver_24072024/
+ 1234  ls
+ 1235  make clean
+ 1236  make
+ 1237  make install
+ 1238  sudo rmmod pci_driver.ko
+ 1239  sudo insmod pci_driver.ko
+ 1240  lspci -k
+ 1241  sudo rmmod cobi_chip_driver
+ 1242  sudo rmmod cobi_chip_driver.ko
+ 1243  sudo rmmod cobi_pci_driver.ko
+ 1244  sudo insmod pci_driver.ko
+ 1245  ls
+ 1246  sudo ./user_app
+ 1247  g++ -o user_app user_app.c
+ 1248  sudo ./user_app
+ 1249  sudo rmmod pci_driver.ko
+ 1250  sudo insmod cobi_pci_driver.ko
+ 1251  cd /.
+ 1252  sudo reboot
+ 1253  lspci -k
+ 1254  cd Documents/pci_driver_version2a/
+ 1255  cd pci_driver_24072024/
+ 1256  g++ -o user_app user_app.c
+ 1257  sudo ./user_app
+ 1258  g++ -o user_app user_app.c
+ 1259  sudo ./user_app
+ 1260  sudo reboot
+ 1261  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1262  lspci -k
+ 1263  g++ -o user_app user_app.c
+ 1264  sudo ./user_app
+ 1265  g++ -o user_app user_app.c
+ 1266  sudo ./user_app
+ 1267  sudo reboot
+ 1268  lspci -k
+ 1269  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1270  g++ -o user_app user_app.c
+ 1271  rm user_app
+ 1272  g++ -o user_app user_app.c
+ 1273  sudo ./user_app
+ 1274  ls
+ 1275  ls cobisolv-parllel/
+ 1276  ls peter-dev/
+ 1277  ls snap/
+ 1278  exit
+ 1279  tigervncserver -xstartup /usr/bin/gnome-session
+ 1280  sudo apt-get remove code
+ 1281  sudo reboot
+ 1282  cd Documents/
+ 1283  ls
+ 1284  cd usb_c_demo_app/
+ 1285  ls
+ 1286  cd linux-x86_64/
+ 1287  ls
+ 1288  sudo ./user_app
+ 1289  tigervncserver -xstartup /usr/bin/gnome-session
+ 1290  sudo ./user_app
+ 1291  g++ -o data_app1 data_app.cpp
+ 1292  g++ -o data_app1 Data.cpp
+ 1293  g++ -o data_app1 Data.cpp -lftd3xx
+ 1294  rm data_app1
+ 1295  g++ -o data_app1 Data.cpp -lftd3xx
+ 1296  sudo ./data_app1
+ 1297  g++ -o data_app1 Data.cpp -lftd3xx
+ 1298  sudo ./data_app1
+ 1299  g++ -o data_app1 Data.cpp -lftd3xx
+ 1300  sudo ./data_app1
+ 1301  /usr/bin/g++ -fdiagnostics-color=always -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -L/path/to/ftd3xx_library -lftd3xx -o /home/develope
+ 1302  /usr/bin/g++ -fdiagnostics-color=always -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -L/path/to/ftd3xx_library -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/ftd3xx.h
+ 1303  ls
+ 1304  /usr/bin/g++ -fdiagnostics-color=always -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -L/path/to/ftd3xx_library -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/data_app1
+ 1305  /usr/bin/g++ -fdiagnostics-color=always -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -L/home/developer/Documents/usb_c_demo_app/lib -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data
+ 1306  rm data_app1
+ 1307  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app1
+ 1308  sudo ./Data_app1
+ 1309  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app1
+ 1310  sudo ./Data_app1
+ 1311  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app1
+ 1312  sudo ./Data_app1
+ 1313  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app1
+ 1314  g++ -o user_app OpenCloseTest.cpp DataProc.cpp DataRx.cpp -lftd3xx
+ 1315  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app1
+ 1316  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app2
+ 1317  sudo ./Data_app1
+ 1318  g++ -g /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data.cpp -lftd3xx -o /home/developer/Documents/usb_c_demo_app/linux-x86_64/Data_app1
+ 1319  sudo ./Data_app1
+ 1320  sudo ./Data_app2
+ 1321  sudo ./Data_app1
+ 1322  sudo ./Data_app2
+ 1323  sudo ./Data_app1
+ 1324  sudo ./Data_app2
+ 1325  sudo ./Data_app1
+ 1326  sudo ./Data_app2
+ 1327  sudo ./Data_app1
+ 1328  sudo ./Data_app2
+ 1329  sudo ./Data_app1
+ 1330  sudo ./Data_app2
+ 1331  sudo ./Data_app1
+ 1332  sudo ./Data_app2
+ 1333  sudo ./Data_app1
+ 1334  sudo ./Data_app2
+ 1335  sudo ./Data_app1
+ 1336  sudo ./Data_app2
+ 1337  sudo ./Data_app1
+ 1338  sudo ./Data_app2
+ 1339  sudo ./Data_app1
+ 1340  sudo ./Data_app2
+ 1341  cd Documents/
+ 1342  cd QuartusPrime/
+ 1343  cd quartus/
+ 1344  cd bin/
+ 1345  xhost +
+ 1346  sudo ./quartus
+ 1347  tigervncserver -xstartup /usr/bin/gnome-session
+ 1348  exit
+ 1349  vivado 
+ 1350  sudo reboot now
+ 1351  ls
+ 1352  tigervncserver -xstartup /usr/bin/gnome-session
+ 1353  ls
+ 1354  cd Documents/
+ 1355  ls
+ 1356  cd kim_dev
+ 1357  ls
+ 1358  ./user_app 
+ 1359  ps
+ 1360  ls
+ 1361  ls /dev/cobi&
+ 1362  ls
+ 1363  vivado 
+ 1364  sudo reboot now
+ 1365  tigervncserver -xstartup /usr/bin/gnome-session
+ 1366  ls
+ 1367  cd Documents/
+ 1368  ls
+ 1369  cd pci_driver_version2a/pci_driver_24072024/
+ 1370  ls
+ 1371  sudo ./user_app
+ 1372  vivado 
+ 1373  sudo reboot now
+ 1374  ls
+ 1375  cd Documents/
+ 1376  ls
+ 1377  cd pci_driver_version2a/
+ 1378  ls
+ 1379  cd pci_driver_24072024/
+ 1380  ls
+ 1381  sudo ./user_app 
+ 1382  tigervncserver -xstartup /usr/bin/gnome-session
+ 1383  sudo reboot
+ 1384  vivado
+ 1385  tigervncserver -xstartup /usr/bin/gnome-session
+ 1386  cd Documents/
+ 1387  cd pci_driver_version2a/
+ 1388  ls
+ 1389  cd pci_driver_24072024/
+ 1390  ls
+ 1391  cd Documents/
+ 1392  cd pci_driver_version2a/
+ 1393  ls
+ 1394  cd pci_driver_24072024/
+ 1395  ls
+ 1396  sudo ./user_app
+ 1397  cd Documents/
+ 1398  cd pci_driver_version2a/
+ 1399  cd pci_driver_24072024/
+ 1400  ls
+ 1401  g++ -o user_app user_app.c
+ 1402  sudo ./user_app
+ 1403  sudo reboot
+ 1404  tigervncserver -xstartup /usr/bin/gnome-session
+ 1405  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1406  sudo ./user_app
+ 1407  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1408  g++ -o user_app user_app.c
+ 1409  sudo ./user_app
+ 1410  lspci -k
+ 1411  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1412  g++ -o user_app user_app.c
+ 1413  sudo ./user_app
+ 1414  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1415  g++ -o user_app user_app.c
+ 1416  sudo ./user_app
+ 1417  sudo reboot
+ 1418  vivado
+ 1419  tigervncserver -xstartup /usr/bin/gnome-session
+ 1420  sudo reboot
+ 1421  gcc -o user_app user_app.c
+ 1422  g++ -o user_app user_app.c
+ 1423  sudo ./user_app
+ 1424  tigervncserver -xstartup /usr/bin/gnome-session
+ 1425  sudo reboot
+ 1426  vivado
+ 1427  sudo apt get update
+ 1428  sudo apt update
+ 1429  sudo apt upgrade
+ 1430  tigervncserver -xstartup /usr/bin/gnome-session
+ 1431  sudo reboot
+ 1432  sudo ./user_app
+ 1433  vivado
+ 1434  sudo insmod pci_driver.ko
+ 1435  make clean
+ 1436  cd Documents/pci_driver_version2a/pci_driver_24072024/
+ 1437  ls
+ 1438  sudo ./.user_app
+ 1439  sudo ./user_app
+ 1440  lspci -k
+ 1441  make
+ 1442  make clean
+ 1443  make
+ 1444  make clean
+ 1445  make
+ 1446  sudo insmod pci_driver.ko
+ 1447  ls
+ 1448  lsmod | grep pci_driver
+ 1449  lspci -k
+ 1450  sudo ./user_app
+ 1451  lsmod | grep pci_driver
+ 1452  dmesg | tail
+ 1453  sudo dmesg|tail
+ 1454  ls /dev | grep pci_driver
+ 1455  sudo echo "pci_driver" >> /etc/modules
+ 1456  echo "pci_driver" | sudo tee -a /etc/modules
+ 1457  sudo nano /etc/modules
+ 1458  tigervncserver -xstartup /usr/bin/gnome-session
+ 1459  sudo reboot
+ 1460  sudo ./user_app
+ 1461  sudo dmesg|tail
+ 1462  tigervncserver -xstartup /usr/bin/gnome-session
+ 1463  sudo reboot
+ 1464  vivado
+ 1465  sudo insmod pci_driver.ko
+ 1466  lspci -k
+ 1467  tigervncserver -xstartup /usr/bin/gnome-session
+ 1468  sudo reboot
+ 1469  g++ -o user_app user_app.c
+ 1470  sudo ./user_app
+ 1471  xhost +
+ 1472  sudo ./quartus
+ 1473  ls /usr/local/lib | grep libftd3xx.so
+ 1474  tigervncserver -xstartup /usr/bin/gnome-session
+ 1475  sudo reboot
+ 1476  vivado
+ 1477  tigervncserver -xstartup /usr/bin/gnome-session
+ 1478  sudo reboot
+ 1479  sudo ./user_app
+ 1480  cd ..
+ 1481  ls
+ 1482  cd pci_driver_24072024_driver_install/
+ 1483  sudo insmod pci_driver.ko
+ 1484  ls
+ 1485  cd ..
+ 1486  cd pci_driver_24072024
+ 1487  ls
+ 1488  g++ -o user_app user_app.c
+ 1489  sudo ./user_app
+ 1490  g++ -o user_app user_app.c
+ 1491  sudo ./user_app
+ 1492  g++ -o user_app user_app.c
+ 1493  sudo ./user_app
+ 1494  tigervncserver -xstartup /usr/bin/gnome-session
+ 1495  cd Documents/
+ 1496  cd pcie_m2_binary_25Sep2024/
+ 1497  ls
+ 1498  rm COBIFIVE_PCIe_M2_FW.bin COBIFIVE_PCIe_M2_FW.bit COBIFIVE_PCIe_M2_FW..ltx
+ 1499  rm COBIFIVE_PCIe_M2_FW.bin COBIFIVE_PCIe_M2_FW.bit COBIFIVE_PCIe_M2_FW.ltx
+ 1500  ls
+ 1501  exit
+ 1502  tigervncserver -xstartup /usr/bin/gnome-session
+ 1503  sudo reboot
+ 1504  ls
+ 1505  less vivado.log 
+ 1506  cd peter-dev/
+ 1507  ls
+ 1508  ./cobi_pci_driver_31072024/user_app 
+ 1509  pgrep -fa viv
+ 1510  top
+ 1511  last
+ 1512  ls
+ 1513  unzip COBIGRADIENT_M2_FW_ID1100_REVxxxx_20240730-20241007T133020Z-001.zip 
+ 1514  cd COBIGRADIENT_M2_FW_ID1100_REVxxxx_20240730/
+ 1515  ls
+ 1516  vivado &
+ 1517  vivado
+ 1518  vivado
+ 1519  lsusb
+ 1520  vivado
+ 1521  tigervncserver -xstartup /usr/bin/gnome-session
+ 1522  cd Documents/pci_driver_version2a/
+ 1523  ls
+ 1524  cd pci_driver_24072024_driver_install/
+ 1525  sudo insmod pci_driver.ko
+ 1526  cd ..
+ 1527  cd pci_driver_24072024
+ 1528  ls
+ 1529  sudo ./user_app
+ 1530  tigervncserver -xstartup /usr/bin/gnome-session
+ 1531  sudo reboot
+ 1532  vivado
+ 1533  tigervncserver -xstartup /usr/bin/gnome-session
+ 1534  sudo reboot
+ 1535  sudo insmod pci_driver.ko
+ 1536  cd ..
+ 1537  pci_driver_24072024
+ 1538  sudo ./user_app
+ 1539  cd pci_driver_24072024
+ 1540  ls
+ 1541  sudo ./user_app
+ 1542  tigervncserver -xstartup /usr/bin/gnome-session
+ 1543  cd Documents/
+ 1544  cd pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1545  sudo insmod pci_driver.ko
+ 1546  cd ..
+ 1547  cd pci_driver_24072024
+ 1548  ls
+ 1549  sudo ./user_app
+ 1550  tigervncserver -xstartup /usr/bin/gnome-session
+ 1551  sudo reboot
+ 1552  vivado
+ 1553  tigervncserver -xstartup /usr/bin/gnome-session
+ 1554  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1555  sudo insmod pci_driver.ko
+ 1556  cd ..
+ 1557  pci_driver_24072024
+ 1558  sudo ./user_app
+ 1559  cd pci_driver_24072024
+ 1560  sudo ./user_app
+ 1561  tigervncserver -xstartup /usr/bin/gnome-session
+ 1562  sudo reboot
+ 1563  tigervncserver -xstartup /usr/bin/gnome-session
+ 1564  co Documents/pci_driver_version2a/pci_driver_24072024
+ 1565  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1566  ls
+ 1567  cd ..
+ 1568  cd pci_driver_24072024_driver_install/
+ 1569  sudo insmod pci_driver.ko
+ 1570  cd ..
+ 1571  cd pci_driver_24072024
+ 1572  ls
+ 1573  sudo ./user_app
+ 1574  sudo reboot
+ 1575  vivado
+ 1576  tigervncserver -xstartup /usr/bin/gnome-session
+ 1577  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1578  ls
+ 1579  cd ..
+ 1580  cd pci_driver_24072024_driver_install/
+ 1581  sudo insmod pci_driver.ko
+ 1582  cd ..
+ 1583  cd pci_driver_24072024
+ 1584  ls
+ 1585  sudo ./user_app
+ 1586  sudo reboot
+ 1587  tigervncserver -xstartup /usr/bin/gnome-session
+ 1588  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1589  sudo insmod pci_driver.ko
+ 1590  cd ..
+ 1591  cd pci_driver_24072024
+ 1592  sudo ./user_app
+ 1593  vivado
+ 1594  tigervncserver -xstartup /usr/bin/gnome-session
+ 1595  cd Documents/
+ 1596  cd pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1597  ls
+ 1598  sudo insmod pci_driver.ko
+ 1599  cd ..
+ 1600  cd pci_driver_24072024
+ 1601  sudo ./user_app
+ 1602  sudo reboot
+ 1603  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1604  sudo insmod pci_driver.ko
+ 1605  tigervncserver -xstartup /usr/bin/gnome-session
+ 1606  cd ..
+ 1607  cd pci_driver_24072024
+ 1608  sudo ./user_app
+ 1609  sudo reboot
+ 1610  vivado
+ 1611  tigervncserver -xstartup /usr/bin/gnome-session
+ 1612  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1613  sudo insmod pci_driver.ko
+ 1614  cd ..
+ 1615  cd pci_driver_24072024
+ 1616  sudo ./user_app
+ 1617  tigervncserver -xstartup /usr/bin/gnome-session
+ 1618  clear
+ 1619  sudo reboot
+ 1620  tigervncserver -xstartup /usr/bin/gnome-session
+ 1621  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1622  sudo insmod pci_driver.ko
+ 1623  cd ..
+ 1624  cd pci_driver_24072024
+ 1625  sudo ./user_app
+ 1626  vivado
+ 1627  tigervncserver -xstartup /usr/bin/gnome-session
+ 1628  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1629  sudo insmod pci_driver.ko
+ 1630  cd ..
+ 1631  cd pci_driver_24072024
+ 1632  ls
+ 1633  sudo ./user_app
+ 1634  tigervncserver -xstartup /usr/bin/gnome-session
+ 1635  sudo reboot
+ 1636  tigervncserver -xstartup /usr/bin/gnome-session
+ 1637  sudo reboot
+ 1638  vivado
+ 1639  tigervncserver -xstartup /usr/bin/gnome-session
+ 1640  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1641  sudo insmod pci_driver.ko
+ 1642  cd ..
+ 1643  cd pci_driver_24072024
+ 1644  sudo ./user_app
+ 1645  sudo reboot
+ 1646  tigervncserver -xstartup /usr/bin/gnome-session
+ 1647  sudo reboot
+ 1648  vivado
+ 1649  cd Documents/
+ 1650  cd pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1651  sudo insmod pci_driver.ko
+ 1652  cd ..
+ 1653  cd pci_driver_24072024
+ 1654  ls
+ 1655  tigervncserver -xstartup /usr/bin/gnome-session
+ 1656  sudo ./user_app
+ 1657  g++ -o user_app user_app.c
+ 1658  sudo ./user_app
+ 1659  sudo reboot
+ 1660  tigervncserver -xstartup /usr/bin/gnome-session
+ 1661  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1662  sudo insmod pci_driver.ko
+ 1663  cd ..
+ 1664  cd pci_driver_24072024
+ 1665  sudo ./user_app
+ 1666  tigervncserver -xstartup /usr/bin/gnome-session
+ 1667  sudo ./user_app
+ 1668  tigervncserver -xstartup /usr/bin/gnome-session
+ 1669  sudo reboot
+ 1670  tigervncserver -xstartup /usr/bin/gnome-session
+ 1671  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1672  cd Documents/pci_driver_version2a/pci_driver_2407202
+ 1673  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1674  cd ..
+ 1675  cd pci_driver_24072024
+ 1676  cd ..
+ 1677  cd pci_driver_24072024_driver_install/
+ 1678  sudo insmod pci_driver.ko
+ 1679  cd ..
+ 1680  cd pci_driver_24072024
+ 1681  sudo ./user_app
+ 1682  sudo reboot
+ 1683  vivado
+ 1684  lsusb
+ 1685  tigervncserver -xstartup /usr/bin/gnome-session
+ 1686  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1687  sudo insmod pci_driver.ko
+ 1688  cd ..
+ 1689  cd pci_driver_24072024
+ 1690  ls
+ 1691  sudo ./user_app
+ 1692  sudo reboot
+ 1693  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1694  tigervncserver -xstartup /usr/bin/gnome-session
+ 1695  sudo insmod pci_driver.ko
+ 1696  cd ..
+ 1697  cd pci_driver_24072024
+ 1698  sudo ./user_app
+ 1699  ls
+ 1700  g++ -o user_app user_app.c
+ 1701  sudo ./user_app
+ 1702  sudo reboot
+ 1703  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1704  sudo ./user_app
+ 1705  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1706  sudo ./user_app
+ 1707  g++ -o user_app user_app.c
+ 1708  sudo ./user_app
+ 1709  vivado
+ 1710  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1711  sudo insmod pci_driver.ko
+ 1712  ls
+ 1713  cd ..
+ 1714  cd pci_driver_24072024
+ 1715  sudo ./user_app
+ 1716  tigervncserver -xstartup /usr/bin/gnome-session
+ 1717  g++ -o user_app user_app.c
+ 1718  sudo reboot
+ 1719  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1720  sudo ./user_app
+ 1721  cd Documents/
+ 1722  cd QuartusPrime/
+ 1723  cd quartus/bin
+ 1724  xhost +
+ 1725  sudo ./quartus
+ 1726  tigervncserver -xstartup /usr/bin/gnome-session
+ 1727  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1728  cd ..
+ 1729  cd pci_driver_24072024
+ 1730  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1731  cd /.
+ 1732  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1733  cd home/developer/Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1734  sudo insmod pci_driver.ko
+ 1735  cd ..
+ 1736  cd pci_driver_24072024
+ 1737  g++ -o user_app user_app.c
+ 1738  sudo ./user_app
+ 1739  cd ..
+ 1740  cd usb_c_demo_app/
+ 1741  cd linux-x86_64/
+ 1742  ls
+ 1743  sudo ./Data-dynamic
+ 1744  cd ..
+ 1745  sudo data_app1
+ 1746  sudo./ data_app1
+ 1747  sudo ./data_app1
+ 1748  cd linux-x86_64/
+ 1749  sudo ./data_app1
+ 1750  ls
+ 1751  sudo ./Data_app1
+ 1752  g++ -o user_app OpenCloseTest.cpp DataProc.cpp DataRx.cpp -lftd3xx
+ 1753  nano cobi_demo_app.cpp
+ 1754  cd ..
+ 1755  cd usb_c_demo_app/
+ 1756  cd linux-x86_64/
+ 1757  sudo ./data_app
+ 1758  sudo ./Data_app1cd
+ 1759  ls
+ 1760  sudo ./data_app
+ 1761  cd ..
+ 1762  cd pci_driver_version2a/pci_driver_24072024
+ 1763  ls
+ 1764  g++ -o cobi_dualres user_app.c
+ 1765  ls
+ 1766  g++ -o cobifive user_app.c
+ 1767  g++ -o cobi_dualres user_app.c
+ 1768  ls
+ 1769  rm cobi_dualres 
+ 1770  g++ -o cobidualres user_app.c
+ 1771  g++ -o cobifive  user_app.c
+ 1772  ls
+ 1773  sudo ./cobidualres 
+ 1774  sudo ./cobifive 
+ 1775  sudo reboot
+ 1776  vivado
+ 1777  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1778  g++ -o user_app user_app.c
+ 1779  sudo ./user_app
+ 1780  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1781  sudo insmod pci_driver.ko
+ 1782  cd ..
+ 1783  cd pci_driver_24072024
+ 1784  ls
+ 1785  sudo ./cobifive
+ 1786  sudo ./cobidualres
+ 1787  sudo reboot
+ 1788  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1789  sudo insmod pci_driver.ko
+ 1790  cd ..
+ 1791  cd pci_driver_24072024
+ 1792  ls
+ 1793  sudo ./cobidualres 
+ 1794  sudo ./cobifive
+ 1795  tigervncserver -xstartup /usr/bin/gnome-session
+ 1796  sudo ./cobifive
+ 1797  g++ -o cobifive user_app.c
+ 1798  sudo ./cobifive
+ 1799  g++ -o cobifive user_app.c
+ 1800  sudo ./cobifive
+ 1801  g++ -o cobifive user_app.c
+ 1802  sudo ./cobifive
+ 1803  ls
+ 1804  ls -lh /dev/cobi_pcie_card*
+ 1805  lspci -vv
+ 1806  ./peter-dev/cobi_pci_driver_31072024/user_app 
+ 1807  dmesg | grep cobi
+ 1808  sudo dmesg | grep cobi
+ 1809  ls
+ 1810  cd peter-dev/
+ 1811  ls
+ 1812  gcc incr_write_test.c -o write_test
+ 1813  ./write_test 
+ 1814  ls
+ 1815  ./cobi_pci_driver_31072024/user_app 
+ 1816  pgrep -fa cobi
+ 1817  ls
+ 1818  ls cobi_pci_driver_31072024/
+ 1819  cd cobi_pci_driver_31072024/
+ 1820  ls
+ 1821  cd ..
+ 1822  ls
+ 1823  tar xzvf cobi_driver_20241018.tar.gz 
+ 1824  cd pci_driver_dev/
+ 1825  ls
+ 1826  make
+ 1827  make clean
+ 1828  make
+ 1829  less Makefile 
+ 1830  CC=x86_64-linux-gnu-gcc-12 make
+ 1831  ls
+ 1832  vim Makefile 
+ 1833  cat Make
+ 1834  cat 
+ 1835  uname -r
+ 1836  less /lib/modules/6.8.0-45-generic/
+ 1837  less /lib/modules/6.8.0-45-generic/build/Makefile 
+ 1838  vim /lib/modules/6.8.0-45-generic/build/Makefile 
+ 1839  less Makefile 
+ 1840  make clean
+ 1841  make 
+ 1842  sudo vim /lib/modules/6.8.0-45-generic/build/Makefile 
+ 1843  HOSTCC=x86_64-linux-gnu-gcc-12 make 
+ 1844  ls
+ 1845  sudo vim /lib/modules/6.8.0-45-generic/build/Makefile 
+ 1846  make
+ 1847  ls
+ 1848  ls -lh
+ 1849  rm cobigradient_pcie_m2_fw.*
+ 1850  ls
+ 1851  less cleanup_script.sh 
+ 1852  sudo ls /lib/modules/6.8.0-45-generic/build/
+ 1853  uname -r
+ 1854  ls /
+ 1855  sudo apt-get install linux-headers-$(uname -r)
+ 1856  dpkg -L linux-headers-$(uname -r)
+ 1857  less /usr/src/linux-headers-6.8.0-45-generic/include/linux/device/class.h 
+ 1858  grep -R -H "class_create" /usr/src/linux-headers-6.8.0-45-generic/include/linux/
+ 1859  grep -R -H "class_create" /usr/src/linux-headers-6.8.0-45-generic/include/
+ 1860  vim cobi_pci_driver.c 
+ 1861  make
+ 1862  ls
+ 1863  sudo apt install dwarves
+ 1864  make
+ 1865  make clean
+ 1866  make
+ 1867  less cleanup_script.sh 
+ 1868  chmod +x cleanup_script.sh 
+ 1869  ./cleanup_script.sh 
+ 1870  lsmod | grep cobi
+ 1871  lsmod | grep pci
+ 1872  ls
+ 1873  less Makefile 
+ 1874  sudo insmod cobi_pci_driver.ko 
+ 1875  lsmod | grep cobi
+ 1876  gcc -o user_app user_app.c
+ 1877  ./user_app 
+ 1878  ls
+ 1879  sudo dmesg 
+ 1880  ls
+ 1881  cd ..
+ 1882  ls
+ 1883  gcc -o pci_reset pci_reset.c 
+ 1884  ./pci_reset 
+ 1885  ls
+ 1886  cd pci_driver_dev/
+ 1887  ./user_app 
+ 1888  sudo dmesg |tial
+ 1889  sudo dmesg |tail
+ 1890  ../pci_reset 
+ 1891  sudo dmesg |tail
+ 1892  sudo reboot
+ 1893  vivado
+ 1894  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1895  tigervncserver -xstartup /usr/bin/gnome-session
+ 1896  cd ..
+ 1897  sudo reboot
+ 1898  tigervncserver -xstartup /usr/bin/gnome-session
+ 1899  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1900  sudo insmod pci_driver.ko
+ 1901  cd ..
+ 1902  cd pci_driver_24072024
+ 1903  lsusb
+ 1904  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1905  sudo insmod pci_driver.ko
+ 1906  cd ..
+ 1907  tigervncserver -xstartup /usr/bin/gnome-session
+ 1908  cd pci_driver_24072024
+ 1909  ls
+ 1910  g++ -o cobifive2 user_app.c
+ 1911  ls
+ 1912  sudo reboot
+ 1913  vivado
+ 1914  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1915  ls
+ 1916  sudo ./cobifive
+ 1917  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1918  sudo insmod pci_driver.ko
+ 1919  cd .
+ 1920  cd ..
+ 1921  cd pci_driver_24072024
+ 1922  ls
+ 1923  sudo ./cobifive2
+ 1924  tigervncserver -xstartup /usr/bin/gnome-session
+ 1925  sudo reboot
+ 1926  vivado
+ 1927  tigervncserver -xstartup /usr/bin/gnome-session
+ 1928  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1929  sudo insmod pci_driver.ko
+ 1930  cd ..
+ 1931  cd pci_driver_24072024
+ 1932  ls
+ 1933  rm cobifive2
+ 1934  ks
+ 1935  ls
+ 1936  g++ -o cobifive2 user_app.c
+ 1937  sudo cobifive2
+ 1938  sudo ./cobifive2
+ 1939  sudo reboot
+ 1940  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1941  ls
+ 1942  sudo ./covifive2
+ 1943  sudo ./cobifive2
+ 1944  tigervncserver -xstartup /usr/bin/gnome-session
+ 1945  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1946  sudo insmod pci_driver.ko
+ 1947  cd ..
+ 1948  cd pci_driver_24072024
+ 1949  sudo ./cobifive2
+ 1950  cd Documents/pci_driver_version2a/pci_driver_24072024
+ 1951  ls
+ 1952  g++ -o cobifive2 user_app.c
+ 1953  tigervncserver -xstartup /usr/bin/gnome-session
+ 1954  sudo reboot
+ 1955  vivado
+ 1956  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1957  sudo insmod pci_driver.ko
+ 1958  cd ..
+ 1959  cd pci_driver_24072024
+ 1960  ls
+ 1961  sudo ./cobifive2
+ 1962  tigervncserver -xstartup /usr/bin/gnome-session
+ 1963  sudo ./cobifive2
+ 1964  g++ -o cobifive_all_0 user_app.c
+ 1965  sudo ./cobifive_all_0 
+ 1966  sudo reboot
+ 1967  ls
+ 1968  pgrep -fa cobi
+ 1969  cd peter-dev/
+ 1970  ls
+ 1971  ./cobi_pci_driver_31072024/user_app 
+ 1972  tigervncserver -xstartup /usr/bin/gnome-session
+ 1973  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1974  sudo insmod pci_driver.ko
+ 1975  cd ..
+ 1976  cd pci_driver_24072024
+ 1977  ls
+ 1978  sudo ./cobifive2
+ 1979  sudo ./cobifive_all_0 
+ 1980  g++ -o cobifive_all_0 user_app.c
+ 1981  sudo ./cobifive_all_0 
+ 1982  tigervncserver -xstartup /usr/bin/gnome-session
+ 1983  sudo reboot
+ 1984  vivado
+ 1985  tigervncserver -xstartup /usr/bin/gnome-session
+ 1986  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1987  sudo insmod pci_driver.ko
+ 1988  cd ..
+ 1989  cd pci_driver_24072024
+ 1990  ls
+ 1991  sudo ./cobifive_all_0 
+ 1992  g++ -o cobifive_all_0 user_app.c
+ 1993  sudo ./cobifive_all_0 
+ 1994  sudo reboot
+ 1995  tigervncserver -xstartup /usr/bin/gnome-session
+ 1996  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 1997  sudo insmod pci_driver.ko
+ 1998  cd ..
+ 1999  cd pci_driver_24072024
+ 2000  sudo ./cobifive_all_0 
+ 2001  ls
+ 2002  history
+ 2003  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 2004  ls
+ 2005  ls ../
+ 2006  ls
+ 2007  ./user_app 
+ 2008  history
+ 2009  cd
+ 2010  ls
+ 2011  cd Documents/pci_driver_version2a/pci_driver_24072024_driver_install/
+ 2012  ls
+ 2013  cd ..
+ 2014  ls
+ 2015  cd pci_driver_24072024
+ 2016  ls
+ 2017  cd cobifive2
+ 2018  ls
+ 2019  ./cobifive
+ 2020  ./cobifive2
+ 2021  ./cobifive
+ 2022  ls
+ 2023  ./cobifive_all_0
+ 2024  ./cobifive2
+ 2025  ./cobifive
+ 2026  ls
+ 2027  ./user_app 
+ 2028  ./cobifive_all_0
+ 2029  ./cobifive2
+ 2030  ./cobifive_all_0
+ 2031  ./user_app 
+ 2032  ./cobifive_all_0
+ 2033  ./cobifive2
+ 2034  history
+ 2035  :q
+ 2036  history >! history
+ 2037  history > history
