@@ -10,6 +10,7 @@ PCIe driver installation instructions
 1. sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
 
 note: You may have to run 'uname -r' first, and then copy the info to the above command line
+
 2. sudo depmod -a
 3. sudo vi /etc/modules
 4. add the name of: pci_driver64.  
