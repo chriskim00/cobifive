@@ -19,14 +19,12 @@ you should see: pci_driver64
 For a more permanent solution, you can create a udev rule to set the correct permissions when the device is created:
 (Below steps may not be needed on Ubuntu (e.g. rosc))
 
-sudo vi /etc/udev/rules.d/99-cobi.rules
+1. sudo vi /etc/udev/rules.d/99-cobi.rules
 
 Add the following line:
-
 KERNEL=="cobi_pcie_card*", MODE="0666"
 
-Save and close the file, then reload the udev rules and trigger them:
-
+2. Save and close the file, then reload the udev rules and trigger them:
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
