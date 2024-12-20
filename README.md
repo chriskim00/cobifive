@@ -1,26 +1,32 @@
-# cobifive
-COBIFIVE driver, user app, and binary
+# Cobifive
+Unified driver, user app, and binary for M.2 PCIe and quad PCIe cards
 
-M.2 PCIe card
+# Simple write and read test user app instructions
 
-Quad PCIe card
+1. Clone this repository to your local machine
+2. Run 'g++ -o quadcobifive quadcobifive_user_app64.c'
+3. Run './quadcobifive'
+4. Run 'vi output_logs' to check results
 
-PCIe driver installation instructions
+# PCIe driver installation instructions
 
 (First, go to the BIOS setting (hit F2 key when booting) and disable secure login option)
-1. sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
+
+1. make clean
+2. make all (fix compilation errors)
+3. sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
 
 note: You may have to run 'uname -r' first, and then copy the info to the above command line
 
-2. sudo depmod -a
-3. sudo vi /etc/modules
-4. add the name of: pci_driver64.  
-5. sudo chmod 644 /lib/modules/$(uname -r)/kernel/drivers/pci_driver64.ko
-6. reboot computer (sudo shutdown -r +1)
-7. verify that the driver is installed. on terminal: lsmod | grep pci_driver64
+4. sudo depmod -a
+5. sudo vi /etc/modules
+6. add the name of: pci_driver64.  
+7. sudo chmod 644 /lib/modules/$(uname -r)/kernel/drivers/pci_driver64.ko
+8. reboot computer (sudo shutdown -r +1)
+9. verify that the driver is installed. on terminal: lsmod | grep pci_driver64
 you should see: pci_driver64
 
-For a more permanent solution, you can create a udev rule to set the correct permissions when the device is created:
+# For a more permanent solution, you can create a udev rule to set the correct permissions when the device is created:
 
 (Below steps may not be needed on a Ubuntu machine)
 
