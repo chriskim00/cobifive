@@ -1,12 +1,13 @@
 # Cobifive
 Unified driver, user app, and binary for M.2 PCIe and quad PCIe cards
 
-# Simple write and read test user app instructions
+# Quad card write and read test user app instructions
 
 1. Clone this repository to your local machine
-2. Run 'g++ -o quadcobifive quadcobifive_user_app64.c'
-3. Run './quadcobifive'
-4. Run 'vi output_logs' to check results
+2. Run 'cd ./cobifive/quadpci'
+3. Run 'g++ -o quadcobifive quadcobifive_user_app64.c'
+4. Run './quadcobifive'
+5. Run 'vi output_logs' to check results
 
 # PCIe driver installation instructions
 
