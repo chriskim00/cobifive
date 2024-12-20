@@ -33,5 +33,6 @@ For a more permanent solution, you can create a udev rule to set the correct per
 2. Save and close the file, then reload the udev rules and trigger them:
 
   sudo udevadm control --reload-rules
+  
   sudo udevadm trigger
 
