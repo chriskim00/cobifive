@@ -92,7 +92,6 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
 
         // Update the device's offset for the next read
         dev->offset = read_offset;
-//        printk(KERN_INFO "Read offset set to %lld\n", (long long)read_offset);
         return sizeof(off_t);
     }
 
