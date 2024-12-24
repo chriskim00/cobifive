@@ -22,7 +22,8 @@ struct pci_mmap_dev {
     dev_t devno;  // Device number
     size_t offset;
     struct list_head list;  // Linked list node
-    struct mutex dev_lock;   // Mutex for protecting device-specific operations
+    struct mutex dev_lock;  // Mutex for protecting device-specific operations
+    bool busy; // True when device has been opened by another process
 };
 
 typedef struct {
@@ -32,16 +33,30 @@ typedef struct {
 
 static LIST_HEAD(device_list);
 static DEFINE_MUTEX(device_list_lock);
+static DEFINE_MUTEX(open_lock);
 
 static int pci_mmap_open(struct inode *inode, struct file *file)
 {
+    int ret = 0;
     struct pci_mmap_dev *dev = container_of(inode->i_cdev, struct pci_mmap_dev, cdev);
     file->private_data = dev;
-    return 0;
+
+    mutex_lock(&open_lock);
+    if (dev->busy) {
+        ret = -EBUSY;
+    } else {
+        // claim device
+        dev->busy = true;
+    }
+    mutex_unlock(&open_lock);
+
+    return ret;
 }
 
 static int pci_mmap_release(struct inode *inode, struct file *file)
 {
+    struct pci_mmap_dev *dev = (struct pci_mmap_dev *) file->private_data;
+    dev->busy = false;
     return 0;
 }
 
@@ -74,7 +89,6 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
 
 static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 {
-    size_t data_count;
     struct pci_mmap_dev *dev = file->private_data;
     write_data_t write_data;
     off_t read_offset;
@@ -99,7 +113,7 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
     if (count == sizeof(write_data_t) || count % sizeof(write_data_t) == 0) {
         mutex_lock(&dev->dev_lock);  // Lock only once per bulk write operation
 
-        data_count = count / sizeof(write_data_t);  // Determine number of write_data_t structures
+        size_t data_count = count / sizeof(write_data_t);  // Determine number of write_data_t structures
 
         for (size_t i = 0; i < data_count; i++) {
             // Copy each chunk of data
@@ -179,7 +193,6 @@ static int pci_mmap_probe(struct pci_dev *pdev, const struct pci_device_id *id)
     major = MAJOR(dev->devno);
 
     if (!pci_mmap_class) {
-//        pci_mmap_class = class_create(THIS_MODULE,DEVICE_NAME);
         pci_mmap_class = class_create(DEVICE_NAME);
         if (IS_ERR(pci_mmap_class)) {
             err = PTR_ERR(pci_mmap_class);
@@ -194,8 +207,7 @@ static int pci_mmap_probe(struct pci_dev *pdev, const struct pci_device_id *id)
         dev_err(&pdev->dev, "Failed to add char device\n");
         goto destroy_class;
     }
-
-    printk(KERN_INFO "Creating device file /dev/%s_%x_%x\n", DEVICE_NAME, pdev->bus->number, PCI_SLOT(pdev->devfn));
+    
     device_create(pci_mmap_class, NULL, dev->devno, NULL, DEVICE_NAME "%d", device_count);
     dev_info(&pdev->dev, "Created device file: /dev/%s%d\n", DEVICE_NAME, device_count);  // Print device file name
 
@@ -274,14 +286,12 @@ static int __init pci_mmap_init(void)
     if (err)
         return err;
 
-    printk(KERN_INFO "%s driver registered\n", DRIVER_NAME);
     return 0;
 }
 
 static void __exit pci_mmap_exit(void)
 {
     pci_unregister_driver(&pci_mmap_driver);
-    printk(KERN_INFO "%s driver unregistered\n", DRIVER_NAME);
 }
 
 module_init(pci_mmap_init);
