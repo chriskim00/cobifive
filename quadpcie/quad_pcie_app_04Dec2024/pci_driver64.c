@@ -106,7 +106,6 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
 
         // Update the device's offset for the next read
         dev->offset = read_offset;
-        printk(KERN_INFO "Read offset set to %lld\n", (long long)read_offset);
         return sizeof(off_t);
     }
 
@@ -208,8 +207,7 @@ static int pci_mmap_probe(struct pci_dev *pdev, const struct pci_device_id *id)
         dev_err(&pdev->dev, "Failed to add char device\n");
         goto destroy_class;
     }
-
-    printk(KERN_INFO "Creating device file /dev/%s_%x_%x\n", DEVICE_NAME, pdev->bus->number, PCI_SLOT(pdev->devfn));
+    
     device_create(pci_mmap_class, NULL, dev->devno, NULL, DEVICE_NAME "%d", device_count);
     dev_info(&pdev->dev, "Created device file: /dev/%s%d\n", DEVICE_NAME, device_count);  // Print device file name
 
@@ -288,14 +286,12 @@ static int __init pci_mmap_init(void)
     if (err)
         return err;
 
-    printk(KERN_INFO "%s driver registered\n", DRIVER_NAME);
     return 0;
 }
 
 static void __exit pci_mmap_exit(void)
 {
     pci_unregister_driver(&pci_mmap_driver);
-    printk(KERN_INFO "%s driver unregistered\n", DRIVER_NAME);
 }
 
 module_init(pci_mmap_init);
