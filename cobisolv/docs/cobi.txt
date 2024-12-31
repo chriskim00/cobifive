@@ -1,0 +1,69 @@
+To solve sub-qubo problems on the ising solver you will need to invoke cobisolv with `sudo`.
+
+Run `cobisolv -h` for documentation of standard qbsolv arguments.
+
+See `cobisolv -q` for documentation of input format.
+
+================
+New cobisolv args
+================
+
+-C
+If present, use cobi chip to solve sub-problems.
+
+-z numSamples
+Number of solutions to sample from cobi chip. Defaults to 10.
+
+-N numOutputSolutions
+Optional argument that sets the number of unique solutions to be output.
+If the value provided is 0, all unique solutions will be output.
+
+-p preSearchPassFactor
+Scale the amount of classical tabu search to be performed before decomposing problem to
+sub-problems. Defaults to 0. Standard qbsolv uses 6500.
+
+-g globalSearchPassFactor
+Scale the amount of classical tabu search to be performed between each round of sub-problem
+solutions. Defaults to 0. Standard qbsolv uses 1700.
+
+-d
+Final output will be printed as comma delimited data, allowing for aggregation of multiple runs in a
+single data file.
+
+-a b
+Use BFS decomposer. When generating the subproblems, a random variable is chosen as a root vertex
+and BFS is performed from there to populate the subproblem.
+
+=========
+Examples:
+=========
+
+$ sudo ./cobisolv -C -i ./data/bqp100_5.qubo
+
+$ sudo ./cobisolv -p 100 -g 200 -z 5 -C -i ./data/bqp100_5.qubo
+
+$ sudo ./cobisolv -a b -C -i ./data/bqp100_5.qubo
+
+======
+Output
+======
+Delimited output has the format:
+
+column num                 description
+-------------------------------------------------------------------------------
+1                         input file name
+2                         presearch pass factor
+3                         global search pass factor
+4                         final energy
+5                         number of subqubos solved
+6                         pre-tabu search time
+7                         global tabu search time
+8                         time spent on sub-problems
+9                         total time
+10                        unique solution index (index 0 is the best solution)
+11                        number of times a given unqiue solution was found
+12                        prng seed
+
+Delimited output example:
+$ sudo ./cobisolv -C -d -r 123 -m -p 0 -g 100 -i ./data/bqp500_2.qubo
+./data/bqp500_2.qubo, 0, 100, 128339.0, 180, 0.0000, 1.3778, 26.3343, 27.7797, 0, 32, 123

@@ -1,0 +1,2 @@
+/bin/ar qc libcobisolv.a CMakeFiles/libcobisolv.dir/src/util.cc.o CMakeFiles/libcobisolv.dir/src/cobi.cc.o CMakeFiles/solver.dir/src/solver.cc.o CMakeFiles/solver.dir/src/util.cc.o CMakeFiles/solver.dir/src/cobi.cc.o
+/bin/ranlib libcobisolv.a
