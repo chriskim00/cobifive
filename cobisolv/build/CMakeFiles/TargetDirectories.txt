@@ -1,5 +1,0 @@
-/project/chriskim00/chriskim/research/cobifive/cobisolv/build/CMakeFiles/solver.dir
-/project/chriskim00/chriskim/research/cobifive/cobisolv/build/CMakeFiles/libcobisolv.dir
-/project/chriskim00/chriskim/research/cobifive/cobisolv/build/CMakeFiles/cobisolv.dir
-/project/chriskim00/chriskim/research/cobifive/cobisolv/build/CMakeFiles/edit_cache.dir
-/project/chriskim00/chriskim/research/cobifive/cobisolv/build/CMakeFiles/rebuild_cache.dir
