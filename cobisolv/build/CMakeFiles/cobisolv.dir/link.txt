@@ -1,1 +1,0 @@
-/bin/c++  -Wall -Wextra -std=gnu++11 -fopenmp -O3 -rdynamic CMakeFiles/cobisolv.dir/cmd/main.c.o CMakeFiles/cobisolv.dir/cmd/readqubo.c.o -o cobisolv  libcobisolv.a 
