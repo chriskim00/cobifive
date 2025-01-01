@@ -15,6 +15,7 @@
 static int major;
 static struct class *pci_mmap_class;
 
+//sturcutre built to hold the pci device data and more custom data. 
 struct pci_mmap_dev {
     struct pci_dev *pdev;
     void __iomem *hw_addr;
@@ -94,6 +95,7 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
     off_t read_offset;
 
     // Check if the input count matches the size of an off_t, indicating it's likely a read offset update
+    // TODO move this into the .read()
     if (count == sizeof(off_t)) {
         if (copy_from_user(&read_offset, buf, sizeof(off_t))) {
             return -EFAULT;
@@ -139,59 +141,71 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
     return -EINVAL;  // If not a valid batch size, return error
 }
 
+//operations that can be called by Linux kernal to access the pci device
 static struct file_operations pci_mmap_fops = {
     .owner = THIS_MODULE,
-    .open = pci_mmap_open,
-    .release = pci_mmap_release,
-    .read = pci_mmap_read,
-    .write = pci_mmap_write,
+    .open = pci_mmap_open, //called by the open() function
+    .release = pci_mmap_release, //called by the close() function
+    .read = pci_mmap_read, //called by the read() function
+    .write = pci_mmap_write, //called by the write() function
 };
 
+//list of compatible devices with this driver
 static struct pci_device_id pci_mmap_id_table[] = {
-    { PCI_DEVICE(0x800E, 0x7011) },
-    { 0, }
+    { PCI_DEVICE(0x800E, 0x7011) }, //vendor and device ID of fpga
+    { 0, } //end of list
 };
 MODULE_DEVICE_TABLE(pci, pci_mmap_id_table);
 
+//function called when a matching PCI device is found
 static int pci_mmap_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 {
     int err;
     resource_size_t mmio_start, mmio_len;
-    struct pci_mmap_dev *dev;
+    struct pci_mmap_dev *dev; //intializes a pointer that holds the address to a pci_mmap_dev custom structure
     static int device_count = 0;
 
+    //allocates memory for the pci_mmap_dev custom sturcture 
     dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
     if (!dev)
-        return -ENOMEM;
+        return -ENOMEM; //error: no memory
 
+    //enables the pci device 
     err = pci_enable_device(pdev);
     if (err) {
         dev_err(&pdev->dev, "Failed to enable PCI device\n");
         return err;
     }
 
+    //Linux requesting access to the pci I/O and memory regions on the pci device
     err = pci_request_regions(pdev, DRIVER_NAME);
     if (err) {
         dev_err(&pdev->dev, "Failed to request PCI regions\n");
         goto disable_device;
     }
 
-    mmio_start = pci_resource_start(pdev, BAR0);
-    mmio_len = pci_resource_len(pdev, BAR0);
-    dev->hw_addr = ioremap(mmio_start, mmio_len);
+    //create a virutal mmio in the Linux kernal to interact with the pci device
+    mmio_start = pci_resource_start(pdev, BAR0); //find the start memory mapped io of Base Address Register (BAR) 0
+    mmio_len = pci_resource_len(pdev, BAR0); //find the size/length memory mapped io of Base Address Register (BAR) 0
+    dev->hw_addr = ioremap(mmio_start, mmio_len); //mapping the MMIO of the device to a vitural memory range the Linux kernal can access
+    //check if the MMIO was successfully mapped
     if (!dev->hw_addr) {
         dev_err(&pdev->dev, "Failed to map MMIO region\n");
         err = -ENOMEM;
-        goto release_regions;
+        goto release_regions; //
     }
 
+    //allocate ids to the driver and devices assoicated with the driver
     err = alloc_chrdev_region(&dev->devno, device_count, 1, DEVICE_NAME);
     if (err) {
         dev_err(&pdev->dev, "Failed to allocate char device region\n");
         goto unmap_region;
     }
+    
+    //getting the major value from the dev data structure
     major = MAJOR(dev->devno);
 
+    //create a class structure that will be intialized and passed to the linux system kernel
     if (!pci_mmap_class) {
         pci_mmap_class = class_create(DEVICE_NAME);
         if (IS_ERR(pci_mmap_class)) {
@@ -200,46 +214,50 @@ static int pci_mmap_probe(struct pci_dev *pdev, const struct pci_device_id *id)
         }
     }
 
+    //creates a character device structure for the pci device that says it will use pci_mmap_fops for operations
     cdev_init(&dev->cdev, &pci_mmap_fops);
     dev->cdev.owner = THIS_MODULE;
+    //register a character device with the kernel so it is availble for use
     err = cdev_add(&dev->cdev, dev->devno, 1);
     if (err) {
         dev_err(&pdev->dev, "Failed to add char device\n");
         goto destroy_class;
     }
     
+    //creating the device in the /dev directory that can be interacted with 
     device_create(pci_mmap_class, NULL, dev->devno, NULL, DEVICE_NAME "%d", device_count);
-    dev_info(&pdev->dev, "Created device file: /dev/%s%d\n", DEVICE_NAME, device_count);  // Print device file name
+    dev_info(&pdev->dev, "Created device file: /dev/%s%d\n", DEVICE_NAME, device_count);  // Attach device file name to device data struct
 
     dev->pdev = pdev;
     dev->offset = 0; // Initialize the offset
-    mutex_init(&dev->dev_lock);  // Initialize the mutex lock for this device
-    pci_set_drvdata(pdev, dev);
+    mutex_init(&dev->dev_lock);  // Initialize the mutex lock for this device to allow many threads to use
+    pci_set_drvdata(pdev, dev); //store all of the collected data in pci_mmap_dev sturcutre to be associated with the created driver instance
 
     mutex_lock(&device_list_lock);
-    list_add_tail(&dev->list, &device_list);
+    list_add_tail(&dev->list, &device_list); //add a new device to the list of drivers
     mutex_unlock(&device_list_lock);
 
-    dev_info(&pdev->dev, "PCI device %s probed\n", DRIVER_NAME);
+    dev_info(&pdev->dev, "PCI device %s probed\n", DRIVER_NAME); //attach a message to the device driver indicating it ready
 
     device_count++;
     return 0;
 
-destroy_class:
-    if (device_count == 0) {
-        class_destroy(pci_mmap_class);
-    }
-unregister_chrdev:
-    unregister_chrdev_region(dev->devno, 1);
-unmap_region:
-    iounmap(dev->hw_addr);
-release_regions:
-    pci_release_regions(pdev);
-disable_device:
-    pci_disable_device(pdev);
-    return err;
+    destroy_class:
+        if (device_count == 0) {
+            class_destroy(pci_mmap_class);
+        }
+    unregister_chrdev:
+        unregister_chrdev_region(dev->devno, 1);
+    unmap_region:
+        iounmap(dev->hw_addr);
+    release_regions:
+        pci_release_regions(pdev);
+    disable_device:
+        pci_disable_device(pdev);
+        return err;
 }
 
+//remove a device from being used by the Linux kernal
 static void pci_mmap_remove(struct pci_dev *pdev)
 {
     struct pci_mmap_dev *dev = pci_get_drvdata(pdev);
@@ -271,18 +289,20 @@ static void pci_mmap_remove(struct pci_dev *pdev)
     dev_info(&pdev->dev, "PCI device %s removed\n", DRIVER_NAME);
 }
 
+//pcie device registration 
 static struct pci_driver pci_mmap_driver = {
-    .name = DRIVER_NAME,
-    .id_table = pci_mmap_id_table,
-    .probe = pci_mmap_probe,
-    .remove = pci_mmap_remove,
+    .name = DRIVER_NAME, //Driver name
+    .id_table = pci_mmap_id_table, //Device ID table that hold compatible pcie device 
+    .probe = pci_mmap_probe, //function called when a matching pcie device is detected
+    .remove = pci_mmap_remove,//function called when the pcie device is removed
 };
 
-static int __init pci_mmap_init(void)
+//called upon driver startup to register the pcie device
+static int __init pci_mmap_init(void) 
 {
     int err;
 
-    err = pci_register_driver(&pci_mmap_driver);
+    err = pci_register_driver(&pci_mmap_driver); //framework used to register a new pcie device to this driver
     if (err)
         return err;
 
