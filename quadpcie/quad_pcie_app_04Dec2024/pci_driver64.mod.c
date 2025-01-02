@@ -44,7 +44,6 @@ __used __section("__versions") = {
 	{ 0x646397e6, "_dev_info" },
 	{ 0x9901e5e3, "class_destroy" },
 	{ 0x13c49cc2, "_copy_from_user" },
-	{ 0x122c3a7e, "_printk" },
 	{ 0xf0fdf6cb, "__stack_chk_fail" },
 	{ 0xa78af5f3, "ioread32" },
 	{ 0x6b10bee1, "_copy_to_user" },
@@ -60,6 +59,7 @@ __used __section("__versions") = {
 	{ 0x1e898af9, "_dev_err" },
 	{ 0x38e073, "class_create" },
 	{ 0x459fa94a, "pci_unregister_driver" },
+	{ 0x54b1fac6, "__ubsan_handle_load_invalid_value" },
 	{ 0xbdfb6dbb, "__fentry__" },
 	{ 0x5b8239ca, "__x86_return_thunk" },
 	{ 0x3bb4acde, "__pci_register_driver" },
@@ -73,4 +73,4 @@ MODULE_INFO(depends, "");
 
 MODULE_ALIAS("pci:v0000800Ed00007011sv*sd*bc*sc*i*");
 
-MODULE_INFO(srcversion, "D3014D209DEE97D478D683F");
+MODULE_INFO(srcversion, "4B4C12676FDC7E74CA9121A");

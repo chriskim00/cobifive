@@ -123,7 +123,7 @@ void perform_operations(const char* device_file) {
     fwid_read(fd, &fwid_val);
     printf("FWID: 0x%x\n", fwid_val);
     if(fwid_val == 0xAA558823){
-    printf("Writing Data to COBIFIVE\n");
+        printf("Writing Data to COBIFIVE\n");
         read_empty_status(fd, &read_status);
         printf("Status Register: 0x%x\n",read_status);
         printf("initialize\n");
@@ -138,7 +138,7 @@ void perform_operations(const char* device_file) {
         usleep(5000000); 
 
        // Data writing loop
-        for(int loopWRRD = 0; loopWRRD < 15; ++loopWRRD) {
+        for(int loopWRRD = 0; loopWRRD < 1; ++loopWRRD) {
             printf("\nLOOP: %d\n", loopWRRD);
             int expected_reply = 0;
             for (int problem = 1; problem <= 30; ++problem) {
@@ -290,8 +290,8 @@ void perform_operations(const char* device_file) {
                 }
             }
 
-        read_empty_status(fd, &read_status);
-        printf("Status Register: 0x%x\n",read_status);
+            read_empty_status(fd, &read_status);
+            printf("Status Register: 0x%x\n",read_status);
             usleep(5000);
             printf("Done writing data to cobi chip.\n");
         

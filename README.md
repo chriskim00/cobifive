@@ -71,6 +71,79 @@ A .write() is needed to corectly set the virtual memory pointer before a read ca
 ## Memory Map
 A 32-bit x N offset is sent using the .write() command to set the correct address of the PCIe devices virtual memory to read and write from. Each address is 32bits apart as the PCI is a 32-bit bus. The offset doesn't necessairly need to be set using the .write() command, but is currently done so. The mapping of the virtual memory is shown in QUAD_COBIFIVE_CARD_Memory_Map.xlsx and starts from 1 * sizeof(uint32_t) (FWID or Firmware ID) and goes to 10 * sizeof(uint32_t) (COBI STATUS REG)
 
-## Example Usage
 
+## Basic Driver Interaction
 
+// Open device file
+fd = open(device_file, O_RDWR);
+
+//read the FWID
+//set the virtual memory pointer to the FWID  
+off_t read_offset = 1 * sizeof(uint32_t);
+write(fd, &read_offset, sizeof(read_offset))
+
+//read off the FWID that is returned to the read_data variable
+uint32_t read_data;
+read(fd, &read_data, sizeof(read_data))
+
+//check the read and write FIFOs statuses
+read_offset = 10 * sizeof(uint32_t);
+write(fd, &read_offset, sizeof(read_offset))
+read(fd, &read_data, sizeof(read_data))
+
+//write to the COBI chips
+//create the data structure pointer that will be passed to the driver
+write_data_t *bulk_write_data = (write_data_t*)malloc(count * sizeof(write_data_t));
+
+//initialize the data structure
+for (size_t i = 0; i < count; ++i) {
+    bulk_write_data[i].offset = 9 * sizeof(uint64_t);  // Memory Map Address
+    bulk_write_data[i].value =  swap_bytes(data[i]);   // 64-bit value
+}
+
+//write the data
+write(fd, bulk_write_data, count * sizeof(write_data_t)
+
+//check the read FIFOs statuses
+read_offset = 10 * sizeof(uint32_t);
+write(fd, &read_offset, sizeof(read_offset))
+read(fd, &read_data, sizeof(read_data))
+
+//read the full read FIFOs
+
+for (h = 0; h < 3; ++h) {
+  read_offset = 5 * sizeof(uint32_t); //Set for CHIP B but can be 4 *, 5 *, 6 *, or 7 * for CHIP A, B, C, or D respectively.
+
+  // Write read offset to device
+  if (write(fd, &read_offset, sizeof(read_offset)) != sizeof(read_offset)) {
+      perror("Failed to set read offset in device");
+      close(fd);
+      return;
+  }
+
+  // Read data from device
+  if (read(fd, &read_data, sizeof(read_data)) != sizeof(read_data)) {
+      perror("Failed to read from device");
+      close(fd);
+      return;
+  }
+  //printf("COBIFIVE Response: 0x%x\n", read_data);
+  if(h == 0){
+      uint8_t problem_id = inverse_data(read_data);
+      printf("COBIFIVE Problem ID: 0x%x\n", problem_id);
+
+      uint8_t core_id = inverse_data(read_data >> 4);
+      printf("COBIFIVE Core ID: %d\n", core_id);
+      best_spins =read_data;
+  }
+  if(h == 1){
+      best_spins = ((uint64_t)read_data << 32) | (best_spins & 0xFFFFFFFF);
+      printf("COBIFIVE Best Spins: 0x%lx\n", (best_spins>>8) & 0x3FFFFFFFFFFF);
+      best_ham = read_data;
+  }
+  if(h == 2){
+      best_ham = ((uint64_t)read_data << 32) | (best_ham & 0xFFFFFFFF);
+      printf("COBIFIVE Best Ham: 0x%lx\n", (best_ham>>22) & 0x3FFF);
+      printf("COBIFIVE Chip ID: 0x%lx\n", (best_ham>>37) & 0xF);
+  }
+}
