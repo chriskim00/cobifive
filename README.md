@@ -1,4 +1,4 @@
-# Cobifive
+# Cobifive chip
 Unified driver, user app, cobisolv (decomposing QUBO solver, M.2 card only), and binary for M.2 PCIe and quad PCIe cards
 
 # Quad card write and read test user app instructions
@@ -9,7 +9,7 @@ Unified driver, user app, cobisolv (decomposing QUBO solver, M.2 card only), and
 4. Run './quadcobifive'
 5. Run 'vi output_logs' to check results
 
-# PCIe driver installation instructions
+# PCIe driver: Installation instructions
 
 (First, go to the BIOS setting (hit F2 key when booting) and disable secure login option)
 
@@ -27,7 +27,7 @@ note: You may have to run 'uname -r' first, and then copy the info to the above 
 9. verify that the driver is installed. on terminal: lsmod | grep pci_driver64
 you should see: pci_driver64
 
-# For a more permanent solution, you can create a udev rule to set the correct permissions when the device is created:
+# PCIe driver: For a more permanent solution, you can create a udev rule to set the correct permissions when the device is created:
 
 (Below steps may not be needed on a Ubuntu machine)
 
