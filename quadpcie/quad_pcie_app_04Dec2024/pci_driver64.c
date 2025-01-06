@@ -59,6 +59,7 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
         return 0;
     }
 
+    //flip bits to match the order of Linux kernal
     data = ioread32(dev->hw_addr + dev->offset);
     data = ((data & 0xFF000000) >> 24) |
            ((data & 0x00FF0000) >> 8) |
