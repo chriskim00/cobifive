@@ -8,6 +8,12 @@
 #include <linux/cdev.h>
 #include <linux/slab.h>  // For kmalloc and kfree
 
+#include <linux/fs.h>
+#include <linux/file.h>
+#include <linux/err.h>
+#include <linux/uaccess.h>
+#include <linux/timekeeping.h>
+
 #define DRIVER_NAME "cobi_chip_driver64"
 #define DEVICE_NAME "cobi_pcie_card"
 #define BAR0 0
@@ -34,6 +40,35 @@ typedef struct {
 static LIST_HEAD(device_list);
 static DEFINE_MUTEX(device_list_lock);
 static DEFINE_MUTEX(open_lock);
+
+//TODO: Add timestamps to see how long the driver spends in the .write() and .read() functions and store them in a log file
+static void log_time(const char *filename, const char *message, const s64 *time_elapsed) {
+    struct file *file;
+    loff_t pos = 0;
+    char *buf;
+    size_t len;
+
+    buf = kmalloc(256, GFP_KERNEL);
+    if (!buf)
+        return;
+
+    snprintf(buf, 256, "%s: %llu\n", message, *time_elapsed);
+    len = strlen(buf);
+
+    filename = "/tmp/pci_driver.log";
+    file = filp_open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    if (IS_ERR(file)) {
+        kfree(buf);
+        printk(KERN_ERR "Failed to open log file2: %ld\n", PTR_ERR(file));
+
+        return;
+    }
+
+    kernel_write(file, buf, len, &pos);
+
+    filp_close(file, NULL);
+    kfree(buf);
+}
 
 static int pci_mmap_open(struct inode *inode, struct file *file)
 {
@@ -64,6 +99,9 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
 {
     struct pci_mmap_dev *dev = file->private_data;
     u32 data;
+    struct timespec64 start, end;
+
+    ktime_get_real_ts64(&start);
 
     mutex_lock(&dev->dev_lock);  // Lock the device for this operation
 
@@ -83,6 +121,11 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
         return -EFAULT;
     }
 
+    ktime_get_real_ts64(&end);
+
+    s64 time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
+    log_time("/var/log/pci_driver.log", "Read operation completed", &time_elapsed);
+
     mutex_unlock(&dev->dev_lock);  // Unlock after the operation
     return sizeof(data);
 }
@@ -92,6 +135,10 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
     struct pci_mmap_dev *dev = file->private_data;
     write_data_t write_data;
     off_t read_offset;
+
+    //time stamps for the write time
+    struct timespec64 start, end;
+    ktime_get_real_ts64(&start);
 
     // Check if the input count matches the size of an off_t, indicating it's likely a read offset update
     if (count == sizeof(off_t)) {
@@ -134,6 +181,13 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
         }
 
         mutex_unlock(&dev->dev_lock);  // Release lock after bulk write operation
+
+        //end time stamp for write
+        ktime_get_real_ts64(&end);
+
+        s64 time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
+        log_time("/var/log/pci_driver.log", "Write operation completed", &time_elapsed);
+
         return count;  // Return the full count to indicate successful batch write
     }
 
