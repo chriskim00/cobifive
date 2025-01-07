@@ -101,7 +101,6 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
     u32 data;
     struct timespec64 start, end;
 
-    ktime_get_real_ts64(&start);
 
     mutex_lock(&dev->dev_lock);  // Lock the device for this operation
 
@@ -110,7 +109,12 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
         return 0;
     }
 
+    ktime_get_real_ts64(&start);//start recording read time
+
     data = ioread32(dev->hw_addr + dev->offset);
+    
+    ktime_get_real_ts64(&end);//end recording read time
+
     data = ((data & 0xFF000000) >> 24) |
            ((data & 0x00FF0000) >> 8) |
            ((data & 0x0000FF00) << 8) |
@@ -121,7 +125,6 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
         return -EFAULT;
     }
 
-    ktime_get_real_ts64(&end);
 
     s64 time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
     log_time("/var/log/pci_driver.log", "Read operation completed", &time_elapsed);
@@ -138,7 +141,14 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
 
     //time stamps for the write time
     struct timespec64 start, end;
-    ktime_get_real_ts64(&start);
+    struct timespec64 total_start, total_end;
+    s64 pcie_write_average = 0;
+    s64 mem_read_average = 0;
+    s64 data_offset_average = 0;
+
+
+    s64 time_elapsed;
+    
 
     // Check if the input count matches the size of an off_t, indicating it's likely a read offset update
     if (count == sizeof(off_t)) {
@@ -157,18 +167,34 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
         return sizeof(off_t);
     }
 
+    
     // Otherwise, handle as a write_data_t structure for data writes
     if (count == sizeof(write_data_t) || count % sizeof(write_data_t) == 0) {
         mutex_lock(&dev->dev_lock);  // Lock only once per bulk write operation
+        
 
         size_t data_count = count / sizeof(write_data_t);  // Determine number of write_data_t structures
-
+        
+        // ktime_get_real_ts64(&total_start);
+        // ktime_get_real_ts64(&total_end);
+        // time_elapsed = timespec64_to_ns(&total_end) - timespec64_to_ns(&total_start);
+        // log_time("/var/log/pci_driver.log", "Total Write completed", &time_elapsed);
+        
         for (size_t i = 0; i < data_count; i++) {
             // Copy each chunk of data
+            ktime_get_real_ts64(&start);//start time stamp for write
+
             if (copy_from_user(&write_data, buf + (i * sizeof(write_data_t)), sizeof(write_data_t))) {
                 mutex_unlock(&dev->dev_lock);  // Unlock on error
                 return -EFAULT;
             }
+
+            ktime_get_real_ts64(&end);        //end time stamp for write
+            time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
+            mem_read_average += time_elapsed;
+            log_time("/var/log/pci_driver.log", "Copy data from user complete", &time_elapsed);
+            
+            ktime_get_real_ts64(&start);//start time stamp for write
 
             // Validate the offset to prevent access outside the MMIO region
             if (write_data.offset >= pci_resource_len(dev->pdev, BAR0)) {
@@ -176,17 +202,33 @@ static ssize_t pci_mmap_write(struct file *file, const char __user *buf, size_t 
                 return -EINVAL;
             }
 
+            ktime_get_real_ts64(&end);        //end time stamp for write
+            time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
+            data_offset_average += time_elapsed;
+            log_time("/var/log/pci_driver.log", "Offset writing completed", &time_elapsed);
+
+            ktime_get_real_ts64(&start);//start time stamp for write
+
             // Perform a single MMIO write
             writeq(write_data.value, dev->hw_addr + write_data.offset);
+
+            ktime_get_real_ts64(&end);        //end time stamp for write
+            time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
+            pcie_write_average += time_elapsed;
+            log_time("/var/log/pci_driver.log", "PCI Write completed", &time_elapsed);
+
         }
+        time_elapsed = pcie_write_average / data_count;
+        log_time("/var/log/pci_driver.log", "PCI Write average completed", &time_elapsed);
+
+        time_elapsed = data_offset_average / data_count;
+        log_time("/var/log/pci_driver.log", "Offset writing average completed", &time_elapsed);
+
+        time_elapsed = mem_read_average / data_count;
+        log_time("/var/log/pci_driver.log", "Copy data from user average completed", &time_elapsed);
 
         mutex_unlock(&dev->dev_lock);  // Release lock after bulk write operation
 
-        //end time stamp for write
-        ktime_get_real_ts64(&end);
-
-        s64 time_elapsed = timespec64_to_ns(&end) - timespec64_to_ns(&start);
-        log_time("/var/log/pci_driver.log", "Write operation completed", &time_elapsed);
 
         return count;  // Return the full count to indicate successful batch write
     }

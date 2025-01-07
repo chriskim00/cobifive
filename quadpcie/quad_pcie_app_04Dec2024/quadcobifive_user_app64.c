@@ -138,7 +138,7 @@ void perform_operations(const char* device_file) {
         usleep(5000000); 
 
        // Data writing loop
-        for(int loopWRRD = 0; loopWRRD < 15; ++loopWRRD) {
+        for(int loopWRRD = 0; loopWRRD < 1; ++loopWRRD) {
             printf("\nLOOP: %d\n", loopWRRD);
             int expected_reply = 0;
             for (int problem = 1; problem <= 30; ++problem) {
