@@ -16,6 +16,7 @@ Unified driver, user app, cobisolv (decomposing QUBO solver, M.2 card only), and
 1. make clean
 2. make all (fix compilation errors)
 3. sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
+3. (a) sudo modprobe -r pci_driver64
 
 note: You may have to run 'uname -r' first, and then copy the info to the above command line
 
@@ -23,7 +24,9 @@ note: You may have to run 'uname -r' first, and then copy the info to the above 
 5. sudo vi /etc/modules
 6. add the name of: pci_driver64.  
 7. sudo chmod 644 /lib/modules/$(uname -r)/kernel/drivers/pci_driver64.ko
-8. reboot computer (sudo shutdown -r +1)
+8. sudo modprobe pci_driver64 
+or
+8. reboot computer (sudo shutdown -r +1 or sudo reboot now) 
 9. verify that the driver is installed. on terminal: lsmod | grep pci_driver64
 you should see: pci_driver64
 

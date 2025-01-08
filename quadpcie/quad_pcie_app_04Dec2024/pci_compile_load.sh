@@ -27,4 +27,7 @@ sudo chmod 644 /lib/modules/$(uname -r)/kernel/drivers/pci_driver64.ko
 # Load the module
 sudo modprobe pci_driver64
 
+#remove old log file
+sudo rm -rf /tmp/pci_driver.log 
+
 echo "Module pci_driver64 loaded successfully."
