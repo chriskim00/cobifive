@@ -6,7 +6,14 @@
 #include <linux/uaccess.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
-#include "pci_driver64.h"
+#include <linux/slab.h>
+#include <linux/workqueue.h>
+#include <linux/mutex.h>
+#include <linux/list.h>
+#include <linux/file.h>
+#include <linux/fdtable.h>
+#include <linux/unistd.h>
+
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Your Name");
@@ -18,11 +25,12 @@ MODULE_VERSION("0.1");
 #define MAX_DEVICES 10
 #define DEVICE_FILE_TEMPLATE "/dev/cobi_pcie_card%d"
 
+
 static int major;
 static struct class *vpci_class = NULL;
 static struct device *vpci_device = NULL;
 static struct cdev vpci_cdev;
-static int fd_val[MAX_DEVICES] = {0}; //used to store the file descriptors of the registered PCIe devices
+struct file **fd_val;    //used to store the file descriptors of the registered PCIe devices
 static DEFINE_MUTEX(vpci_mutex); //lock for the virutal pcie device
 
 //queue for the virtual pcie device
@@ -39,7 +47,7 @@ static DECLARE_WORK(vpci_work, vpci_work_handler); //declare the queue
 
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset)
 {
-    printk(KERN_INFO "VPCI Driver: Read from device\n");
+    kernel_read(fd_val[0], buf, len, offset);
     return 0;
 }
 
@@ -48,6 +56,11 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
 //LIMIT of 32 problems at a time
 static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset)
 {
+    
+    
+    kernel_write(fd_val[0], buf, len,offset);
+
+    /*
     struct vpci_data *entry;
 
     if (len == 0)
@@ -82,12 +95,13 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
     printk(KERN_INFO "VPCI Driver: Write to device\n");
 
     //TODO Assign ID and pass user point to read function in a work queue 
-
+*/
     return len;
 }
 
 //read queue will poll and return all problems once it has finished
 
+/*
 static void vpci_work_handler(struct work_struct *work)
 {
 
@@ -114,6 +128,7 @@ static void vpci_work_handler(struct work_struct *work)
     }
     mutex_unlock(&vpci_mutex);
 }
+*/
 
 //create an interupt based mmio check of the read FIFOs that will be used to continusouly readout data from the chips
 
@@ -149,15 +164,20 @@ static int __init vpci_driver_init(void)
         return -ENODEV;
     }
 
+    
+
     //open all PCI devices with COBI chips to prevent others from using
     char device_file[256]; //used to copy the file path of registered PCIe deices
 
-    for( int i = 0; i < MAX_DEVICES; i++) {
+    for (int i = 0; i < MAX_DEVICES; i++) {
         snprintf(device_file, sizeof(device_file), DEVICE_FILE_TEMPLATE, i);
-        if (access(device_file, F_OK) == 0) {
-            fd_val[i] = open(device_file, O_RDWR);
+        struct file *file = filp_open(device_file, O_RDONLY, 0);
+        if (!IS_ERR(file)) {
+            fd_val[i] = file;
+            printk(KERN_INFO "VPCI Driver: Opened device %s\n", device_file);
         } else {
-            printf("No device found at %s\n", device_file);
+            printk(KERN_INFO "VPCI Driver: No device found at %s\n", device_file);
+            fd_val[i] = NULL;
         }
     }
 
@@ -177,7 +197,7 @@ static int __init vpci_driver_init(void)
     printk(KERN_INFO "VPCI Driver: Registered with major number %d\n", major);
 
     // Register the device class of the VPCI driver
-    vpci_class = class_create(THIS_MODULE, CLASS_NAME);
+    vpci_class = class_create(CLASS_NAME);
     if (IS_ERR(vpci_class)) {
         unregister_chrdev(major, DEVICE_NAME);
         printk(KERN_ALERT "VPCI Driver: Failed to register device class\n");
@@ -216,7 +236,7 @@ static void __exit vpci_driver_exit(void)
 {
     //close the opened PCI cobi devicess
     for( int i = 0; i < MAX_DEVICES; i++) {
-        close(fd_vals[i]);
+        filp_close(fd_val[i], NULL);
     }
 
     flush_workqueue(vpci_wq);
