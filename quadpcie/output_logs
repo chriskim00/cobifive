@@ -1,0 +1,243 @@
+
+Accessing device file: /dev/cobi_pcie_card0
+FWID: 0xaa558823
+Writing Data to COBIFIVE
+Status Register: 0x3ff
+initialize
+
+LOOP: 0
+Writing Problem 1.
+Writing Problem 2.
+Writing Problem 3.
+Writing Problem 4.
+Writing Problem 5.
+Writing Problem 6.
+Writing Problem 7.
+Writing Problem 8.
+Writing Problem 9.
+Writing Problem 10.
+Writing Problem 11.
+Writing Problem 12.
+Writing Problem 13.
+Writing Problem 14.
+Writing Problem 15.
+Writing Problem 16.
+Writing Problem 17.
+Writing Problem 18.
+Writing Problem 19.
+Writing Problem 20.
+Writing Problem 21.
+Writing Problem 22.
+Writing Problem 23.
+Writing Problem 24.
+Writing Problem 25.
+Writing Problem 26.
+Writing Problem 27.
+Writing Problem 28.
+Writing Problem 29.
+Writing Problem 30.
+Status Register: 0x3e0
+Done writing data to cobi chip.
+Status Register: 0x3e0
+CHIP A DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x4
+CHIP D DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x8
+Reply: 4
+Status Register: 0x3e0
+CHIP A DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x34dea063fd00
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x8
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x4
+CHIP D DATA.
+COBIFIVE Problem ID: 0x2
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x8
+Reply: 8
+Status Register: 0x3e0
+CHIP A DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x3
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x7
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x4
+CHIP D DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x8
+Reply: 12
+Status Register: 0x3e0
+CHIP A DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x4
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x9
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x4
+CHIP D DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x8
+Reply: 16
+Status Register: 0x3e0
+CHIP A DATA.
+COBIFIVE Problem ID: 0xd
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x1
+CHIP B DATA.
+COBIFIVE Problem ID: 0x5
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb215f9c02ff
+COBIFIVE Best Ham: 0x155f
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0xa
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x34d68463dd04
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x4
+CHIP D DATA.
+COBIFIVE Problem ID: 0x6
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xb297b9c22fb
+COBIFIVE Best Ham: 0x255f
+COBIFIVE Chip ID: 0x8
+Reply: 20
+Status Register: 0x3f2
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x3ef3
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 0
+COBIFIVE Best Spins: 0x18a934c3cb34
+COBIFIVE Best Ham: 0x1cdf
+COBIFIVE Chip ID: 0x4
+Reply: 22
+Status Register: 0x3f2
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3fffffffffff
+COBIFIVE Best Ham: 0x15fb
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x1fcd34d6ea4b
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x4
+Reply: 24
+Status Register: 0x3f2
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 2
+COBIFIVE Best Spins: 0x0
+COBIFIVE Best Ham: 0x2bf7
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 1
+COBIFIVE Best Spins: 0x3ff94836a29d
+COBIFIVE Best Ham: 0x1cbf
+COBIFIVE Chip ID: 0x4
+Reply: 26
+Status Register: 0x3f2
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0x2032cb2915b4
+COBIFIVE Best Ham: 0x299f
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 3
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x4
+Reply: 28
+Status Register: 0x3f2
+CHIP B DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0xed349390a43
+COBIFIVE Best Ham: 0x23af
+COBIFIVE Chip ID: 0x2
+CHIP C DATA.
+COBIFIVE Problem ID: 0x1
+COBIFIVE Core ID: 4
+COBIFIVE Best Spins: 0x18a934c3cf34
+COBIFIVE Best Ham: 0x2cdf
+COBIFIVE Chip ID: 0x4
+Reply: 30
+Status Register: 0x3ff
+Done Fetching Data.
+No device found at /dev/cobi_pcie_card1
