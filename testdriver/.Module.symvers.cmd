@@ -1,0 +1,1 @@
+cmd_/home/cobidev/vdriver/testdriver/Module.symvers := sed 's/\.ko$$/\.o/' /home/cobidev/vdriver/testdriver/modules.order | scripts/mod/modpost -m -a -E -o /home/cobidev/vdriver/testdriver/Module.symvers -e -i Module.symvers   -T -

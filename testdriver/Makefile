@@ -1,4 +1,4 @@
-obj-m += vpci_driver64.o
+obj-m += pci_driver64.o
 
 # Compiler settings - use system gcc
 ARCH := x86_64
