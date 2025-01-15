@@ -1,8 +1,0 @@
-/home/cobidev/vdriver/testdriver/pci_driver64.c: In function ‘pci_write’:
-/home/cobidev/vdriver/testdriver/pci_driver64.c:50:22: warning: passing argument 1 of ‘copy_to_user’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
-   50 |     if( copy_to_user(buf, &len, len) != 0 )
-      |                      ^~~
-In file included from /home/cobidev/vdriver/testdriver/pci_driver64.c:3:
-./include/linux/uaccess.h:197:27: note: expected ‘void *’ but argument is of type ‘const char *’
-  197 | copy_to_user(void __user *to, const void *from, unsigned long n)
-      |              ~~~~~~~~~~~~~^~

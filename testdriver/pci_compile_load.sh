@@ -13,21 +13,22 @@ if [ $? -ne 0 ]; then
 fi
 
 # Copy the module to the appropriate directory
-sudo cp vpci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
+sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
 
 # Remove the module if it is already loaded
+sudo modprobe -r pci_driver64
 sudo modprobe -r vpci_driver64
 
 # Update module dependencies
 sudo depmod -a
 
 # Set the correct permissions for the module
-sudo chmod 644 /lib/modules/$(uname -r)/kernel/drivers/vpci_driver64.ko
+sudo chmod 644 /lib/modules/$(uname -r)/kernel/drivers/pci_driver64.ko
 
 # Load the module
-sudo modprobe vpci_driver64
+sudo modprobe pci_driver64
 
 #remove old log file
 sudo rm -rf /tmp/pci_driver.log 
 
-echo "Module vpci_driver64 loaded successfully."
+echo "Module pci_driver64 loaded successfully."

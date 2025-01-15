@@ -4,26 +4,61 @@
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
 #include <linux/device.h>
-
+#include <linux/slab.h>
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
 MODULE_LICENSE("GPL");
 
+extern struct file_operations tpci_fops;
+
+
 // Define variables
 #define DRIVER_NAME "cobi_chip_vdriver64"
 #define DEVICE_FILE_TEMPLATE "/dev/cobi_pcie_card%d"
+#define MAX_DEVICES 1
+
 static int major;
 static struct class *vpci_class;
 static struct device *vpci_device = NULL;
 static int device_number;
-
-
+struct file **fd_val;
 
 //read function of the virtual PCIe device
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
+    int ret = 0;
+    char kernel_buf[sizeof(unsigned int)];
 
-    if( copy_to_user(buf, &len, len) != 0 )
+   // Check if we have valid file descriptors
+    if (!fd_val || !fd_val[0]) {
+        printk(KERN_ERR "No valid device file descriptor\n");
+        return -ENODEV;
+    }
+
+    // Check buffer size
+    if (len < sizeof(unsigned int)) {
+        printk(KERN_ERR "Buffer too small\n");
+        return -EINVAL;
+    }
+
+    ret = tpci_fops.read(fd_val[0], kernel_buf, sizeof(unsigned int), offset);
+    if (ret < 0) {
+        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+        return ret;
+    }
+
+    // Copy data to user space
+    if (copy_to_user(buf, kernel_buf, sizeof(unsigned int))) {
+        return -EFAULT;
+    }
+
+    return 0;
+}
+
+static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
+
+    //copy to the user from the kernel sapces
+    if (copy_to_user((void __user *)buf, &len, len) != 0)
         return -EFAULT;
 
     return 0;
@@ -33,22 +68,25 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
 static struct file_operations vpci_fops = {
     .owner = THIS_MODULE,
     .read = vpci_read, 
-    .write = NULL
+    .write = vpci_write
 };
 
 static int __init vpci_init(void) {
 
     //variables
-    struct pci_dev *pdev = NULL;
     struct file *file;
-    int ret;
-    char device_file[256]; //used to copy the file path of registered PCIe deices
     int result;
+
+    fd_val = kmalloc(MAX_DEVICES * sizeof(struct file *), GFP_KERNEL);
+    if (!fd_val) {
+        return -ENOMEM;
+    }
 
     printk(KERN_INFO "VPCI Driver: Checking for PCI devices\n");
     
     //open all PCI devices with COBI chips to prevent others from using
 
+    /*
     for (int i = 0; i < MAX_DEVICES; i++) {
         snprintf(device_file, sizeof(device_file), DEVICE_FILE_TEMPLATE, i);
         file = filp_open(device_file, O_RDONLY, 0);
@@ -60,6 +98,23 @@ static int __init vpci_init(void) {
             fd_val[i] = NULL;
         }
     }
+    */
+
+    
+    // Allocate memory for the file descriptor array if not already allocated
+    
+    // Open file and store in array
+    file = filp_open("/dev/cobi_chip_testdriver64", O_RDONLY, 0);
+    fd_val[0] = file;
+    /*
+    if (!IS_ERR(file)) {
+        fd_val[0] = file;
+        printk(KERN_INFO "VPCI Driver: Opened device %s\n", device_file);
+    } else {
+        printk(KERN_INFO "VPCI Driver: No device found at %s\n", device_file);
+        fd_val[0] = NULL;
+    }
+    */
 
     //Virtual PCIe device registration and initialization
 
@@ -73,10 +128,7 @@ static int __init vpci_init(void) {
     }
     //store the major number
     major = result;
-    if(major != 0)
-    {
-        unregister_chrdev(major, DRIVER_NAME);
-    }
+
 
     //create a class for the device
     vpci_class = class_create(THIS_MODULE, DRIVER_NAME);
@@ -121,6 +173,12 @@ static void __exit vpci_exit(void) {
         unregister_chrdev( major, DRIVER_NAME );
     }
     printk(KERN_INFO "VPCI: Module unloaded\n");
+
+    for (int i = 0; i < MAX_DEVICES; i++) {
+        if (fd_val[i] != NULL) {
+            filp_close(fd_val[i], NULL);
+        }
+    }
 }
 
 module_init(vpci_init);

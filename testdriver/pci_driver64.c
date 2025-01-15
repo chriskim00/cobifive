@@ -6,6 +6,7 @@
 #include <linux/device.h>
 
 
+
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
 MODULE_LICENSE("GPL");
@@ -31,6 +32,8 @@ static int pci_open(struct inode *inode, struct file *file)
     } else {
         // claim device
         busy = true;
+        printk( KERN_WARNING "PCI:  opened device");
+
     }
     mutex_unlock(&open_lock);
 
@@ -47,7 +50,7 @@ static int pci_release(struct inode *inode, struct file *file)
 //read function of the virtual PCIe device
 static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
 
-    if( copy_to_user(buf, &len, len) != 0 )
+    if( copy_to_user((void __user *)buf, &len, len) != 0 )
         return -EFAULT;
 
     return 0;
@@ -55,28 +58,30 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
 
 //read function of the virtual PCIe device
 static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
+    printk( KERN_WARNING "PCI:  reading device");
 
-    if( copy_to_user(buf, &len, len) != 0 )
+    if( copy_to_user((void __user *)buf, &len, len) != 0 )
         return -EFAULT;
 
     return 0;
 }
 
 //file operations for the virtual PCIe device
-static struct file_operations vpci_fops = {
+struct file_operations tpci_fops = {
     .owner = THIS_MODULE,
     .open = pci_open,
     .release = pci_release,
     .read = pci_read, 
     .write = pci_write
 };
+EXPORT_SYMBOL(tpci_fops);
 
 static int __init vpci_init(void) {
 
     //Virtual PCIe device registration and initialization
 
     // Register the character device with the Linux kernel
-    int result = register_chrdev(0, DRIVER_NAME, &vpci_fops);
+    int result = register_chrdev(0, DRIVER_NAME, &tpci_fops);
     //check if the character device was successfully registered
     if( result < 0 )
     {
@@ -85,10 +90,6 @@ static int __init vpci_init(void) {
     }
     //store the major number
     major = result;
-    if(major != 0)
-    {
-        unregister_chrdev(major, DRIVER_NAME);
-    }
 
     //create a class for the device
     tpci_class = class_create(THIS_MODULE, DRIVER_NAME);
