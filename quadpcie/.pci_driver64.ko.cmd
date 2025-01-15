@@ -1,0 +1,1 @@
+cmd_/home/cobidev/vdriver/quadpcie/pci_driver64.ko := ld -r -m elf_x86_64 -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T scripts/module.lds -o /home/cobidev/vdriver/quadpcie/pci_driver64.ko /home/cobidev/vdriver/quadpcie/pci_driver64.o /home/cobidev/vdriver/quadpcie/pci_driver64.mod.o;  true

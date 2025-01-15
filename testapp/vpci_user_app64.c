@@ -23,6 +23,7 @@ Date: Dec. 6, 2024
 */
 void perform_operations(const char* device_file) {
     int fd;
+    ssize_t bytes_read = 100;
 
     fd = open(device_file, O_RDWR);
     if (fd < 0) {
@@ -30,19 +31,23 @@ void perform_operations(const char* device_file) {
         return;
     }
 
-
-    off_t read_offset = 1 * sizeof(uint32_t); // Read FIFO empty status
-
     // Read data from device
-    uint32_t read_data = 12345;
-    ssize_t bytes_read = read(fd, &read_data, sizeof(read_data));
-    printf("Bytes read: %zd\n", bytes_read);
+    static int read_data = 0;
+    printf("Value before: %d\n", read_data);
 
-    if (read(fd, &read_data, sizeof(read_data)) != sizeof(read_data)) {
-        perror("Failed to read from device");
+    bytes_read = read(fd, &read_data, sizeof(read_data));
+    if (bytes_read < 0) {
+        perror("Read failed");
+        close(fd);
+        return;
     }
+    printf("Bytes read: %zd\n", bytes_read);
+    printf("Value after: %d\n",read_data);
+
     
 /*
+    off_t read_offset = 1 * sizeof(uint32_t); // Read FIFO empty status
+
     // Write read offset to device
     if (write(fd, &read_offset, sizeof(read_offset)) != sizeof(read_offset)) {
         perror("Failed to set read offset in device");
@@ -51,7 +56,6 @@ void perform_operations(const char* device_file) {
 */
 
 
-    printf("Value: %u\n", read_data);
 
     if(fd){
         close(fd);

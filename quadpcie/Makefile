@@ -1,15 +1,16 @@
+obj-m += pci_driver64.o
 obj-m += vpci_driver64.o
-obj-m += ../testdriver/pci_driver64.o
 
 # Compiler settings - use system gcc
-ARCH := x86_64
+ARCH := $(shell uname -m)
+KERNEL := $(shell uname -r)
+KERNEL_BUILD := /lib/modules/$(KERNEL)/build
 CROSS_COMPILE :=
 CC := x86_64-linux-gnu-gcc-12
 EXTRA_CFLAGS :=  -std=gnu99
 
 # WSL2 Kernel directories
 KVERSION := $(shell uname -r)
-KDIR := $(HOME)/wsl2-kernel/WSL2-Linux-Kernel
 
 # Current directory
 CURRENT_PATH := $(shell pwd)
@@ -18,14 +19,14 @@ CURRENT_PATH := $(shell pwd)
 LOG_FILE := build.log
 
 all:
-	make -C $(KDIR) M=$(CURRENT_PATH) modules 2> $(LOG_FILE)
+	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH) modules 2> $(LOG_FILE)
 
 install:
-	make -C $(KDIR) M=$(CURRENT_PATH) modules_install
+	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH) modules_install
 	depmod -a
 
 clean:
-	make -C $(KDIR) M=$(CURRENT_PATH) clean
+	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH) clean
 
 #OLD MAKEFILE VERSION FOR non-WSL 
 # CC := x86_64-linux-gnu-gcc-12

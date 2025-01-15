@@ -4,13 +4,13 @@
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
 #include <linux/device.h>
-
+#include <linux/export.h> //used to export file operations
 
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
 MODULE_LICENSE("GPL");
-
+MODULE_VERSION("1.1"); 
 // Define variables
 #define DRIVER_NAME "cobi_chip_testdriver64"
 static int major;
@@ -58,12 +58,19 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
 
 //read function of the virtual PCIe device
 static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
-    printk( KERN_WARNING "PCI:  reading device");
+    int read_data = 19;
+    int ret;
 
-    if( copy_to_user((void __user *)buf, &len, len) != 0 )
+    printk(KERN_INFO "PCI: Starting read operation\n");
+    
+    ret = copy_to_user(buf, &read_data, sizeof(read_data));
+    if (ret != 0) {
+        printk(KERN_ERR "PCI: copy_to_user failed with %d\n", ret);
         return -EFAULT;
+    }
 
-    return 0;
+    printk(KERN_INFO "PCI: Read successful, value=%d\n", read_data);
+    return sizeof(read_data);
 }
 
 //file operations for the virtual PCIe device

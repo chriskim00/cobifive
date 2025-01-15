@@ -5,6 +5,7 @@
 #include <linux/proc_fs.h>
 #include <linux/device.h>
 #include <linux/slab.h>
+#include <linux/export.h> //used to import EXPORT_SYMBOL() functions
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
@@ -17,6 +18,7 @@ extern struct file_operations tpci_fops;
 #define DRIVER_NAME "cobi_chip_vdriver64"
 #define DEVICE_FILE_TEMPLATE "/dev/cobi_pcie_card%d"
 #define MAX_DEVICES 1
+#define PROBLEM_BYTE_SIZE 1
 
 static int major;
 static struct class *vpci_class;
@@ -24,10 +26,11 @@ static struct device *vpci_device = NULL;
 static int device_number;
 struct file **fd_val;
 
+
+
 //read function of the virtual PCIe device
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
     int ret = 0;
-    char kernel_buf[sizeof(unsigned int)];
 
    // Check if we have valid file descriptors
     if (!fd_val || !fd_val[0]) {
@@ -41,15 +44,11 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
         return -EINVAL;
     }
 
-    ret = tpci_fops.read(fd_val[0], kernel_buf, sizeof(unsigned int), offset);
+    
+    ret = tpci_fops.read(fd_val[0], buf, len, offset);
     if (ret < 0) {
         printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
         return ret;
-    }
-
-    // Copy data to user space
-    if (copy_to_user(buf, kernel_buf, sizeof(unsigned int))) {
-        return -EFAULT;
     }
 
     return 0;
