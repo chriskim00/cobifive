@@ -1,0 +1,11 @@
+/home/cobidev/vdriver/quadpcie/pci_driver64.c:50:13: warning: ‘init_fifo’ defined but not used [-Wunused-function]
+   50 | static void init_fifo(void)
+      |             ^~~~~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘vpci_write’:
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:176:9: warning: unused variable ‘ret’ [-Wunused-variable]
+  176 |     int ret = 0;
+      |         ^~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c: At top level:
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:92:12: warning: ‘queue_user_data_work’ defined but not used [-Wunused-function]
+   92 | static int queue_user_data_work(struct user_data *data)
+      |            ^~~~~~~~~~~~~~~~~~~~

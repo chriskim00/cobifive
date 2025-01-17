@@ -234,4 +234,26 @@ pci_driver64.o: /home/cobidev/vdriver/quadpcie/pci_driver64.c \
  include/linux/ioport.h include/linux/klist.h include/linux/pm.h \
  include/linux/device/bus.h include/linux/device/class.h \
  include/linux/device/driver.h arch/x86/include/asm/device.h \
- include/linux/pm_wakeup.h
+ include/linux/pm_wakeup.h include/linux/slab.h \
+ include/linux/percpu-refcount.h include/linux/kasan.h \
+ include/linux/random.h include/linux/once.h include/uapi/linux/random.h \
+ include/linux/irqnr.h include/uapi/linux/irqnr.h include/linux/prandom.h \
+ include/linux/siphash.h arch/x86/include/asm/archrandom.h \
+ include/linux/kfifo.h include/linux/scatterlist.h include/linux/mm.h \
+ include/linux/mmap_lock.h include/linux/page_ext.h \
+ include/linux/stacktrace.h include/linux/stackdepot.h \
+ include/linux/page_ref.h include/linux/memremap.h include/linux/sizes.h \
+ include/linux/pgtable.h arch/x86/include/asm/pgtable.h \
+ arch/x86/include/asm/x86_init.h arch/x86/include/asm/pkru.h \
+ arch/x86/include/asm/fpu/xstate.h arch/x86/include/asm/fpu/api.h \
+ include/asm-generic/pgtable_uffd.h arch/x86/include/asm/pgtable_64.h \
+ arch/x86/include/asm/fixmap.h arch/x86/include/asm/apicdef.h \
+ arch/x86/include/uapi/asm/vsyscall.h include/asm-generic/fixmap.h \
+ arch/x86/include/asm/pgtable-invert.h include/linux/huge_mm.h \
+ include/linux/sched/coredump.h include/linux/vmstat.h \
+ include/linux/vm_event_item.h arch/x86/include/asm/io.h \
+ arch/x86/include/generated/asm/early_ioremap.h \
+ include/asm-generic/early_ioremap.h include/asm-generic/iomap.h \
+ include/asm-generic/pci_iomap.h include/asm-generic/io.h \
+ include/linux/logic_pio.h include/linux/fwnode.h include/linux/vmalloc.h \
+ arch/x86/include/asm/vmalloc.h arch/x86/include/asm/pgtable_areas.h

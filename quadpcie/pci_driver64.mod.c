@@ -29,23 +29,31 @@ static const struct modversion_info ____versions[]
 __used __section("__versions") = {
 	{ 0xb6a63e1, "module_layout" },
 	{ 0x6bc3fbc0, "__unregister_chrdev" },
-	{ 0x56470118, "__warn_printk" },
+	{ 0xbc870820, "kmalloc_caches" },
+	{ 0xd36dc10c, "get_random_u32" },
 	{ 0xd73ace02, "device_destroy" },
 	{ 0x527130a4, "__register_chrdev" },
+	{ 0xc6f46339, "init_timer_key" },
 	{ 0x3213f038, "mutex_unlock" },
+	{ 0x15ba50a6, "jiffies" },
 	{ 0x6b10bee1, "_copy_to_user" },
 	{ 0x5b8239ca, "__x86_return_thunk" },
 	{ 0x4dfa8d4b, "mutex_lock" },
 	{ 0xf88cac93, "device_create" },
+	{ 0xc38c83b8, "mod_timer" },
 	{ 0xd0da656b, "__stack_chk_fail" },
 	{ 0x92997ed8, "_printk" },
+	{ 0x7f24de73, "jiffies_to_usecs" },
 	{ 0xbdfb6dbb, "__fentry__" },
+	{ 0x3754aaaa, "kmem_cache_alloc_trace" },
+	{ 0x82ee90dc, "timer_delete_sync" },
+	{ 0x37a0cba, "kfree" },
 	{ 0xbef6f27e, "class_destroy" },
+	{ 0x13c49cc2, "_copy_from_user" },
 	{ 0xfbcd51c, "__class_create" },
-	{ 0x88db9f48, "__check_object_size" },
 };
 
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "F8A73220FF4218915EFB9E4");
+MODULE_INFO(srcversion, "3A374C4507F3920592FB74B");

@@ -28,27 +28,32 @@ MODULE_INFO(retpoline, "Y");
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
 	{ 0xb6a63e1, "module_layout" },
+	{ 0x8c03d20c, "destroy_workqueue" },
+	{ 0x42160169, "flush_workqueue" },
 	{ 0x7656064e, "filp_close" },
 	{ 0xd73ace02, "device_destroy" },
+	{ 0xd0da656b, "__stack_chk_fail" },
 	{ 0xbef6f27e, "class_destroy" },
 	{ 0xf88cac93, "device_create" },
 	{ 0x6bc3fbc0, "__unregister_chrdev" },
 	{ 0xfbcd51c, "__class_create" },
 	{ 0x527130a4, "__register_chrdev" },
+	{ 0x49cd25ed, "alloc_workqueue" },
 	{ 0x1526d277, "filp_open" },
+	{ 0x656e4a6e, "snprintf" },
+	{ 0x37a0cba, "kfree" },
 	{ 0x3754aaaa, "kmem_cache_alloc_trace" },
 	{ 0xbc870820, "kmalloc_caches" },
-	{ 0x56470118, "__warn_printk" },
-	{ 0x6b10bee1, "_copy_to_user" },
-	{ 0x88db9f48, "__check_object_size" },
+	{ 0x13c49cc2, "_copy_from_user" },
+	{ 0xeb233a45, "__kmalloc" },
 	{ 0x92997ed8, "_printk" },
 	{ 0x5b8239ca, "__x86_return_thunk" },
 	{ 0x65487097, "__x86_indirect_thunk_rax" },
-	{ 0xe2835b43, "tpci_fops" },
+	{ 0x97893891, "tpci_fops" },
 	{ 0xbdfb6dbb, "__fentry__" },
 };
 
 MODULE_INFO(depends, "pci_driver64");
 
 
-MODULE_INFO(srcversion, "456E72D629E12FE1253859C");
+MODULE_INFO(srcversion, "5C33959DEC9C18505FB869B");

@@ -6,6 +6,7 @@
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/export.h> //used to import EXPORT_SYMBOL() functions
+#include <linux/workqueue.h>
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
@@ -16,24 +17,141 @@ extern struct file_operations tpci_fops;
 
 // Define variables
 #define DRIVER_NAME "cobi_chip_vdriver64"
-#define DEVICE_FILE_TEMPLATE "/dev/cobi_pcie_card%d"
+#define DEVICE_FILE_TEMPLATE "/dev/cobi_chip_testdriver64%d"
 #define MAX_DEVICES 1
-#define PROBLEM_BYTE_SIZE 1
 
 static int major;
 static struct class *vpci_class;
 static struct device *vpci_device = NULL;
 static int device_number;
-struct file **fd_val;
+
+
+
+//store device data 
+struct device_data {
+    struct file *fd_val;
+    int value;
+    bool busy;
+};
+
+struct device_data *device_array[MAX_DEVICES];
+
+//problem data
+struct write_data_t {
+    off_t offset;
+    uint64_t value;  // Change to 64-bit
+};
+typedef struct write_data_t write_data_t;
+
+//store the users problems and solutions 
+struct user_data {
+    int problem_count;           
+    int solved;           
+    int *card_id;
+    int *problem_id;
+    char __user **solution;
+    struct write_data_t **write_data;
+};
+typedef struct user_data user_data;
+
+//make a queue to store and work on user_data structures
+static struct workqueue_struct *user_data_wq;
+struct user_data_work {
+    struct work_struct work;
+    struct user_data *data;
+};
+
+// Add the worker function
+static void process_user_data(struct work_struct *work)
+{
+    struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
+    struct user_data *data = ud_work->data;
+    int i;
+
+    if (!data)
+        goto out;
+
+    // Process each problem in the user_data
+    for (i = 0; i < data->problem_count; i++) {
+        // Do your processing here
+        // Example: write to device using data->write_data[i]
+        if (data->write_data && data->write_data[i]) {
+            // Process write_data
+            printk(KERN_INFO "Processing problem %d\n", i);
+        }
+    }
+
+    // Update solved count
+    data->solved = i;
+
+out:
+    kfree(ud_work);
+}
+
+// Add function to queue work
+static int queue_user_data_work(struct user_data *data)
+{
+    struct user_data_work *work;
+
+    work = kmalloc(sizeof(*work), GFP_KERNEL);
+    if (!work)
+        return -ENOMEM;
+
+    INIT_WORK(&work->work, process_user_data);
+    work->data = data;
+
+    return queue_work(user_data_wq, &work->work);
+}
+
+
+//intailize the user data struct
+struct user_data* init_user_data(struct file *file, struct user_data *data,  size_t size) {
+    int i;
+    
+    // Allocate memory for the user_data structure based on the amount of problem (size) sent from the userspace
+    data->card_id = kmalloc(size * sizeof(int), GFP_KERNEL);
+    data->problem_id = kmalloc(size * sizeof(int), GFP_KERNEL);
+    data->solution = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
+    data->write_data = kmalloc(size * sizeof(write_data_t *), GFP_KERNEL);
+
+    //divide the problems from the user space into the user_data structs 
+    for (i = 0; i < size; i++) {
+        // Allocate memory for each write_data_t structure
+        data->write_data[i] = kmalloc(sizeof(write_data_t), GFP_KERNEL);
+
+        //check if allocation failed
+        if (!data->write_data[i]) {
+            // Handle allocation failure
+            return NULL;
+        }
+
+        //copy the data from the user space to the kernel space
+        if (copy_from_user(&(data->write_data[i]), file + (i * sizeof(write_data_t)), sizeof(write_data_t))) {
+            return NULL;
+        }
+    }
+
+    //intialize the probem count and solved count that will be used to know when to return the solution to the user
+    data->problem_count = size;
+    data->solved = 0;
+
+    return data;
+};
+
+// Function to free user_data
+void free_user_data(struct user_data *data) {
+    kfree(data);
+}
 
 
 
 //read function of the virtual PCIe device
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
+    int i = 0;
     int ret = 0;
 
    // Check if we have valid file descriptors
-    if (!fd_val || !fd_val[0]) {
+    if (!device_array[i]->value || !(device_array[i]->fd_val)) {
         printk(KERN_ERR "No valid device file descriptor\n");
         return -ENODEV;
     }
@@ -45,7 +163,7 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
     }
 
     
-    ret = tpci_fops.read(fd_val[0], buf, len, offset);
+    ret = tpci_fops.read(device_array[i]->fd_val, buf, len, offset);
     if (ret < 0) {
         printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
         return ret;
@@ -55,11 +173,61 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
 }
 
 static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
+    int ret = 0;
+    size_t data_count;
+    struct user_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
 
-    //copy to the user from the kernel sapces
-    if (copy_to_user((void __user *)buf, &len, len) != 0)
-        return -EFAULT;
 
+    // Determine number of write_data_t structures
+    data_count = len / sizeof(write_data_t);  
+
+    // Further processing of the user data into a structure user_data that seperates out the problems and ids them
+    if(len != sizeof(buf)){
+        //check if data was created
+        if (!data)
+            return -ENOMEM;
+
+        //intialize the data struct with the user data
+        data = init_user_data(file, data, data_count);
+        if (!data)
+            return -EFAULT;
+    }
+
+
+
+//this will be sent to the worker queue to be process the problems 
+/* 
+    //find a device that is avaiable to be written to
+    int i;
+    for (i = 0; i < MAX_DEVICES; i++) {
+        if (device_array[i] && device_array[i]->value < 17 && !device_array[i]->busy) {
+            break;
+        }
+    }
+
+    if (i == MAX_DEVICES) {
+        printk(KERN_ERR "No device found with value less than 17\n");
+        return -ENODEV;
+    }
+
+   // Check if we have valid file descriptors
+    if (!device_array[i]->value || !(device_array[i]->fd_val)) {
+        printk(KERN_ERR "No valid device file descriptor\n");
+        return -ENODEV;
+    }
+
+    // Check buffer size
+    if (len < sizeof(unsigned int)) {
+        printk(KERN_ERR "Buffer too small\n");
+        return -EINVAL;
+    }
+
+    ret = tpci_fops.write(device_array[i]->fd_val, buf, len, offset);
+    if (ret < 0) {
+        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+        return ret;
+    }
+*/
     return 0;
 }
 
@@ -75,49 +243,49 @@ static int __init vpci_init(void) {
     //variables
     struct file *file;
     int result;
-
-    fd_val = kmalloc(MAX_DEVICES * sizeof(struct file *), GFP_KERNEL);
-    if (!fd_val) {
-        return -ENOMEM;
-    }
+    char device_file[256];
 
     printk(KERN_INFO "VPCI Driver: Checking for PCI devices\n");
     
     //open all PCI devices with COBI chips to prevent others from using
-
-    /*
     for (int i = 0; i < MAX_DEVICES; i++) {
+        //create a device file string
         snprintf(device_file, sizeof(device_file), DEVICE_FILE_TEMPLATE, i);
+        //open the device file
         file = filp_open(device_file, O_RDONLY, 0);
+        //check if opening the file failed
         if (!IS_ERR(file)) {
-            fd_val[i] = file;
+            //create a struct to store the device data
+            struct device_data *dev_data = kmalloc(sizeof(struct device_data), GFP_KERNEL);
+            if (!dev_data) {
+                return -ENOMEM;
+            }
+
+            //intialize the dev_data struct
+            dev_data->value = 0;
+            dev_data->fd_val = file;
+            dev_data->busy = false;
+
+            //store the device data in the device array
+            device_array[i] = dev_data;
+            
             printk(KERN_INFO "VPCI Driver: Opened device %s\n", device_file);
+
         } else {
             printk(KERN_INFO "VPCI Driver: No device found at %s\n", device_file);
-            fd_val[i] = NULL;
         }
     }
-    */
-
     
-    // Allocate memory for the file descriptor array if not already allocated
-    
-    // Open file and store in array
-    file = filp_open("/dev/cobi_chip_testdriver64", O_RDONLY, 0);
-    fd_val[0] = file;
-    /*
-    if (!IS_ERR(file)) {
-        fd_val[0] = file;
-        printk(KERN_INFO "VPCI Driver: Opened device %s\n", device_file);
-    } else {
-        printk(KERN_INFO "VPCI Driver: No device found at %s\n", device_file);
-        fd_val[0] = NULL;
+    //create a queue to process the users data
+    user_data_wq = create_singlethread_workqueue("user_data_worker");
+    if (!user_data_wq) {
+        // Handle error
+        return -ENOMEM;
     }
-    */
 
     //Virtual PCIe device registration and initialization
 
-    // Register the character device with the Linux kernel
+    // Register the character device of the virtual driver with the Linux kernel
     result = register_chrdev(0, DRIVER_NAME, &vpci_fops);
     //check if the character device was successfully registered
     if( result < 0 )
@@ -129,7 +297,7 @@ static int __init vpci_init(void) {
     major = result;
 
 
-    //create a class for the device
+    //create a class for the vitual driver/device
     vpci_class = class_create(THIS_MODULE, DRIVER_NAME);
     if( IS_ERR( vpci_class ) )
     {
@@ -139,10 +307,10 @@ static int __init vpci_init(void) {
     }
     printk( KERN_NOTICE "VPCI: Device class created\n" );
 
-    //make a device number macro
+    //make a device number using the MAJOR macro for the virtual driver
     device_number = MKDEV( major, 0 );
 
-    //create a device for the class
+    //create a device for the virtual drivr class
     vpci_device = device_create( vpci_class, NULL, device_number, NULL, DRIVER_NAME );
     if ( IS_ERR(vpci_device ) )
     {
@@ -171,13 +339,23 @@ static void __exit vpci_exit(void) {
     {
         unregister_chrdev( major, DRIVER_NAME );
     }
-    printk(KERN_INFO "VPCI: Module unloaded\n");
 
+    // close the devices
     for (int i = 0; i < MAX_DEVICES; i++) {
-        if (fd_val[i] != NULL) {
-            filp_close(fd_val[i], NULL);
+        if (device_array[i]  != NULL) {
+            filp_close(device_array[i]->fd_val, NULL);
+            kfree(device_array[i]);
+            device_array[i] = NULL;
         }
     }
+
+    // Destroy the workqueue
+    if (user_data_wq) {
+        flush_workqueue(user_data_wq);
+        destroy_workqueue(user_data_wq);
+    }
+    printk(KERN_INFO "VPCI: Module unloaded\n");
+
 }
 
 module_init(vpci_init);
