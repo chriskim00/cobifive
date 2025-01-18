@@ -31,9 +31,9 @@ static int device_number;
 struct device_data {
     struct file *fd_val;
     int value;
-    bool busy;
 };
 
+//store the devices in an array
 struct device_data *device_array[MAX_DEVICES];
 
 //problem data
@@ -67,29 +67,70 @@ static void process_user_data(struct work_struct *work)
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
     struct user_data *data = ud_work->data;
     int i;
+    int ret;
 
     if (!data)
         goto out;
 
-    // Process each problem in the user_data
-    for (i = 0; i < data->problem_count; i++) {
-        // Do your processing here
-        // Example: write to device using data->write_data[i]
-        if (data->write_data && data->write_data[i]) {
-            // Process write_data
-            printk(KERN_INFO "Processing problem %d\n", i);
+    //Check if there are any free chips avaiable
+    int i;
+    int k = 0;
+    int device_count = 0;
+    // Count non-NULL entries
+    for (int i = 0; i < MAX_DEVICES; i++) {
+        if (device_array[i] != NULL) {
+            device_count++;
         }
     }
 
+    //keep trying to read and write to the chips until all the problems are solved
+    while(data->solved != data->problem_count){
+
+
+        //go through the devices and check if they are avaiable to be written to
+        for (i = 0; i < device_count; i++) {
+
+            //check if device "i" is avaiable to be written to
+            if (device_array[i] && device_array[i]->value < 17) {
+                
+                
+                for (k = device_array[i]->value; k < 17; k++) {
+                    if (data->write_data[k]) {
+                        // Send the problem to the PCIe device
+                        printk(KERN_INFO "Processing problem %d\n", i);
+                        break;
+                    }
+                }
+                if (k == 17) {
+                    device_array[i]->value = 16;
+                break;
+                }
+            }
+        }
+
+        //check if any of the devices need to be read from
+        for (i = 0; i < device_count; i++) {
+            //check if device "i" is avaiable to be read from by checking the read flag
+            ret = tpci_fops.read(device_array[i]->fd_val, buf, len, 0);
+            if (ret < 0) {
+                printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                return;
+            }
+
+        }
+
+    }
+    
+
     // Update solved count
-    data->solved = i;
+    
 
 out:
     kfree(ud_work);
 }
 
 // Add function to queue work
-static int queue_user_data_work(struct user_data *data)
+int queue_user_data_work(struct user_data *data)
 {
     struct user_data_work *work;
 
@@ -129,6 +170,10 @@ struct user_data* init_user_data(struct file *file, struct user_data *data,  siz
         if (copy_from_user(&(data->write_data[i]), file + (i * sizeof(write_data_t)), sizeof(write_data_t))) {
             return NULL;
         }
+
+//TODO: set the problem ID value of the variable and also in the problem passed to the PCIe device
+        data->problem_id[i] = 0;
+
     }
 
     //intialize the probem count and solved count that will be used to know when to return the solution to the user
@@ -142,8 +187,6 @@ struct user_data* init_user_data(struct file *file, struct user_data *data,  siz
 void free_user_data(struct user_data *data) {
     kfree(data);
 }
-
-
 
 //read function of the virtual PCIe device
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
@@ -198,12 +241,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
 //this will be sent to the worker queue to be process the problems 
 /* 
     //find a device that is avaiable to be written to
-    int i;
-    for (i = 0; i < MAX_DEVICES; i++) {
-        if (device_array[i] && device_array[i]->value < 17 && !device_array[i]->busy) {
-            break;
-        }
-    }
+
 
     if (i == MAX_DEVICES) {
         printk(KERN_ERR "No device found with value less than 17\n");
@@ -264,7 +302,6 @@ static int __init vpci_init(void) {
             //intialize the dev_data struct
             dev_data->value = 0;
             dev_data->fd_val = file;
-            dev_data->busy = false;
 
             //store the device data in the device array
             device_array[i] = dev_data;
