@@ -2,71 +2,54 @@
    50 | static void init_fifo(void)
       |             ^~~~~~~~~
 /home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:75:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-   75 |     int device_id;
-      |     ^~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:119:12: error: invalid storage class for function ‘queue_user_data_work’
-  119 | static int queue_user_data_work(struct user_data *data)
-      |            ^~~~~~~~~~~~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:119:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-  119 | static int queue_user_data_work(struct user_data *data)
-      | ^~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:173:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-  173 | void free_user_data(struct user_data *data) {
-      | ^~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:178:16: error: invalid storage class for function ‘vpci_read’
-  178 | static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
-      |                ^~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:204:16: error: invalid storage class for function ‘vpci_write’
-  204 | static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
-      |                ^~~~~~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:161:21: error: implicit declaration of function ‘printf’ [-Werror=implicit-function-declaration]
+  161 |                     printf("COBIFIVE Problem ID: 0x%x\n", problem_id);
+      |                     ^~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:8:1: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
+    7 | #include <linux/slab.h>
+  +++ |+#include <stdio.h>
+    8 | #include <linux/export.h> //used to import EXPORT_SYMBOL() functions
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:161:21: warning: incompatible implicit declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+  161 |                     printf("COBIFIVE Problem ID: 0x%x\n", problem_id);
+      |                     ^~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:161:21: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:163:21: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  163 |                     uint8_t core_id = inverse_data(buf >> 4);
+      |                     ^~~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:169:21: warning: incompatible implicit declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+  169 |                     printf("COBIFIVE Best Spins: 0x%lx\n", (best_spins>>8) & 0x3FFFFFFFFFFF);
+      |                     ^~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:169:21: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:169:54: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘long long unsigned int’ [-Wformat=]
+  169 |                     printf("COBIFIVE Best Spins: 0x%lx\n", (best_spins>>8) & 0x3FFFFFFFFFFF);
+      |                                                    ~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                      |                     |
+      |                                                      long unsigned int     long long unsigned int
+      |                                                    %llx
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:174:21: warning: incompatible implicit declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+  174 |                     printf("COBIFIVE Best Ham: 0x%lx\n", (best_ham>>22) & 0x3FFF);
+      |                     ^~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:174:21: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:174:52: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘uint64_t’ {aka ‘long long unsigned int’} [-Wformat=]
+  174 |                     printf("COBIFIVE Best Ham: 0x%lx\n", (best_ham>>22) & 0x3FFF);
+      |                                                  ~~^     ~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                    |                    |
+      |                                                    long unsigned int    uint64_t {aka long long unsigned int}
+      |                                                  %llx
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:175:51: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘uint64_t’ {aka ‘long long unsigned int’} [-Wformat=]
+  175 |                     printf("COBIFIVE Chip ID: 0x%lx\n", (best_ham>>37) & 0xF);
+      |                                                 ~~^     ~~~~~~~~~~~~~~~~~~~~
+      |                                                   |                    |
+      |                                                   long unsigned int    uint64_t {aka long long unsigned int}
+      |                                                 %llx
 /home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘vpci_write’:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:205:9: warning: unused variable ‘ret’ [-Wunused-variable]
-  205 |     int ret = 0;
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:274:9: warning: unused variable ‘ret’ [-Wunused-variable]
+  274 |     int ret = 0;
       |         ^~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:261:13: error: initializer element is not constant
-  261 |     .read = vpci_read,
-      |             ^~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:261:13: note: (near initialization for ‘vpci_fops.read’)
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:262:14: error: initializer element is not constant
-  262 |     .write = vpci_write
-      |              ^~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:262:14: note: (near initialization for ‘vpci_fops.write’)
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:265:19: error: invalid storage class for function ‘vpci_init’
-  265 | static int __init vpci_init(void) {
-      |                   ^~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:349:20: error: invalid storage class for function ‘vpci_exit’
-  349 | static void __exit vpci_exit(void) {
-      |                    ^~~~~~~~~
-In file included from /home/cobidev/vdriver/quadpcie/vpci_driver64.c:2:
-./include/linux/module.h:131:49: error: invalid storage class for function ‘__inittest’
-  131 |         static inline initcall_t __maybe_unused __inittest(void)                \
-      |                                                 ^~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:384:1: note: in expansion of macro ‘module_init’
-  384 | module_init(vpci_init);
-      | ^~~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:384:1: warning: ‘alias’ attribute ignored [-Wattributes]
-./include/linux/module.h:139:49: error: invalid storage class for function ‘__exittest’
-  139 |         static inline exitcall_t __maybe_unused __exittest(void)                \
-      |                                                 ^~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:385:1: note: in expansion of macro ‘module_exit’
-  385 | module_exit(vpci_exit);
-      | ^~~~~~~~~~~
-./include/linux/module.h:139:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-  139 |         static inline exitcall_t __maybe_unused __exittest(void)                \
-      |         ^~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:385:1: note: in expansion of macro ‘module_exit’
-  385 | module_exit(vpci_exit);
-      | ^~~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:385:1: warning: ‘alias’ attribute ignored [-Wattributes]
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:385:1: error: expected declaration or statement at end of input
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c: At top level:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:173:6: warning: ‘free_user_data’ defined but not used [-Wunused-function]
-  173 | void free_user_data(struct user_data *data) {
-      |      ^~~~~~~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:119:12: warning: ‘queue_user_data_work’ defined but not used [-Wunused-function]
-  119 | static int queue_user_data_work(struct user_data *data)
-      |            ^~~~~~~~~~~~~~~~~~~~
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘vpci_init’:
+/home/cobidev/vdriver/quadpcie/vpci_driver64.c:330:33: error: expected expression before ‘{’ token
+  330 |             dev_data->id_used = {[0 ... 17] = false};
+      |                                 ^
+cc1: some warnings being treated as errors
 make[2]: *** [scripts/Makefile.build:289: /home/cobidev/vdriver/quadpcie/vpci_driver64.o] Error 1
 make[1]: *** [Makefile:1906: /home/cobidev/vdriver/quadpcie] Error 2

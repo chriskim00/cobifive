@@ -25,12 +25,11 @@ static struct class *vpci_class;
 static struct device *vpci_device = NULL;
 static int device_number;
 
-
-
 //store device data 
 struct device_data {
     struct file *fd_val;
     int value;
+    bool id_used[17];  // Array to track which FIFO slots need to be read
 };
 
 //store the devices in an array
@@ -46,10 +45,12 @@ typedef struct write_data_t write_data_t;
 //store the users problems and solutions 
 struct user_data {
     int problem_count;           
-    int solved;           
+    int solved;
+    int first_problem;
     int *card_id;
     int *problem_id;
-    char __user **solution;
+    uint64_t *best_spins;
+    uint64_t *best_ham;
     struct write_data_t **write_data;
 };
 typedef struct user_data user_data;
@@ -61,6 +62,16 @@ struct user_data_work {
     struct user_data *data;
 };
 
+//helper functions
+//reverse the 8-bit data
+uint8_t inverse_data(uint8_t data) {
+    uint8_t reversed = 0;
+    for (int i = 0; i < 4; ++i) {
+        reversed |= ((data >> i) & 1) << (3 - i);
+    }
+    return reversed;
+}
+
 // Add the worker function
 static void process_user_data(struct work_struct *work)
 {
@@ -68,14 +79,25 @@ static void process_user_data(struct work_struct *work)
     struct user_data *data = ud_work->data;
     int i;
     int ret;
-
+    int k;
+    int device_count = 0;
+    int problems_submitted = 0;
+    uint32_t read_data;
+    uint64_t best_spins;
+    uint64_t best_ham;
+    int problem_id = 0;
+    int card_id = 0;
+    int read_flag = 0 ;
+    loff_t offset = 0;
+    bool found = false;
+    int found_counter = 0;
+    bool first_problem_tracker;
+    //if the data is NULL then return
     if (!data)
         goto out;
 
     //Check if there are any free chips avaiable
-    int i;
-    int k = 0;
-    int device_count = 0;
+
     // Count non-NULL entries
     for (int i = 0; i < MAX_DEVICES; i++) {
         if (device_array[i] != NULL) {
@@ -86,43 +108,117 @@ static void process_user_data(struct work_struct *work)
     //keep trying to read and write to the chips until all the problems are solved
     while(data->solved != data->problem_count){
 
-
+        //WRITE
         //go through the devices and check if they are avaiable to be written to
         for (i = 0; i < device_count; i++) {
 
             //check if device "i" is avaiable to be written to
             if (device_array[i] && device_array[i]->value < 17) {
                 
-                
+                //submit as many problems to the device as avaiable slots
                 for (k = device_array[i]->value; k < 17; k++) {
-                    if (data->write_data[k]) {
-                        // Send the problem to the PCIe device
-                        printk(KERN_INFO "Processing problem %d\n", i);
-                        break;
+                    
+                    //find an open problem id to use
+                    if(!(device_array[i]->id_used[k])){
+
+                        //check if there exists data to write and if all problems have been submitted
+                        if (data->write_data[problems_submitted] && problems_submitted != data->problem_count) {
+                            // Send the problem to the PCIe device
+                            ret = tpci_fops.write(device_array[i]->fd_val, (char *)&data->write_data[problems_submitted], sizeof(write_data_t), &offset);
+                            if (ret < 0) {
+                                printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                                return;
+                            }
+                            
+                            //increment the problems_submitted to sumbit the next problem in the problem set
+                            problems_submitted++;
+                            
+                            //set the ids that will identify which problem is being solved on what chip
+                            data->card_id[problems_submitted] = i;
+                            data->problem_id[problems_submitted] = k;
+                            printk(KERN_INFO "Processing problem %d\n", i);
+                        }
+                        
+                        //indicate that the problem id is being used
+                        device_array[i]->id_used[k] = true;
                     }
+
                 }
+
+                //set the value of the device to the number of problems that have been submitted
                 if (k == 17) {
                     device_array[i]->value = 16;
-                break;
+                    break;
                 }
+
             }
         }
-
+        
+        //READ 
         //check if any of the devices need to be read from
         for (i = 0; i < device_count; i++) {
+            read_flag = 0;
             //check if device "i" is avaiable to be read from by checking the read flag
-            ret = tpci_fops.read(device_array[i]->fd_val, buf, len, 0);
+            offset = 10 * sizeof(uint32_t); //fifo flag offset
+            ret = tpci_fops.read(device_array[i]->fd_val, (char *)&read_data, sizeof(read_data), &offset);
             if (ret < 0) {
                 printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
-                return;
+                goto out;
+            }
+            //set the read flag from the returned read data 
+            read_flag = read_data;
+
+            //read the data from the device
+            if(read_flag == 1){
+                //read the data from the device. 128-bits need to be read from the device, so 4 reads need to be sent 
+                offset = 1 * sizeof(uint32_t); //fifo flag offset
+                for( k = 0 ; k <3; k++){
+
+                    ret = tpci_fops.read(device_array[i]->fd_val, (char *)&read_data, sizeof(read_data), &offset);
+                    if (ret < 0) {
+                        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                        goto out;
+                    }
+
+                    if(k == 0){
+                        problem_id = inverse_data(read_data);
+                        card_id = inverse_data(read_data >> 4);
+                        best_spins = read_data;
+                    }
+                    if(k == 1){
+                        best_spins = ((uint64_t)read_data << 32) | (best_spins & 0xFFFFFFFF);
+                        best_ham = read_data;
+                    }
+                    if(k == 2){
+                        best_ham = ((uint64_t)read_data << 32) | (best_ham & 0xFFFFFFFF);
+                    }
+                }
             }
 
+            //Store the data in the user_data struct
+            found_counter = data->first_problem; // used to search through the problems that have been submitted
+            first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
+            found = false; //track if the problem has been found to break the while loop
+
+            while(found){
+                if(data->card_id[found_counter] == card_id && data->problem_id[found_counter] == problem_id){
+                    data->best_spins[found_counter] = best_spins;
+                    data->best_ham[found_counter] = best_ham;
+                    data->solved++;
+                    found = true;
+                }
+                found_counter++;
+                
+                if(data->best_spins[found_counter] == NULL && !first_problem_tracker){
+                    data->first_problem = found_counter;
+                    first_problem_tracker = true;
+                }
+                
+            }
+            
+
         }
-
     }
-    
-
-    // Update solved count
     
 
 out:
@@ -144,15 +240,14 @@ int queue_user_data_work(struct user_data *data)
     return queue_work(user_data_wq, &work->work);
 }
 
-
 //intailize the user data struct
-struct user_data* init_user_data(struct file *file, struct user_data *data,  size_t size) {
+struct user_data* init_user_data(struct file *file, struct user_data *data, const char __user *buf, size_t size) {
     int i;
     
     // Allocate memory for the user_data structure based on the amount of problem (size) sent from the userspace
-    data->card_id = kmalloc(size * sizeof(int), GFP_KERNEL);
     data->problem_id = kmalloc(size * sizeof(int), GFP_KERNEL);
-    data->solution = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
+    data->best_spins = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
+    data->best_ham = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
     data->write_data = kmalloc(size * sizeof(write_data_t *), GFP_KERNEL);
 
     //divide the problems from the user space into the user_data structs 
@@ -167,7 +262,7 @@ struct user_data* init_user_data(struct file *file, struct user_data *data,  siz
         }
 
         //copy the data from the user space to the kernel space
-        if (copy_from_user(&(data->write_data[i]), file + (i * sizeof(write_data_t)), sizeof(write_data_t))) {
+        if (copy_from_user(&(data->write_data[i]), data + (i * sizeof(write_data_t)), sizeof(write_data_t))) {
             return NULL;
         }
 
@@ -177,6 +272,7 @@ struct user_data* init_user_data(struct file *file, struct user_data *data,  siz
     }
 
     //intialize the probem count and solved count that will be used to know when to return the solution to the user
+    data->first_problem = 0;
     data->problem_count = size;
     data->solved = 0;
 
@@ -231,41 +327,11 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
             return -ENOMEM;
 
         //intialize the data struct with the user data
-        data = init_user_data(file, data, data_count);
+        data = init_user_data(file, data, buf, data_count);
         if (!data)
             return -EFAULT;
     }
 
-
-
-//this will be sent to the worker queue to be process the problems 
-/* 
-    //find a device that is avaiable to be written to
-
-
-    if (i == MAX_DEVICES) {
-        printk(KERN_ERR "No device found with value less than 17\n");
-        return -ENODEV;
-    }
-
-   // Check if we have valid file descriptors
-    if (!device_array[i]->value || !(device_array[i]->fd_val)) {
-        printk(KERN_ERR "No valid device file descriptor\n");
-        return -ENODEV;
-    }
-
-    // Check buffer size
-    if (len < sizeof(unsigned int)) {
-        printk(KERN_ERR "Buffer too small\n");
-        return -EINVAL;
-    }
-
-    ret = tpci_fops.write(device_array[i]->fd_val, buf, len, offset);
-    if (ret < 0) {
-        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
-        return ret;
-    }
-*/
     return 0;
 }
 
@@ -302,6 +368,7 @@ static int __init vpci_init(void) {
             //intialize the dev_data struct
             dev_data->value = 0;
             dev_data->fd_val = file;
+            dev_data->id_used = {[0 ... 17] = false};
 
             //store the device data in the device array
             device_array[i] = dev_data;

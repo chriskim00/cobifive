@@ -153,7 +153,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
     int ret;
     int i;  
 
-    if (*offset == 0) {
+    if (*offset == 10 * sizeof(uint32_t)) {
         int result = (read_flag > 0) ? 1 : 0;
         ret = copy_to_user(buf, &result, sizeof(result));
         if (ret != 0) {
