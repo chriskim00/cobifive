@@ -19,6 +19,7 @@ extern struct file_operations tpci_fops;
 #define DRIVER_NAME "cobi_chip_vdriver64"
 #define DEVICE_FILE_TEMPLATE "/dev/cobi_chip_testdriver64%d"
 #define MAX_DEVICES 1
+#define RAW_BYTE_CNT 166
 
 static int major;
 static struct class *vpci_class;
@@ -72,6 +73,16 @@ uint8_t inverse_data(uint8_t data) {
     return reversed;
 }
 
+//change the problem ID 
+void set_pid_in_rawData(uint64_t* rawData, uint16_t new_pid){
+    //change the MSB 16 bits of the rawData to the new_pid
+    // Clear the MSB 16 bits
+    *rawData &= 0x0000FFFFFFFFFFFF;
+
+    // Set the new_pid in the MSB 16 bits
+    *rawData |= ((uint64_t)new_pid << 48);
+}
+
 // Add the worker function
 static void process_user_data(struct work_struct *work)
 {
@@ -92,6 +103,8 @@ static void process_user_data(struct work_struct *work)
     bool found = false;
     int found_counter = 0;
     bool first_problem_tracker;
+    uint16_t pid = 0xFFFF;
+
     //if the data is NULL then return
     if (!data)
         goto out;
@@ -104,6 +117,8 @@ static void process_user_data(struct work_struct *work)
             device_count++;
         }
     }
+
+
 
     //keep trying to read and write to the chips until all the problems are solved
     while(data->solved != data->problem_count){
@@ -123,6 +138,9 @@ static void process_user_data(struct work_struct *work)
 
                         //check if there exists data to write and if all problems have been submitted
                         if (data->write_data[problems_submitted] && problems_submitted != data->problem_count) {
+
+
+                            set_pid_in_rawData(data->write_data[problems_submitted], pid);
                             // Send the problem to the PCIe device
                             ret = tpci_fops.write(device_array[i]->fd_val, (char *)&data->write_data[problems_submitted], sizeof(write_data_t), &offset);
                             if (ret < 0) {
@@ -200,7 +218,7 @@ static void process_user_data(struct work_struct *work)
             first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
             found = false; //track if the problem has been found to break the while loop
 
-            while(found){
+            while(!found){
                 if(data->card_id[found_counter] == card_id && data->problem_id[found_counter] == problem_id){
                     data->best_spins[found_counter] = best_spins;
                     data->best_ham[found_counter] = best_ham;
@@ -219,7 +237,10 @@ static void process_user_data(struct work_struct *work)
 
         }
     }
-    
+
+    // Free the user_data structure
+    kfree(ud_work);
+
 
 out:
     kfree(ud_work);
@@ -243,7 +264,8 @@ int queue_user_data_work(struct user_data *data)
 //intailize the user data struct
 struct user_data* init_user_data(struct file *file, struct user_data *data, const char __user *buf, size_t size) {
     int i;
-    
+    int k;
+
     // Allocate memory for the user_data structure based on the amount of problem (size) sent from the userspace
     data->problem_id = kmalloc(size * sizeof(int), GFP_KERNEL);
     data->best_spins = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
@@ -261,10 +283,16 @@ struct user_data* init_user_data(struct file *file, struct user_data *data, cons
             return NULL;
         }
 
+//TODO: EXPAND TO 166 iterations to cover the 166 54-bit writes that are needed to send the problem to the PCIe device
+        write_data_t *bulk_write_data = (write_data_t*)kmalloc(RAW_BYTE_CNT * sizeof(write_data_t));
+
+
         //copy the data from the user space to the kernel space
-        if (copy_from_user(&(data->write_data[i]), data + (i * sizeof(write_data_t)), sizeof(write_data_t))) {
+        if (copy_from_user(bulk_write_data, data + (i * sizeof(write_data_t) * RAW_BYTE_CNT), sizeof(write_data_t))) {
             return NULL;
         }
+
+        data->write_data[i] = *bulk_write_data;
 
 //TODO: set the problem ID value of the variable and also in the problem passed to the PCIe device
         data->problem_id[i] = 0;
@@ -368,7 +396,7 @@ static int __init vpci_init(void) {
             //intialize the dev_data struct
             dev_data->value = 0;
             dev_data->fd_val = file;
-            dev_data->id_used = {[0 ... 17] = false};
+            memset(dev_data->id_used, 0, sizeof(dev_data->id_used));
 
             //store the device data in the device array
             device_array[i] = dev_data;

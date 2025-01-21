@@ -1,55 +1,8 @@
-/home/cobidev/vdriver/quadpcie/pci_driver64.c:50:13: warning: ‘init_fifo’ defined but not used [-Wunused-function]
-   50 | static void init_fifo(void)
-      |             ^~~~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:161:21: error: implicit declaration of function ‘printf’ [-Werror=implicit-function-declaration]
-  161 |                     printf("COBIFIVE Problem ID: 0x%x\n", problem_id);
-      |                     ^~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:8:1: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
-    7 | #include <linux/slab.h>
-  +++ |+#include <stdio.h>
-    8 | #include <linux/export.h> //used to import EXPORT_SYMBOL() functions
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:161:21: warning: incompatible implicit declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
-  161 |                     printf("COBIFIVE Problem ID: 0x%x\n", problem_id);
-      |                     ^~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:161:21: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:163:21: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-  163 |                     uint8_t core_id = inverse_data(buf >> 4);
-      |                     ^~~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:169:21: warning: incompatible implicit declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
-  169 |                     printf("COBIFIVE Best Spins: 0x%lx\n", (best_spins>>8) & 0x3FFFFFFFFFFF);
-      |                     ^~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:169:21: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:169:54: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘long long unsigned int’ [-Wformat=]
-  169 |                     printf("COBIFIVE Best Spins: 0x%lx\n", (best_spins>>8) & 0x3FFFFFFFFFFF);
-      |                                                    ~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                                                      |                     |
-      |                                                      long unsigned int     long long unsigned int
-      |                                                    %llx
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:174:21: warning: incompatible implicit declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
-  174 |                     printf("COBIFIVE Best Ham: 0x%lx\n", (best_ham>>22) & 0x3FFF);
-      |                     ^~~~~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:174:21: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:174:52: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘uint64_t’ {aka ‘long long unsigned int’} [-Wformat=]
-  174 |                     printf("COBIFIVE Best Ham: 0x%lx\n", (best_ham>>22) & 0x3FFF);
-      |                                                  ~~^     ~~~~~~~~~~~~~~~~~~~~~~~
-      |                                                    |                    |
-      |                                                    long unsigned int    uint64_t {aka long long unsigned int}
-      |                                                  %llx
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:175:51: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘uint64_t’ {aka ‘long long unsigned int’} [-Wformat=]
-  175 |                     printf("COBIFIVE Chip ID: 0x%lx\n", (best_ham>>37) & 0xF);
-      |                                                 ~~^     ~~~~~~~~~~~~~~~~~~~~
-      |                                                   |                    |
-      |                                                   long unsigned int    uint64_t {aka long long unsigned int}
-      |                                                 %llx
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘vpci_write’:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:274:9: warning: unused variable ‘ret’ [-Wunused-variable]
-  274 |     int ret = 0;
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:212:52: warning: comparison between pointer and integer
+  212 |                 if(data->best_spins[found_counter] == NULL && !first_problem_tracker){
+      |                                                    ^~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c: In function ‘vpci_write’:
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:315:9: warning: unused variable ‘ret’ [-Wunused-variable]
+  315 |     int ret = 0;
       |         ^~~
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c: In function ‘vpci_init’:
-/home/cobidev/vdriver/quadpcie/vpci_driver64.c:330:33: error: expected expression before ‘{’ token
-  330 |             dev_data->id_used = {[0 ... 17] = false};
-      |                                 ^
-cc1: some warnings being treated as errors
-make[2]: *** [scripts/Makefile.build:289: /home/cobidev/vdriver/quadpcie/vpci_driver64.o] Error 1
-make[1]: *** [Makefile:1906: /home/cobidev/vdriver/quadpcie] Error 2

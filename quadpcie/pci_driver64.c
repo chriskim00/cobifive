@@ -20,6 +20,7 @@ static struct class *tpci_class;
 static struct device *tpci_device = NULL;
 static int device_number;
 static bool busy = false;
+static int read_counter = 0;
 
 static LIST_HEAD(device_list);
 static DEFINE_MUTEX(device_list_lock);
@@ -110,7 +111,7 @@ static int pci_release(struct inode *inode, struct file *file)
 }
 
 
-//read function of the virtual PCIe device
+//write function of the virtual PCIe device
 static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
     int i;
     //create a new struct to store the passed in problem
@@ -163,23 +164,71 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
     }
 
     if (*offset == 1) {
-        
-        for (i = 0; i < 16; i++) {
-            if (data_array[i] != NULL && data_array[i]->done) {
-                uint64_t problem_id = data_array[i]->problem_id;
-                ret = copy_to_user(buf, &problem_id, sizeof(problem_id));
-                if (ret != 0) {
-                    return -EFAULT;
+        if(read_counter == 0){
+            for (i = 0; i < 16; i++) {
+                if (data_array[i] != NULL && data_array[i]->done) {
+                    uint64_t problem_id = data_array[i]->problem_id;
+                    ret = copy_to_user(buf, &problem_id, sizeof(problem_id));
+                    if (ret != 0) {
+                        return -EFAULT;
+                    }
+                    mutex_lock(&problem_lock);
+                    kfree(data_array[i]);
+                    data_array[i] = NULL;
+                    read_flag--;
+                    mutex_unlock(&problem_lock);
+                    return sizeof(problem_id);
                 }
-                mutex_lock(&problem_lock);
-                kfree(data_array[i]);
-                data_array[i] = NULL;
-                read_flag--;
-                mutex_unlock(&problem_lock);
-                return sizeof(problem_id);
             }
+
+            //increment read counter to simulate the 4 reads required by the PCIe device
+            read_counter++;
+
+            return -EAGAIN;
         }
-        return -EAGAIN;
+
+        if(read_counter == 1){       
+            //send over a random 32 bit value
+            uint32_t random_value;
+            get_random_bytes(&random_value, sizeof(random_value));
+            ret = copy_to_user(buf, &random_value, sizeof(random_value));
+            if (ret != 0) {
+                return -EFAULT;
+            }
+            
+            read_counter++;
+
+            return -EAGAIN;
+        }
+
+        if(read_counter == 2){       
+            //send over a random 32 bit value
+            uint32_t random_value;
+            get_random_bytes(&random_value, sizeof(random_value));
+            ret = copy_to_user(buf, &random_value, sizeof(random_value));
+            if (ret != 0) {
+                return -EFAULT;
+            }
+            
+            read_counter++;
+
+            return -EAGAIN;
+        }
+
+        if(read_counter > 2){       
+            //send over a random 32 bit value
+            uint32_t random_value;
+            get_random_bytes(&random_value, sizeof(random_value));
+            ret = copy_to_user(buf, &random_value, sizeof(random_value));
+            if (ret != 0) {
+                return -EFAULT;
+            }
+            
+            read_counter == 0;
+
+            return -EAGAIN;
+
+        }
     }
 
     /*
