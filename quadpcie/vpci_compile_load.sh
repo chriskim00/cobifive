@@ -16,8 +16,8 @@ fi
 sudo cp vpci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
 
 # Remove the module if it is already loaded
-sudo modprobe -r vpci_driver64
-sudo modprobe -r pci_driver64
+sudo rmmod vpci_driver64.ko
+sudo rmmod pci_driver64.ko
 
 
 # Update module dependencies
@@ -26,6 +26,9 @@ sudo depmod -a
 # Load the module
 sudo insmod pci_driver64.ko
 sudo insmod vpci_driver64.ko
+
+sudo chmod 666 /dev/cobi_chip_vdriver64
+
 
 #remove old log file
 sudo rm -rf /tmp/pci_driver.log 

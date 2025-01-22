@@ -14,29 +14,68 @@ MODULE_LICENSE("GPL");
 
 extern struct file_operations tpci_fops;
 
+//// Function to log time to a file that is stored in /var/log/pci_driver.log
+static void log_action(const char *message, size_t size) {
+    struct file *file;
+    loff_t pos = 0;
+    char *buf;
+    size_t len;
+    const char *filename;
+
+    buf = kmalloc(size, GFP_KERNEL);
+    if (!buf)
+        return;
+
+    snprintf(buf, size, "%s", message);
+    len = strlen(buf);
+
+    filename = "/tmp/pci_driver.log";
+    file = filp_open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    if (IS_ERR(file)) {
+        kfree(buf);
+        printk(KERN_ERR "Failed to open log file2: %ld\n", PTR_ERR(file));
+
+        return;
+    }
+
+    kernel_write(file, buf, len, &pos);
+
+    filp_close(file, NULL);
+    kfree(buf);
+}
+
+// Define log
+bool enable_logging = true;
 
 // Define variables
 #define DRIVER_NAME "cobi_chip_vdriver64"
 #define DEVICE_FILE_TEMPLATE "/dev/cobi_chip_testdriver64%d"
 #define MAX_DEVICES 1
 #define RAW_BYTE_CNT 166
+#define MAX_USER_DATA 15
 
 static int major;
 static struct class *vpci_class;
 static struct device *vpci_device = NULL;
 static int device_number;
+static int user_id_counter = 0;
+static bool busy = false;
+
+//Define mutexes
+static DEFINE_MUTEX(open_lock);
+
 
 //store device data 
 struct device_data {
     struct file *fd_val;
     int value;
-    bool id_used[17];  // Array to track which FIFO slots need to be read
+    bool id_used[16];  // Array to track which FIFO slots need to be read
 };
 
 //store the devices in an array
 struct device_data *device_array[MAX_DEVICES];
 
-//problem data
+//problem data structure
 struct write_data_t {
     off_t offset;
     uint64_t value;  // Change to 64-bit
@@ -45,6 +84,7 @@ typedef struct write_data_t write_data_t;
 
 //store the users problems and solutions 
 struct user_data {
+    int user_id;
     int problem_count;           
     int solved;
     int first_problem;
@@ -56,7 +96,40 @@ struct user_data {
 };
 typedef struct user_data user_data;
 
-//make a queue to store and work on user_data structures
+//read data structure
+struct user_data_read {
+    int user_id;
+    uint64_t *best_spins;
+    uint64_t *best_ham;
+};
+typedef struct user_data_read user_data_read;
+
+//array to store the user_data_read
+static struct user_data_read *processed_data[MAX_USER_DATA];
+
+// Store the processed data in an array
+static void store_user_data_read(struct user_data *data) {
+    struct user_data_read *new_data = kmalloc(sizeof(struct user_data_read), GFP_KERNEL);
+
+    if (!new_data)
+        return;
+    
+    new_data->user_id = data->user_id;
+    new_data->best_spins = data->best_spins;
+    new_data->best_ham = data->best_ham;
+
+    while(1){
+        for (int i = 0; i < MAX_USER_DATA; i++) {
+            if (processed_data[i] == NULL) {
+                processed_data[i] = new_data;
+                break;
+            }
+        }
+    }
+
+}
+
+//make a queue to store write data and work on user_data structures
 static struct workqueue_struct *user_data_wq;
 struct user_data_work {
     struct work_struct work;
@@ -64,7 +137,7 @@ struct user_data_work {
 };
 
 //helper functions
-//reverse the 8-bit data
+//reverse the 8-bit data -> Takes in: 0b00001011 and outputs: 0b00001101
 uint8_t inverse_data(uint8_t data) {
     uint8_t reversed = 0;
     for (int i = 0; i < 4; ++i) {
@@ -84,8 +157,7 @@ void set_pid_in_rawData(uint64_t* rawData, uint16_t new_pid){
 }
 
 // Add the worker function
-static void process_user_data(struct work_struct *work)
-{
+static void process_user_data(struct work_struct *work){
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
     struct user_data *data = ud_work->data;
     int i;
@@ -111,14 +183,12 @@ static void process_user_data(struct work_struct *work)
 
     //Check if there are any free chips avaiable
 
-    // Count non-NULL entries
+    // Count non-NULL entries in the device array
     for (int i = 0; i < MAX_DEVICES; i++) {
         if (device_array[i] != NULL) {
             device_count++;
         }
     }
-
-
 
     //keep trying to read and write to the chips until all the problems are solved
     while(data->solved != data->problem_count){
@@ -140,7 +210,7 @@ static void process_user_data(struct work_struct *work)
                         if (data->write_data[problems_submitted] && problems_submitted != data->problem_count) {
 
 
-                            set_pid_in_rawData(data->write_data[problems_submitted], pid);
+                            set_pid_in_rawData(&(data->write_data[problems_submitted]->value), pid);
                             // Send the problem to the PCIe device
                             ret = tpci_fops.write(device_array[i]->fd_val, (char *)&data->write_data[problems_submitted], sizeof(write_data_t), &offset);
                             if (ret < 0) {
@@ -188,8 +258,8 @@ static void process_user_data(struct work_struct *work)
 
             //read the data from the device
             if(read_flag == 1){
-                //read the data from the device. 128-bits need to be read from the device, so 4 reads need to be sent 
-                offset = 1 * sizeof(uint32_t); //fifo flag offset
+                //read the data from the device. 96-bits need to be read from the device, so 3 reads need to be sent 
+                offset = 4 * sizeof(uint32_t); //fifo flag offset
                 for( k = 0 ; k <3; k++){
 
                     ret = tpci_fops.read(device_array[i]->fd_val, (char *)&read_data, sizeof(read_data), &offset);
@@ -224,13 +294,16 @@ static void process_user_data(struct work_struct *work)
                     data->best_ham[found_counter] = best_ham;
                     data->solved++;
                     found = true;
+                    found_counter++;
                 }
-                found_counter++;
                 
-                if(data->best_spins[found_counter] == NULL && !first_problem_tracker){
+                /*
+//TODO: track the first problem that has not been solved
+                if(data->best_spins[found_counter] == 0  && !first_problem_tracker){
                     data->first_problem = found_counter;
                     first_problem_tracker = true;
                 }
+                */
                 
             }
             
@@ -238,17 +311,18 @@ static void process_user_data(struct work_struct *work)
         }
     }
 
+    //transfer the data that is solved to a queue that will store the problems until they are ready to be sent back to the user
+    store_user_data_read(data);
+
     // Free the user_data structure
     kfree(ud_work);
-
 
 out:
     kfree(ud_work);
 }
 
 // Add function to queue work
-int queue_user_data_work(struct user_data *data)
-{
+int queue_user_data_work(struct user_data *data){
     struct user_data_work *work;
 
     work = kmalloc(sizeof(*work), GFP_KERNEL);
@@ -263,8 +337,15 @@ int queue_user_data_work(struct user_data *data)
 
 //intailize the user data struct
 struct user_data* init_user_data(struct file *file, struct user_data *data, const char __user *buf, size_t size) {
+    //declare funciton variables
     int i;
-    int k;
+    write_data_t *bulk_write_data = (write_data_t*)kmalloc(RAW_BYTE_CNT * sizeof(write_data_t), GFP_KERNEL);
+
+    if(enable_logging){   
+        log_action("PCI write intialize started", sizeof("PCI write intialize started"));
+    }
+
+    
 
     // Allocate memory for the user_data structure based on the amount of problem (size) sent from the userspace
     data->problem_id = kmalloc(size * sizeof(int), GFP_KERNEL);
@@ -283,70 +364,103 @@ struct user_data* init_user_data(struct file *file, struct user_data *data, cons
             return NULL;
         }
 
-//TODO: EXPAND TO 166 iterations to cover the 166 54-bit writes that are needed to send the problem to the PCIe device
-        write_data_t *bulk_write_data = (write_data_t*)kmalloc(RAW_BYTE_CNT * sizeof(write_data_t));
-
-
         //copy the data from the user space to the kernel space
         if (copy_from_user(bulk_write_data, data + (i * sizeof(write_data_t) * RAW_BYTE_CNT), sizeof(write_data_t))) {
+            kfree(bulk_write_data);
             return NULL;
         }
-
-        data->write_data[i] = *bulk_write_data;
-
-//TODO: set the problem ID value of the variable and also in the problem passed to the PCIe device
+        //copy the data to the user_data struct
+        data->write_data[i] = bulk_write_data;
+        //intialize the problem id to NULL
         data->problem_id[i] = 0;
 
     }
 
     //intialize the probem count and solved count that will be used to know when to return the solution to the user
+    data->user_id = user_id_counter++;
     data->first_problem = 0;
     data->problem_count = size;
     data->solved = 0;
 
+    kfree(bulk_write_data);
+
+    if(enable_logging){
+        log_action("PCI write intialize ended", sizeof("PCI write intialize ended"));
+    }
+
     return data;
 };
 
-// Function to free user_data
-void free_user_data(struct user_data *data) {
-    kfree(data);
-}
 
 //read function of the virtual PCIe device
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
-    int i = 0;
-    int ret = 0;
+    int i;
+    //create a temp data structure to store user_data_read
+    struct user_data_read *user_data_read_temp;
 
-   // Check if we have valid file descriptors
-    if (!device_array[i]->value || !(device_array[i]->fd_val)) {
-        printk(KERN_ERR "No valid device file descriptor\n");
-        return -ENODEV;
+    if(enable_logging){
+        log_action("PCI read started", sizeof("PCI read started"));
     }
 
-    // Check buffer size
-    if (len < sizeof(unsigned int)) {
-        printk(KERN_ERR "Buffer too small\n");
-        return -EINVAL;
+
+    //intialize the user_data_read_temp struct
+    user_data_read_temp->best_spins = kmalloc(len * sizeof(uint64_t), GFP_KERNEL);
+    user_data_read_temp->best_ham = kmalloc(len * sizeof(uint64_t), GFP_KERNEL);
+
+    if (copy_from_user(&user_data_read_temp, buf, sizeof(user_data_read_temp)) != 0) {
+        return -EFAULT;
     }
 
-    
-    ret = tpci_fops.read(device_array[i]->fd_val, buf, len, offset);
-    if (ret < 0) {
-        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
-        return ret;
+    for(i = 0; i < MAX_USER_DATA; i++){
+        
+        if(processed_data[i]->user_id == user_data_read_temp->user_id){
+            if (copy_to_user(buf, processed_data[i], sizeof(processed_data[i])) != sizeof(processed_data[i])) {
+                return -EFAULT;
+            }
+
+            // Free the processed data
+            kfree(processed_data[i]);
+            kfree(user_data_read_temp);
+            processed_data[i] = NULL;
+
+                if(enable_logging){
+                    log_action("PCI read sucessful", sizeof("PCI read sucessful"));
+                }
+
+            return sizeof(processed_data[i]);
+        }
+    }
+
+    kfree(user_data_read_temp);
+
+    if(enable_logging){
+        log_action("PCI read unsucessful", sizeof("PCI read unsucessful"));
     }
 
     return 0;
 }
 
 static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
-    int ret = 0;
+    //initialize variables 
     size_t data_count;
     struct user_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
+
+    if(enable_logging){
+        log_action("PCI write started", sizeof("PCI write started"));
+    }
+
 
 
     // Determine number of write_data_t structures
     data_count = len / sizeof(write_data_t);  
+    
+    // Log the number of problems passed
+    if(enable_logging){
+        char log_message[256];
+        snprintf(log_message, sizeof(log_message), "Problems passed: %zu", data_count);
+        log_action(log_message, sizeof(log_message));
+    }
+
 
     // Further processing of the user data into a structure user_data that seperates out the problems and ids them
     if(len != sizeof(buf)){
@@ -360,6 +474,31 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
             return -EFAULT;
     }
 
+    if(enable_logging){
+        log_action("PCI write ended", sizeof("PCI write ended"));
+    }
+
+    return 0;
+}
+
+static int vpci_open(struct inode *inode, struct file *file){
+    int ret = 0;
+    mutex_lock(&open_lock);
+    if (busy) {
+        printk( KERN_WARNING "PCI:  device busy");
+        ret = -EBUSY;
+    } else {
+        // claim device
+        busy = true;
+        printk( KERN_WARNING "PCI:  opened device");
+    }
+    mutex_unlock(&open_lock);
+
+    return ret;
+}
+
+static int vpci_release(struct inode *inode, struct file *file){
+    busy = false;
     return 0;
 }
 
@@ -367,15 +506,20 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
 static struct file_operations vpci_fops = {
     .owner = THIS_MODULE,
     .read = vpci_read, 
-    .write = vpci_write
+    .write = vpci_write,
+    .open = vpci_open,
+    .release = vpci_release
 };
 
 static int __init vpci_init(void) {
-
     //variables
     struct file *file;
     int result;
     char device_file[256];
+
+    if(enable_logging){
+        log_action("PCI Intialized", sizeof("PCI Intialized"));
+    }
 
     printk(KERN_INFO "VPCI Driver: Checking for PCI devices\n");
     
@@ -396,14 +540,15 @@ static int __init vpci_init(void) {
             //intialize the dev_data struct
             dev_data->value = 0;
             dev_data->fd_val = file;
-            memset(dev_data->id_used, 0, sizeof(dev_data->id_used));
+            memset(dev_data->id_used, false, sizeof(dev_data->id_used));
 
             //store the device data in the device array
             device_array[i] = dev_data;
             
             printk(KERN_INFO "VPCI Driver: Opened device %s\n", device_file);
 
-        } else {
+        } 
+        else {
             printk(KERN_INFO "VPCI Driver: No device found at %s\n", device_file);
         }
     }
@@ -416,7 +561,6 @@ static int __init vpci_init(void) {
     }
 
     //Virtual PCIe device registration and initialization
-
     // Register the character device of the virtual driver with the Linux kernel
     result = register_chrdev(0, DRIVER_NAME, &vpci_fops);
     //check if the character device was successfully registered
@@ -427,7 +571,6 @@ static int __init vpci_init(void) {
     }
     //store the major number
     major = result;
-
 
     //create a class for the vitual driver/device
     vpci_class = class_create(THIS_MODULE, DRIVER_NAME);
@@ -487,6 +630,8 @@ static void __exit vpci_exit(void) {
         destroy_workqueue(user_data_wq);
     }
     printk(KERN_INFO "VPCI: Module unloaded\n");
+
+
 
 }
 

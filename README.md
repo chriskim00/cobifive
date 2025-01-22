@@ -5,7 +5,7 @@ Unified driver, user app, and binary for M.2 PCIe and quad PCIe cards
 
 1. Clone this repository to your local machine
 2. Go to the quadpcie user app folder
-3. Run 'g++ -o vpciapp vpci_user_app64.c > compilation_log.txt 2>&1'
+3. Run 'g++ -o vpciapp user_app.c > compilation_log.txt 2>&1'
 4. Run './vpciapp'
 5. Run 'vi output_logs' to check results
 

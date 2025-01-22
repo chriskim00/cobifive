@@ -1,8 +1,0 @@
-/home/willammoy/cobifive/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
-/home/willammoy/cobifive/quadpcie/vpci_driver64.c:212:52: warning: comparison between pointer and integer
-  212 |                 if(data->best_spins[found_counter] == NULL && !first_problem_tracker){
-      |                                                    ^~
-/home/willammoy/cobifive/quadpcie/vpci_driver64.c: In function ‘vpci_write’:
-/home/willammoy/cobifive/quadpcie/vpci_driver64.c:315:9: warning: unused variable ‘ret’ [-Wunused-variable]
-  315 |     int ret = 0;
-      |         ^~~

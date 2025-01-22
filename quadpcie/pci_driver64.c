@@ -20,20 +20,22 @@ static struct class *tpci_class;
 static struct device *tpci_device = NULL;
 static int device_number;
 static bool busy = false;
-static int read_counter = 0;
+int read_counter = 0;
 
-static LIST_HEAD(device_list);
-static DEFINE_MUTEX(device_list_lock);
+//define mutexes
 static DEFINE_MUTEX(open_lock);
 static DEFINE_MUTEX(problem_lock);
 
 
 // sturutre to hold the data important to the problem. Will generate random data for the solution etc.
 struct fake_data {
-    int problem_id;
+    uint32_t problem_id;
     int time_value;
     bool done;
 };
+
+//store the users problem and fake solution timing data
+static struct fake_data *data_array[16];
 
 //problem data
 typedef struct {
@@ -41,37 +43,24 @@ typedef struct {
     uint64_t value;  // Change to 64-bit
 } write_data_t;
 
-//store the users problem and fake solution timing data
-static struct fake_data *data_array[16];
-
-//store the user solution data in a fifo
-static DEFINE_MUTEX(fifo_lock);
-static DECLARE_KFIFO(fake_data_fifo, struct fake_data, 32);
-
-static void init_fifo(void)
-{
-    INIT_KFIFO(fake_data_fifo);
-    mutex_lock(&fifo_lock);
-    kfifo_reset(&fake_data_fifo);
-    mutex_unlock(&fifo_lock);
-}
 //simulate the read flag of the real PCIe device
 static int read_flag = 0;
 
 
-//
+//simulate the timing of the real cobi chips
 static struct timer_list timer;
 static int counter = 0;
 
-static void timer_callback(struct timer_list *t)
-{
+static void timer_callback(struct timer_list *t){
     int i;
     counter++;
     
     for (i = 0; i < 16; i++) {
         if (data_array[i] != NULL && !data_array[i]->done) {
             if (counter == data_array[i]->time_value) {
+                mutex_lock(&problem_lock);
                 data_array[i] = NULL;
+                mutex_unlock(&problem_lock);
                 read_flag++;
             }
         }
@@ -86,73 +75,55 @@ static void init_timer_setup(void)
     mod_timer(&timer, jiffies + usecs_to_jiffies(1));
 }
 
-
-static int pci_open(struct inode *inode, struct file *file)
-{
-    int ret = 0;
-    mutex_lock(&open_lock);
-    if (busy) {
-        ret = -EBUSY;
-    } else {
-        // claim device
-        busy = true;
-        printk( KERN_WARNING "PCI:  opened device");
-
-    }
-    mutex_unlock(&open_lock);
-
-    return ret;
-}
-
-static int pci_release(struct inode *inode, struct file *file)
-{
-    busy = false;
-    return 0;
-}
-
-
 //write function of the virtual PCIe device
 static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
     int i;
     //create a new struct to store the passed in problem
     struct fake_data *new_data = kmalloc(sizeof(struct fake_data), GFP_KERNEL);
-    write_data_t write_data;
+    write_data_t *write_data;
 
+    //no memory was allocated
     if (!new_data)
         return -ENOMEM;
 
     //intialize the data
     if (copy_from_user(&write_data, buf, sizeof(write_data)) != 0)
         return -EFAULT;
-    
-//TODO set the problem ID value to its value from the write_data struct
+
+    //intialize the fake data
+    new_data->problem_id = write_data->value;
 
     //intialize the solution timing data
     new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
     new_data->done = false;
 
-    //store the problem in the data array
-    for (i = 0; i < 16; i++) {
-        if (data_array[i] == NULL) {
-            mutex_lock(&problem_lock);
-            data_array[i] = new_data;
-            mutex_unlock(&problem_lock);
-            break;
+    //check if the offset passed to the driver indicates a write
+    if(write_data->offset != 9 * sizeof(uint64_t)){
+        for (i = 0; i < 16; i++) {
+            if (data_array[i] == NULL) {
+                mutex_lock(&problem_lock);
+                data_array[i] = new_data;
+                mutex_unlock(&problem_lock);
+                
+                //write was successful, clean up the structures in memory
+                kfree(new_data);
+                kfree(write_data);
+                return 0;
+            }
         }
     }
+    
+    //write has failed, free up the structures in memory
+    kfree(new_data);
+    kfree(write_data);
+    return -ENOSPC;
 
-    if (i == 16) {
-        kfree(new_data);
-        return -ENOSPC;
-    }
-
-    return 0;
 }
 
 //read function of the virtual PCIe device
 static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
     int ret;
-    int i;  
+    int i;
 
     if (*offset == 10 * sizeof(uint32_t)) {
         int result = (read_flag > 0) ? 1 : 0;
@@ -163,10 +134,12 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
         return sizeof(result);
     }
 
-    if (*offset == 1) {
+    
+    if (*offset == 4 * sizeof(uint32_t)) {
         if(read_counter == 0){
             for (i = 0; i < 16; i++) {
                 if (data_array[i] != NULL && data_array[i]->done) {
+                    //copy the problem id to the user
                     uint64_t problem_id = data_array[i]->problem_id;
                     ret = copy_to_user(buf, &problem_id, sizeof(problem_id));
                     if (ret != 0) {
@@ -178,11 +151,11 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
                     read_flag--;
                     mutex_unlock(&problem_lock);
                     return sizeof(problem_id);
+
+                    //increment read counter to simulate the 4 reads required by the PCIe device
+                    read_counter++;
                 }
             }
-
-            //increment read counter to simulate the 4 reads required by the PCIe device
-            read_counter++;
 
             return -EAGAIN;
         }
@@ -198,10 +171,10 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             
             read_counter++;
 
-            return -EAGAIN;
+            return 0;
         }
 
-        if(read_counter == 2){       
+        if(read_counter > 1 ){       
             //send over a random 32 bit value
             uint32_t random_value;
             get_random_bytes(&random_value, sizeof(random_value));
@@ -210,41 +183,40 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
                 return -EFAULT;
             }
             
-            read_counter++;
+            read_counter = 0;
 
-            return -EAGAIN;
+            return 0;
         }
 
-        if(read_counter > 2){       
-            //send over a random 32 bit value
-            uint32_t random_value;
-            get_random_bytes(&random_value, sizeof(random_value));
-            ret = copy_to_user(buf, &random_value, sizeof(random_value));
-            if (ret != 0) {
-                return -EFAULT;
-            }
-            
-            read_counter == 0;
-
-            return -EAGAIN;
-
-        }
     }
 
-    /*
-    printk(KERN_INFO "PCI: Starting read operation\n");
-    
-    ret = copy_to_user(buf, &read_data, sizeof(read_data));
-    if (ret != 0) {
-        printk(KERN_ERR "PCI: copy_to_user failed with %d\n", ret);
-        return -EFAULT;
-    }
+    //failed to read from the device
+    return -EFAULT;
 
-    printk(KERN_INFO "PCI: Read successful, value=%d\n", read_data);
-    return sizeof(read_data);
-    */
+}
+
+//take control of the pci device
+static int pci_open(struct inode *inode, struct file *file){
+    int ret = 0;
+    mutex_lock(&open_lock);
+    if (busy) {
+        printk( KERN_WARNING "PCI:  opened device");
+        ret = -EBUSY;
+    } else {
+        // claim device
+        busy = true;
+        printk( KERN_WARNING "PCI:  opened device");
+
+    }
+    mutex_unlock(&open_lock);
+
+    return ret;
+}
+
+//release control of the pci device
+static int pci_release(struct inode *inode, struct file *file){
+    busy = false;
     return 0;
-
 }
 
 //file operations for the virtual PCIe device
@@ -255,10 +227,9 @@ struct file_operations tpci_fops = {
     .read = pci_read, 
     .write = pci_write
 };
-EXPORT_SYMBOL(tpci_fops);
+EXPORT_SYMBOL(tpci_fops); //export the functions to be used by the virtual driver
 
 static int __init vpci_init(void) {
-    //Virtual PCIe device registration and initialization
 
     // Register the character device with the Linux kernel
     int result = register_chrdev(0, DRIVER_NAME, &tpci_fops);
