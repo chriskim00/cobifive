@@ -1,4 +1,4 @@
-pci_driver64.o: /home/willammoy/cobifive/quadpcie/pci_driver64.c \
+pci_driver64.o: /home/cobidev/vdriver/cobifive/quadpcie/pci_driver64.c \
  include/linux/compiler-version.h include/linux/kconfig.h \
  include/generated/autoconf.h include/linux/compiler_types.h \
  include/linux/compiler_attributes.h include/linux/compiler-gcc.h \

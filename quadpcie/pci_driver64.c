@@ -48,6 +48,14 @@ typedef struct {
 //simulate the read flag of the real PCIe device
 static int read_flag = 0;
 
+//helper functions
+uint8_t inverse_data(uint8_t data) {
+    uint8_t reversed = 0;
+    for (int i = 0; i < 4; ++i) {
+        reversed |= ((data >> i) & 1) << (3 - i);
+    }
+    return reversed;
+}
 
 //simulate the timing of the real cobi chips
 static struct timer_list timer;
@@ -56,9 +64,9 @@ static unsigned int counter = 0;
 static void timer_callback(struct timer_list *t){
     int i;
     counter++;
-    printk(KERN_WARNING "PCI: Time Counter = %u\n", counter);
+    //printk(KERN_WARNING "PCI: Time Counter = %u\n", counter);
     for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
-        printk(KERN_DEBUG "PCI: data_array[%d]: %p, done: %s\n", i, data_array[i], (data_array[i] != NULL) ? (data_array[i]->done ? "true" : "false") : "NULL");
+        //printk(KERN_DEBUG "PCI: data_array[%d]: %p, done: %s\n", i, data_array[i], (data_array[i] != NULL) ? (data_array[i]->done ? "true" : "false") : "NULL");
         if (data_array[i] != NULL && !(data_array[i]->done)) {
             if (counter == data_array[i]->time_value) {
                 mutex_lock(&problem_lock);
@@ -76,7 +84,7 @@ static void timer_callback(struct timer_list *t){
         counter = 0;
     }
 
-    mod_timer(&timer, jiffies + usecs_to_jiffies(500000));
+    mod_timer(&timer, jiffies + usecs_to_jiffies(1));
 }
 
 static void init_timer_setup(void)
@@ -90,53 +98,49 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     int i;
     //create a new struct to store the passed in problem
     struct fake_data *new_data = kmalloc(sizeof(struct fake_data), GFP_KERNEL);
-    write_data_t *write_data = kmalloc(len, GFP_KERNEL);
-
-    printk(KERN_WARNING "PCI: Write variables intialized\n");
+    write_data_t *write_data = (write_data_t*)kmalloc(len, GFP_KERNEL);
+    if (!write_data) 
+        return -ENOMEM;
+    
+    printk(KERN_WARNING "PCI: Write problem\n");
 
     //no memory was allocated
     if (!new_data || !write_data)
         goto out;
-    
-
-    printk(KERN_WARNING "PCI: Copying write_data\n");
-
-    
+        
     //intialize the data
-    if (copy_from_user(write_data, buf, sizeof(write_data)) != 0)
+    if (copy_from_user(write_data, buf, len) != 0)
         goto out;
     
-    printk(KERN_WARNING "PCI: Write data copied\n");
-    //intialize the fake data
-    new_data->problem_id = write_data->value;
+    //printk(KERN_WARNING "PCI: Problem 64-bit in ID Value = 0x%llx\n", write_data[164].value);
+
 
     
     //intialize the solution timing data
-    new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
-    new_data->done = false;
-    printk(KERN_WARNING "PCI: Done = %d\n", new_data->done);
 
-    printk(KERN_WARNING "PCI: Fake data intialized finished\n");
-    printk(KERN_WARNING "PCI: Offset = %ld\n", write_data->offset);
-    printk(KERN_WARNING "PCI: Multiple of sizeof(uint64_t) = %lu\n", 9 * sizeof(uint64_t));
+    //printk(KERN_WARNING "PCI: Done = %d\n", new_data->done);
+
+    //printk(KERN_WARNING "PCI: Fake data intialized finished\n");
+    //printk(KERN_WARNING "PCI: Offset = %ld\n", write_data->offset);
+    //printk(KERN_WARNING "PCI: Multiple of sizeof(uint64_t) = %lu\n", 9 * sizeof(uint64_t));
     //check if the offset passed to the driver indicates a write
     if(write_data->offset == 9 * sizeof(uint64_t)){
         for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
             printk(KERN_WARNING "PCI: Searching for a open problem index\n");
             if (data_array[i] == NULL) {
-                printk(KERN_WARNING "PCI: Found an open problem index\n");
+                //store the problem data in the data_array
+                //intialize the fake data
+                new_data->problem_id = (0x000000000F000000 & write_data[164].value) >> 24;
+                //printk(KERN_WARNING "PCI: Problem ID = %x\n", new_data->problem_id);
+                new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
+                new_data->done = false;
                 mutex_lock(&problem_lock);
                 data_array[i] = new_data;
-                printk(KERN_WARNING "PCI: Problem ID = %u, Time Value = %d, Done = %d\n", data_array[i]->problem_id, data_array[i]->time_value, data_array[i]->done);
-                printk(KERN_WARNING "PCI: Problem stored at index %d = %p\n", i, NULL);
                 mutex_unlock(&problem_lock);
-                printk(KERN_WARNING "PCI: Stored at the open problem index\n");
 
 
                 //write was successful, clean up the structures in memory
                 kfree(write_data);
-                printk(KERN_WARNING "PCI: Wiped data structures\n");
-
                 return 0;
             }
         }
@@ -160,10 +164,13 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
 static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
     int ret;
     int i;
-
+    //printk(KERN_WARNING "PCI: Entered read\n");
     if (*offset == 10 * sizeof(uint32_t)) {
-        int result = (read_flag > 0) ? 1 : 0;
+        uint32_t result = (read_flag > 0) ? 1 : 0;
+        //printk(KERN_WARNING "PCI: Sent read flag: %d\n", result);
         ret = copy_to_user(buf, &result, sizeof(result));
+        //printk(KERN_WARNING "PCI: Problem read flag return copy to user returned %d\n", ret);
+
         if (ret != 0) {
             return -EFAULT;
         }
@@ -176,8 +183,9 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
                 if (data_array[i] != NULL && data_array[i]->done) {
                     //copy the problem id to the user
-                    uint64_t problem_id = data_array[i]->problem_id;
+                    uint32_t problem_id = inverse_data(data_array[i]->problem_id);
                     ret = copy_to_user(buf, &problem_id, sizeof(problem_id));
+
                     if (ret != 0) {
                         return -EFAULT;
                     }
@@ -185,10 +193,13 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
                     kfree(data_array[i]);
                     data_array[i] = NULL;
                     mutex_unlock(&problem_lock);
-                    return sizeof(problem_id);
+                    
 
                     //increment read counter to simulate the 4 reads required by the PCIe device
                     read_counter++;
+                    //printk(KERN_WARNING "PCI: Sent problem ID, read step 1 \n");
+
+                    return 0;
                 }
             }
 
@@ -205,7 +216,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             }
             
             read_counter++;
-
+            //printk(KERN_WARNING "Second Read of single solution, read step 2  \n");
             return 0;
         }
 
@@ -220,6 +231,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             
             read_counter = 0;
             read_flag--;
+            //printk(KERN_WARNING "Third Read of single solution, read step 3 \n");
             return 0;
         }
 
@@ -235,12 +247,12 @@ static int pci_open(struct inode *inode, struct file *file){
     int ret = 0;
     mutex_lock(&open_lock);
     if (busy) {
-        printk( KERN_WARNING "PCI:  opened device");
+        printk( KERN_WARNING "PCI:  couldn't open device");
         ret = -EBUSY;
     } else {
         // claim device
         busy = true;
-        printk( KERN_WARNING "PCI:  opened device");
+        //printk( KERN_WARNING "PCI:  opened device");
 
     }
     mutex_unlock(&open_lock);
@@ -250,7 +262,7 @@ static int pci_open(struct inode *inode, struct file *file){
 
 //release control of the pci device
 static int pci_release(struct inode *inode, struct file *file){
-    printk( KERN_WARNING "PCI:  closed device");
+    //printk( KERN_WARNING "PCI:  closed device");
     busy = false;
     return 0;
 }

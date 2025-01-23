@@ -53,9 +53,10 @@ __used __section("__versions") = {
 	{ 0xbef6f27e, "class_destroy" },
 	{ 0x13c49cc2, "_copy_from_user" },
 	{ 0xfbcd51c, "__class_create" },
+	{ 0x88db9f48, "__check_object_size" },
 };
 
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "DF876298329765FEB9DD612");
+MODULE_INFO(srcversion, "F7B537D1193213F5A2EB92B");

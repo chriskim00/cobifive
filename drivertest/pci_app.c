@@ -51,7 +51,7 @@ uint64_t  rawData1[166] = {
 0x0A00800000000005, 0x8000000000E00000, 0x05000000D0090040, 0x0D090CB00000009C, 0x00003E0400000000, 0x000B0390F0600500, 0x000A000000000C00, 0x000000000000E000, 0x050003000000000C, 0xD0000E0000200B00, 0x0008000000F70000, 0x0006950000000000, 0x0000000A00000000, 0x0000000090000000, 0x000000005B000002, 0x90F0009D00006000, 
 0xD00B004000000303, 0x00000A0000B00005, 0x0000000600000000, 0x9000000040000A09, 0x80000300000A0009, 0x220000B030700000, 0x0000900200F62000, 0x6000D00000080002, 0x0E000EB00009C400, 0x00007C000040000C, 0x00900903900F2000, 0x00A000050000D000, 0x000000800A090000, 0x000B000FC00E0700, 0x00000004000E0609, 0x0000000A070C0000, 
 0x5000500A6D009500, 0x0000040070007000, 0x0000000008000000, 0x000877F090000000, 0x00300006060040D7, 0x00300000000D0B00, 0x0030050D00000000, 0x000B000200000000, 0x0000000000000B00, 0x5AE9030000000070, 0x0C0E040000007300, 0x0006000000F00C00, 0xB0000000060D0E00, 0x00080000C0F00B02, 0x300500000B800040, 0x0000000000000000, 
-0x0000000000000000, 0x0000000000000000, 0x000300FD00000000, 0x00FF001F0003000F, 0xAAAAAAAA01110000, 0x000000AAAAAAAAAA
+0x0000000000000000, 0x0000000000000000, 0x000300FD00000000, 0x00FF001F0003000F, 0xAAAAAAAA01170000, 0x000000AAAAAAAAAA
 
 };
 
@@ -77,6 +77,7 @@ uint8_t inverse_data(uint8_t data) {
     return reversed;
 }
 
+//swaps the right byte with the left byte -> ABCD -> BADC
 uint64_t swap_bytes(uint64_t val) {;
 
     return ((val >> 8)  & 0x00FF00FF00FF00FF) |
@@ -94,8 +95,9 @@ static int perform_read(int fd, int* problem_id, uint64_t* best_spins, uint64_t*
     //check if device "i" is avaiable to be read from by checking the read flag
     offset = 10 * sizeof(uint32_t); //fifo flag offset
     ret = pread(fd, (char *)&read_data, sizeof(read_data), offset);
+    
     if (ret < 0) {
-        log_message("Failed to read from underlying device: %d\n", ret);
+        log_message("Failed to read from underlying device (read flag): %d\n", ret);
         return -1;
     }
     //set the read flag from the returned read data 
@@ -107,9 +109,9 @@ static int perform_read(int fd, int* problem_id, uint64_t* best_spins, uint64_t*
         offset = 4 * sizeof(uint32_t); //fifo flag offset
         for( k = 0 ; k <3; k++){
 
-            ret = pread(fd, (char *)&read_data, sizeof(read_data), offset);
+            ret = pread(fd, &read_data, sizeof(read_data), offset);
             if (ret < 0) {
-                log_message("Failed to read from underlying device: %d\n", ret);
+                log_message("Failed to read from underlying device (regular read): %d\n", ret);
                 return -1;
             }
 
@@ -124,16 +126,18 @@ static int perform_read(int fd, int* problem_id, uint64_t* best_spins, uint64_t*
             }
             if(k == 2){
                 *best_ham = ((uint64_t)read_data << 32) | (*best_ham & 0xFFFFFFFF);
+                log_message("Read logged\n");
+                return 0;
             }
         }
     }
     else{
-        log_message("No data to read\n");
+        log_message("No data to read, try again\n");
         return -1;
     }
 
-    log_message("Read logged\n");
-    return 0;
+    log_message("Perform read failed\n");
+    return -1;
 }
 
 static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
@@ -204,22 +208,22 @@ void perform_operations(const char* device_file) {
     //send data to the vdriver
     read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count*RAW_BYTE_CNT);  
     close(fd);
-    /*
+    
 
     //retrieve data from the vdriver
     time_t start_time_wr = time(NULL); // Record the start time
     
     // Wait for up to 2 seconds before breaking the loop
-    while (difftime(time(NULL), start_time_wr) < 2) {
+    while (difftime(time(NULL), start_time_wr) < 5) {
         //open the device file
         fd = open(device_file, O_RDWR);
 
         //check if the r
-        if (!perform_read(fd, &read_data->user_id, read_data->best_spins, read_data->best_ham) != sizeof(read_data->user_id)) {
-            log_message("Read Data:\n");
+        if (perform_read(fd, &read_data->user_id, read_data->best_spins, read_data->best_ham) >= 0) {
+            log_message("Read Data\n");
             log_message("Data read - User ID: %d\n", read_data->user_id);
-            log_message("Best Spins: %" PRIu64 "\n", read_data->best_spins[0]); 
-            log_message("Best Ham: %" PRIu64 "\n", read_data->best_ham[0]);
+            log_message("COBIFIVE Best Spins: 0x%lx\n", (*read_data->best_spins>>8) & 0x3FFFFFFFFFFF); 
+            log_message("COBIFIVE Best Ham: 0x%lx\n", (*read_data->best_ham>>22) & 0x3FFF);
             break; // Exit the loop after successful read
         }
 
@@ -230,7 +234,7 @@ void perform_operations(const char* device_file) {
         // Check every 100ms
         usleep(100000); 
     }
-*/
+
 
 }
 
