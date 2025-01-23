@@ -19,8 +19,8 @@ static int major;
 static struct class *tpci_class;
 static struct device *tpci_device = NULL;
 static int device_number;
-static bool busy = false;
-int read_counter = 0;
+static bool busy;
+int read_counter;
 
 //define mutexes
 static DEFINE_MUTEX(open_lock);
@@ -49,7 +49,7 @@ static int read_flag = 0;
 
 //simulate the timing of the real cobi chips
 static struct timer_list timer;
-static int counter = 0;
+static unsigned int counter = 0;
 
 static void timer_callback(struct timer_list *t){
     int i;
@@ -62,11 +62,16 @@ static void timer_callback(struct timer_list *t){
                 data_array[i] = NULL;
                 mutex_unlock(&problem_lock);
                 read_flag++;
+                printk(KERN_WARNING "PCI: Problem %u Finished\n", data_array[i]->problem_id);
             }
         }
     }
     
-    mod_timer(&timer, jiffies + usecs_to_jiffies(1));
+    if(counter == 4294967295){
+        counter = 0;
+    }
+
+    mod_timer(&timer, jiffies + usecs_to_jiffies(10000));
 }
 
 static void init_timer_setup(void)
@@ -80,44 +85,68 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     int i;
     //create a new struct to store the passed in problem
     struct fake_data *new_data = kmalloc(sizeof(struct fake_data), GFP_KERNEL);
-    write_data_t *write_data;
+    write_data_t *write_data = kmalloc(len, GFP_KERNEL);
+
+    printk(KERN_WARNING "PCI: Write variables intialized\n");
 
     //no memory was allocated
-    if (!new_data)
-        return -ENOMEM;
+    if (!new_data || !write_data)
+        goto out;
+    
 
+    printk(KERN_WARNING "PCI: Copying write_data\n");
+
+    
     //intialize the data
-    if (copy_from_user(&write_data, buf, sizeof(write_data)) != 0)
-        return -EFAULT;
-
+    if (copy_from_user(write_data, buf, sizeof(write_data)) != 0)
+        goto out;
+    
+    printk(KERN_WARNING "PCI: Write data copied\n");
     //intialize the fake data
     new_data->problem_id = write_data->value;
 
+    
     //intialize the solution timing data
     new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
-    new_data->done = false;
+    new_data->done = true;
 
+    printk(KERN_WARNING "PCI: Fake data intialized finished\n");
+    printk(KERN_WARNING "PCI: Offset = %ld\n", write_data->offset);
+    printk(KERN_WARNING "PCI: Multiple of sizeof(uint64_t) = %lu\n", 9 * sizeof(uint64_t));
     //check if the offset passed to the driver indicates a write
-    if(write_data->offset != 9 * sizeof(uint64_t)){
+    if(write_data->offset == 9 * sizeof(uint64_t)){
         for (i = 0; i < 16; i++) {
+            printk(KERN_WARNING "PCI: Searching for a open problem index\n");
             if (data_array[i] == NULL) {
+                printk(KERN_WARNING "PCI: Found an open problem index\n");
                 mutex_lock(&problem_lock);
                 data_array[i] = new_data;
                 mutex_unlock(&problem_lock);
-                
+                printk(KERN_WARNING "PCI: Stored at the open problem index\n");
+
+
                 //write was successful, clean up the structures in memory
                 kfree(new_data);
                 kfree(write_data);
+                printk(KERN_WARNING "PCI: Wiped data structures\n");
+
                 return 0;
             }
         }
     }
     
+    printk(KERN_WARNING "PCI: Failed to find an open problem index\n");
     //write has failed, free up the structures in memory
     kfree(new_data);
     kfree(write_data);
+    printk(KERN_WARNING "PCI: Wiped data structures after failure\n");
     return -ENOSPC;
 
+    out:
+        kfree(new_data);
+        kfree(write_data);
+        printk(KERN_WARNING "PCI: Wiped data structures after failure\n");
+        return -EFAULT;
 }
 
 //read function of the virtual PCIe device
@@ -136,7 +165,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
 
     
     if (*offset == 4 * sizeof(uint32_t)) {
-        if(read_counter == 0){
+        if(read_counter == 0 && read_flag > 0){
             for (i = 0; i < 16; i++) {
                 if (data_array[i] != NULL && data_array[i]->done) {
                     //copy the problem id to the user
@@ -148,7 +177,6 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
                     mutex_lock(&problem_lock);
                     kfree(data_array[i]);
                     data_array[i] = NULL;
-                    read_flag--;
                     mutex_unlock(&problem_lock);
                     return sizeof(problem_id);
 
@@ -157,7 +185,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
                 }
             }
 
-            return -EAGAIN;
+            return -EAGAIN; //try again message
         }
 
         if(read_counter == 1){       
@@ -184,7 +212,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             }
             
             read_counter = 0;
-
+            read_flag--;
             return 0;
         }
 
@@ -215,6 +243,7 @@ static int pci_open(struct inode *inode, struct file *file){
 
 //release control of the pci device
 static int pci_release(struct inode *inode, struct file *file){
+    printk( KERN_WARNING "PCI:  closed device");
     busy = false;
     return 0;
 }
@@ -229,14 +258,16 @@ struct file_operations tpci_fops = {
 };
 EXPORT_SYMBOL(tpci_fops); //export the functions to be used by the virtual driver
 
-static int __init vpci_init(void) {
-
+static int __init pci_init(void) {
+    
     // Register the character device with the Linux kernel
     int result = register_chrdev(0, DRIVER_NAME, &tpci_fops);
+    read_counter = 0;
+    busy = false;
     //check if the character device was successfully registered
     if( result < 0 )
     {
-            printk( KERN_WARNING "VPCI:  can't register character device with error code = %i\n", result );
+            printk( KERN_WARNING "PCI:  can't register character device with error code = %i\n", result );
             return result;
     }
     //store the major number
@@ -246,11 +277,10 @@ static int __init vpci_init(void) {
     tpci_class = class_create(THIS_MODULE, DRIVER_NAME);
     if( IS_ERR( tpci_class ) )
     {
-        printk( KERN_WARNING "VPCI:  can\'t create device class with errorcode = %ld\n", PTR_ERR( tpci_class ) );
+        printk( KERN_WARNING "PCI:  can\'t create device class with errorcode = %ld\n", PTR_ERR( tpci_class ) );
         unregister_chrdev( major, DRIVER_NAME );
         return PTR_ERR( tpci_class );
     }
-    printk( KERN_NOTICE "VPCI: Device class created\n" );
 
     //make a device number macro
     device_number = MKDEV( major, 0 );
@@ -264,17 +294,15 @@ static int __init vpci_init(void) {
         unregister_chrdev( major, DRIVER_NAME );
         return PTR_ERR( tpci_device );
     }
-    printk(KERN_INFO "VPCI: Module loaded\n");
-    
+
     //set up the timer to check for done problems
     init_timer_setup();
-
+    printk( KERN_WARNING "PCI:  Module loaded");
     return 0;
 }
 
-static void __exit vpci_exit(void) {
+static void __exit pci_exit(void) {
     // Unregister the character device with the Linux kernel
-    printk( KERN_NOTICE "Unregister_device() is called\n" );
 
     if( !IS_ERR( tpci_class ) )
     {
@@ -288,11 +316,11 @@ static void __exit vpci_exit(void) {
     {
         unregister_chrdev( major, DRIVER_NAME );
     }
-    printk(KERN_INFO "VPCI: Module unloaded\n");
+    printk(KERN_WARNING "PCI: Module unloaded\n");
 
     //delete the timer simulating problem completion
     del_timer_sync(&timer);     
 }
 
-module_init(vpci_init);
-module_exit(vpci_exit);
+module_init(pci_init);
+module_exit(pci_exit);

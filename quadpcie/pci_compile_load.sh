@@ -13,11 +13,9 @@ if [ $? -ne 0 ]; then
 fi
 
 # Copy the module to the appropriate directory
-sudo cp vpci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
 sudo cp pci_driver64.ko /lib/modules/$(uname -r)/kernel/drivers
 
 # Remove the module if it is already loaded
-sudo rmmod vpci_driver64.ko
 sudo rmmod pci_driver64.ko
 
 
@@ -26,9 +24,7 @@ sudo depmod -a
 
 # Load the module
 sudo insmod pci_driver64.ko
-sudo insmod vpci_driver64.ko
 
-sudo chmod 666 /dev/cobi_chip_vdriver64
 sudo chmod 666 /dev/cobi_chip_testdriver640
 
 

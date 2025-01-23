@@ -1,5 +1,5 @@
 obj-m += pci_driver64.o
-obj-m += vpci_driver64.o
+#obj-m += vpci_driver64.o
 
 # Compiler settings - use system gcc
 ARCH := $(shell uname -m)
@@ -18,15 +18,19 @@ CURRENT_PATH := $(shell pwd)
 # Logging
 LOG_FILE := build.log
 
+#Build directory
+BUILD_DIR := build
+
+
 all:
-	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH) modules 2> $(LOG_FILE)
+	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH)  modules 2> $(LOG_FILE)
 
 install:
-	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH) modules_install
+	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH)  modules_install
 	depmod -a
 
 clean:
-	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH) clean
+	$(MAKE) -C $(KERNEL_BUILD) M=$(CURRENT_PATH)  clean
 
 #OLD MAKEFILE VERSION FOR non-WSL 
 # CC := x86_64-linux-gnu-gcc-12

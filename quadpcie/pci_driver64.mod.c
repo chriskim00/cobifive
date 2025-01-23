@@ -30,6 +30,7 @@ __used __section("__versions") = {
 	{ 0xb6a63e1, "module_layout" },
 	{ 0x6bc3fbc0, "__unregister_chrdev" },
 	{ 0xbc870820, "kmalloc_caches" },
+	{ 0xeb233a45, "__kmalloc" },
 	{ 0x41ed3709, "get_random_bytes" },
 	{ 0xd36dc10c, "get_random_u32" },
 	{ 0xd73ace02, "device_destroy" },
@@ -57,4 +58,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "3A93BEA5B372261B19B53D1");
+MODULE_INFO(srcversion, "FE8615C8326C000E396EFA1");

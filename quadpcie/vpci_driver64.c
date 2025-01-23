@@ -482,6 +482,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
 }
 
 static int vpci_open(struct inode *inode, struct file *file){
+    
     int ret = 0;
     mutex_lock(&open_lock);
     if (busy) {
@@ -580,7 +581,6 @@ static int __init vpci_init(void) {
         unregister_chrdev( major, DRIVER_NAME );
         return PTR_ERR( vpci_class );
     }
-    printk( KERN_NOTICE "VPCI: Device class created\n" );
 
     //make a device number using the MAJOR macro for the virtual driver
     device_number = MKDEV( major, 0 );
@@ -600,7 +600,7 @@ static int __init vpci_init(void) {
 
 static void __exit vpci_exit(void) {
     // Unregister the character device with the Linux kernel
-    printk( KERN_NOTICE "Unregister_device() is called\n" );
+    
 
     if( !IS_ERR( vpci_class ) )
     {
