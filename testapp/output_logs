@@ -1,5 +1,1 @@
-
-Accessing device file: /dev/cobi_chip_vdriver64
-User ID: -1
-Best Spins: 0 
-Best Hamiltonian Values: 0 
+No device found at /dev/cobi_chip_vdriver64

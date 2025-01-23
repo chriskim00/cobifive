@@ -15,6 +15,8 @@ MODULE_LICENSE("GPL");
 MODULE_VERSION("1.1"); 
 // Define variables
 #define DRIVER_NAME "cobi_chip_testdriver640"
+#define SOLVED_ARRAY_SIZE 16
+
 static int major;
 static struct class *tpci_class;
 static struct device *tpci_device = NULL;
@@ -35,7 +37,7 @@ struct fake_data {
 };
 
 //store the users problem and fake solution timing data
-static struct fake_data *data_array[16];
+static struct fake_data *data_array[SOLVED_ARRAY_SIZE];
 
 //problem data
 typedef struct {
@@ -54,24 +56,27 @@ static unsigned int counter = 0;
 static void timer_callback(struct timer_list *t){
     int i;
     counter++;
-    
-    for (i = 0; i < 16; i++) {
-        if (data_array[i] != NULL && !data_array[i]->done) {
+    printk(KERN_WARNING "PCI: Time Counter = %u\n", counter);
+    for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
+        printk(KERN_DEBUG "PCI: data_array[%d]: %p, done: %s\n", i, data_array[i], (data_array[i] != NULL) ? (data_array[i]->done ? "true" : "false") : "NULL");
+        if (data_array[i] != NULL && !(data_array[i]->done)) {
             if (counter == data_array[i]->time_value) {
                 mutex_lock(&problem_lock);
-                data_array[i] = NULL;
+                printk(KERN_WARNING "PCI: Problem %u Finished\n", data_array[i]->problem_id);
+                data_array[i]->done = true;
                 mutex_unlock(&problem_lock);
                 read_flag++;
-                printk(KERN_WARNING "PCI: Problem %u Finished\n", data_array[i]->problem_id);
             }
         }
     }
-    
-    if(counter == 4294967295){
+
+
+    if(counter == 4294967294){
+        printk(KERN_WARNING "PCI: Time Counter Reset\n");
         counter = 0;
     }
 
-    mod_timer(&timer, jiffies + usecs_to_jiffies(10000));
+    mod_timer(&timer, jiffies + usecs_to_jiffies(500000));
 }
 
 static void init_timer_setup(void)
@@ -108,25 +113,27 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     
     //intialize the solution timing data
     new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
-    new_data->done = true;
+    new_data->done = false;
+    printk(KERN_WARNING "PCI: Done = %d\n", new_data->done);
 
     printk(KERN_WARNING "PCI: Fake data intialized finished\n");
     printk(KERN_WARNING "PCI: Offset = %ld\n", write_data->offset);
     printk(KERN_WARNING "PCI: Multiple of sizeof(uint64_t) = %lu\n", 9 * sizeof(uint64_t));
     //check if the offset passed to the driver indicates a write
     if(write_data->offset == 9 * sizeof(uint64_t)){
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
             printk(KERN_WARNING "PCI: Searching for a open problem index\n");
             if (data_array[i] == NULL) {
                 printk(KERN_WARNING "PCI: Found an open problem index\n");
                 mutex_lock(&problem_lock);
                 data_array[i] = new_data;
+                printk(KERN_WARNING "PCI: Problem ID = %u, Time Value = %d, Done = %d\n", data_array[i]->problem_id, data_array[i]->time_value, data_array[i]->done);
+                printk(KERN_WARNING "PCI: Problem stored at index %d = %p\n", i, NULL);
                 mutex_unlock(&problem_lock);
                 printk(KERN_WARNING "PCI: Stored at the open problem index\n");
 
 
                 //write was successful, clean up the structures in memory
-                kfree(new_data);
                 kfree(write_data);
                 printk(KERN_WARNING "PCI: Wiped data structures\n");
 
@@ -166,7 +173,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
     
     if (*offset == 4 * sizeof(uint32_t)) {
         if(read_counter == 0 && read_flag > 0){
-            for (i = 0; i < 16; i++) {
+            for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
                 if (data_array[i] != NULL && data_array[i]->done) {
                     //copy the problem id to the user
                     uint64_t problem_id = data_array[i]->problem_id;
