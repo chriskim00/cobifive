@@ -1,5 +1,5 @@
 obj-m += pci_driver64.o
-#obj-m += vpci_driver64.o
+obj-m += vpci_driver64.o
 
 # Compiler settings - use system gcc
 ARCH := $(shell uname -m)

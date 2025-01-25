@@ -10,6 +10,9 @@
 #include <time.h>
 #include <inttypes.h>
 #include <cerrno>
+#include <stdarg.h>
+#include <stdio.h>
+
 //#include "cobi_input_data.h"
 
 #define DEVICE_FILE_TEMPLATE "/dev/cobi_chip_vdriver64"
@@ -20,6 +23,25 @@ THIS APPLICATION IS FOR the virtual pcie driver.
 Created by: RPJ
 Date: Dec. 6, 2024
 */
+
+//Logging function
+void log_message(const char* format, ...) {
+    FILE* output = fopen("output_logs", "a");
+    if (!output) {
+        output = stdout;  // Fallback to stdout if file can't be opened
+    }
+    
+    va_list args;
+    va_start(args, format);
+    vfprintf(output, format, args);
+    va_end(args);
+    
+    if (output != stdout) {
+        fclose(output);
+    }
+    fflush(output);
+}
+
 
 uint64_t  rawData1[166] = {
 0xF1F2F3F4F5F5ABC1, 0xA1A2A3A4A5A64433, 0xB1B2B3B4B5B6ABD1, 0x0030700020000000, 0x000B000000000209, 0x0980000090070000, 0x0063500000000000, 0x07080700000CB000, 0xD070228000000006, 0x000000000000E060, 0x5020002A00000000, 0x70CE0000000B2D00, 0x00003000500C0040, 0x0000E00750A00CA0, 0x0006C0000C008000, 0x000040E020C02E00, 
@@ -42,7 +64,7 @@ typedef struct {
 } write_data_t;
 
 struct user_read_data {
-    int user_id;
+    int *user_id;
     uint64_t *best_spins;
     uint64_t *best_ham;
 };
@@ -55,29 +77,16 @@ uint64_t swap_bytes(uint64_t val) {;
 }
 
 static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
-    int user_id; //used to track the problems sent to the device
-
+    int user_id = 0; //used to track the problems sent to the device
     //create a temp structure to store the problem data
-    write_data_t *bulk_write_data = (write_data_t*)malloc(count * sizeof(write_data_t));
 
-    //check if the sturcture was created
-    if (!bulk_write_data) {
-        perror("Failed to allocate memory for bulk write data");
-        return -1;
-    }
-    
-    //loop through the data and intialize the bulk_write_data struct
-    for (size_t i = 0; i < count; ++i) {
-        bulk_write_data[i].offset = 9 * sizeof(uint64_t);  // Memory Map Address
-        bulk_write_data[i].value =  swap_bytes(data[i]);   // 64-bit value
-    }
-
+    /*
     //write the data to the device
-    user_id = write(fd, bulk_write_data, count * sizeof(write_data_t));
-
-    free(bulk_write_data);
+    user_id = write(fd, data, count * sizeof(write_data_t));
+    */
 
     return user_id;
+    
 }
 
 void perform_operations(const char* device_file) {
@@ -88,14 +97,14 @@ void perform_operations(const char* device_file) {
     // Open device file
     fd = open(device_file, O_RDWR);
     if (fd < 0) {
-        fprintf(stderr, "Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
+        log_message("Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
         return;
     }
 
     // Allocate main structure
-    struct user_read_data *read_data = (struct user_read_data *)malloc(sizeof(struct user_read_data));
+    struct user_read_data *read_data = malloc(sizeof(struct user_read_data));
     if (read_data == NULL) {
-        fprintf(stderr, "Failed to allocate read_data\n");
+        log_message("Failed to allocate read_data\n");
         return;
     }
 
@@ -108,16 +117,17 @@ void perform_operations(const char* device_file) {
     read_data->best_ham = (uint64_t *)malloc(problem_count * sizeof(uint64_t));
     
     if (!read_data->best_spins || !read_data->best_ham) {
-        fprintf(stderr, "Failed to allocate arrays\n");
+        log_message("Failed to allocate arrays\n");
         free(read_data->best_spins);
         free(read_data->best_ham);
         free(read_data);
         return;
     }
-
+    
     //send data to the vdriver
-    read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, RAW_BYTE_CNT);  
+    read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count*RAW_BYTE_CNT);  
     close(fd);
+    /*
 
     //retrieve data from the vdriver
     time_t start_time_wr = time(NULL); // Record the start time
@@ -129,7 +139,7 @@ void perform_operations(const char* device_file) {
 
         //check if the r
         if (read(fd, &user_id, problem_count) != sizeof(user_id)) {
-            perror("Read is not done");
+            log_message("Read is not done");
         }
         else{
             //read the data from the device
@@ -147,47 +157,35 @@ void perform_operations(const char* device_file) {
     close(fd);
 
     //Log the data from the user_read_data struct
-    printf("User ID: %d\n", read_data->user_id);
-    printf("Best Spins: ");
+    log_message("User ID: %d\n", read_data->user_id);
+    log_message("Best Spins: ");
     for (size_t i = 0; i < problem_count; i++) {
         printf("%" PRIu64 " ", read_data->best_spins[i]);
     }
-    printf("\nBest Hamiltonian Values: ");
+    log_message("\nBest Hamiltonian Values: ");
     for (size_t i = 0; i < problem_count; i++) {
         printf("%" PRIu64 " ", read_data->best_ham[i]);
     }
-    printf("\n");
+    log_message("\n");
 
+*/
 }
 
 
 int main() {
-    // Open the output_logs file for writing
-    FILE *log_file = freopen("output_logs", "w", stdout);
-    if (log_file == NULL) {
-        perror("Failed to redirect stdout");
-        return 1;
-    }
-
-    // Redirect stderr as well
-    if (freopen("output_logs", "a", stderr) == NULL) {
-        perror("Failed to redirect stderr");
-        return 1;
-    }
 
     char device_file[256];
     snprintf(device_file, sizeof(device_file), DEVICE_FILE_TEMPLATE);
     if (access(device_file, F_OK) == 0) {
-        printf("\nAccessing device file: %s\n", device_file);
+        log_message("Accessing device file: %s\n", device_file);
         //for (int k = 0; k < 5; ++k) {
         //    printf("Outer loop : %d\n", k);
             perform_operations(device_file);
         //}
     } else {
-        printf("No device found at %s\n", device_file);
+        log_message("No device found at %s\n", device_file);
     }
     
     
-    fclose(log_file); // Close the file when done
     return 0;
 }

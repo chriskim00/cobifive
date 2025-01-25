@@ -68,37 +68,30 @@ static DEFINE_MUTEX(open_lock);
 //store device data 
 struct device_data {
     struct file *fd_val;
-    int value;
-    bool id_used[16];  // Array to track which FIFO slots need to be read
+    int *value;
+    bool *id_used[16];  // Array to track which FIFO slots need to be read
 };
 
 //store the devices in an array
 struct device_data *device_array[MAX_DEVICES];
 
-//problem data structure
-struct write_data_t {
-    off_t offset;
-    uint64_t value;  // Change to 64-bit
-};
-typedef struct write_data_t write_data_t;
-
 //store the users problems and solutions 
 struct user_data {
-    int user_id;
-    int problem_count;           
-    int solved;
-    int first_problem;
+    int *user_id;
+    int *problem_count;           
+    int *solved;
+    int *first_problem;
     int *card_id;
-    int *problem_id;
+    uint32_t *problem_id;
     uint64_t *best_spins;
     uint64_t *best_ham;
-    struct write_data_t **write_data;
+    uint64_t **write_data;
 };
 typedef struct user_data user_data;
 
 //read data structure
 struct user_data_read {
-    int user_id;
+    int *user_id;
     uint64_t *best_spins;
     uint64_t *best_ham;
 };
@@ -147,7 +140,7 @@ uint8_t inverse_data(uint8_t data) {
 }
 
 //change the problem ID 
-void set_pid_in_rawData(uint64_t* rawData, uint16_t new_pid){
+void set_pid_in_rawData(uint64_t *rawData, uint16_t new_pid){
     //change the MSB 16 bits of the rawData to the new_pid
     // Clear the MSB 16 bits
     *rawData &= 0x0000FFFFFFFFFFFF;
@@ -198,21 +191,21 @@ static void process_user_data(struct work_struct *work){
         for (i = 0; i < device_count; i++) {
 
             //check if device "i" is avaiable to be written to
-            if (device_array[i] && device_array[i]->value < 17) {
+            if (device_array[i] && *device_array[i]->value < 16) {
                 
                 //submit as many problems to the device as avaiable slots
-                for (k = device_array[i]->value; k < 17; k++) {
+                for (k = 0; k < 17; k++) {
                     
                     //find an open problem id to use
-                    if(!(device_array[i]->id_used[k])){
+                    if(*(device_array[i]->id_used[k])){
 
                         //check if there exists data to write and if all problems have been submitted
-                        if (data->write_data[problems_submitted] && problems_submitted != data->problem_count) {
+                        if (data->write_data[problems_submitted] && problems_submitted != *(data->problem_count)) {
 
 
-                            set_pid_in_rawData(&(data->write_data[problems_submitted]->value), pid);
+                            set_pid_in_rawData(data->write_data[problems_submitted], pid);
                             // Send the problem to the PCIe device
-                            ret = tpci_fops.write(device_array[i]->fd_val, (char *)&data->write_data[problems_submitted], sizeof(write_data_t), &offset);
+                            ret = tpci_fops.write(device_array[i]->fd_val, (char *)&data->write_data[problems_submitted], sizeof(uint64_t), &offset);
                             if (ret < 0) {
                                 printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
                                 return;
@@ -228,14 +221,14 @@ static void process_user_data(struct work_struct *work){
                         }
                         
                         //indicate that the problem id is being used
-                        device_array[i]->id_used[k] = true;
+                        *device_array[i]->id_used[k] = true;
                     }
 
                 }
 
                 //set the value of the device to the number of problems that have been submitted
-                if (k == 17) {
-                    device_array[i]->value = 16;
+                if (k == 16) {
+                    *device_array[i]->value = 16;
                     break;
                 }
 
@@ -279,12 +272,13 @@ static void process_user_data(struct work_struct *work){
                     }
                     if(k == 2){
                         best_ham = ((uint64_t)read_data << 32) | (best_ham & 0xFFFFFFFF);
+                        *device_array[i]->value = *device_array[i]->value - 1 ;
                     }
                 }
             }
 
             //Store the data in the user_data struct
-            found_counter = data->first_problem; // used to search through the problems that have been submitted
+            found_counter = *data->first_problem; // used to search through the problems that have been submitted
             first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
             found = false; //track if the problem has been found to break the while loop
 
@@ -339,8 +333,8 @@ int queue_user_data_work(struct user_data *data){
 struct user_data* init_user_data(struct file *file, struct user_data *data, const char __user *buf, size_t size) {
     //declare funciton variables
     int i;
-    write_data_t *bulk_write_data = (write_data_t*)kmalloc(RAW_BYTE_CNT * sizeof(write_data_t), GFP_KERNEL);
-
+    uint64_t *bulk_write_data = (uint64_t*)kmalloc(RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
+    
     if(enable_logging){   
         log_action("PCI write intialize started", sizeof("PCI write intialize started"));
     }
@@ -348,16 +342,16 @@ struct user_data* init_user_data(struct file *file, struct user_data *data, cons
     
 
     // Allocate memory for the user_data structure based on the amount of problem (size) sent from the userspace
-    data->problem_id = kmalloc(size * sizeof(int), GFP_KERNEL);
-    data->best_spins = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
-    data->best_ham = kmalloc(size * sizeof(char __user *), GFP_KERNEL);
-    data->write_data = kmalloc(size * sizeof(write_data_t *), GFP_KERNEL);
-
+    data->problem_id = (uint32_t*)kmalloc(size * sizeof(int), GFP_KERNEL);
+    data->best_spins = (uint64_t*)kmalloc(size * sizeof(char __user *), GFP_KERNEL);
+    data->best_ham = (uint64_t*)kmalloc(size * sizeof(char __user *), GFP_KERNEL);
+    data->write_data = (uint64_t**)kmalloc(size * sizeof(uint64_t *), GFP_KERNEL);
+    
     //divide the problems from the user space into the user_data structs 
     for (i = 0; i < size; i++) {
-        // Allocate memory for each write_data_t structure
-        data->write_data[i] = kmalloc(sizeof(write_data_t), GFP_KERNEL);
-
+        // Allocate memory for each write_data structure
+        data->write_data[i] = (uint64_t*)kmalloc(RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
+        /*
         //check if allocation failed
         if (!data->write_data[i]) {
             // Handle allocation failure
@@ -365,7 +359,7 @@ struct user_data* init_user_data(struct file *file, struct user_data *data, cons
         }
 
         //copy the data from the user space to the kernel space
-        if (copy_from_user(bulk_write_data, data + (i * sizeof(write_data_t) * RAW_BYTE_CNT), sizeof(write_data_t))) {
+        if (copy_from_user(bulk_write_data, data + (i * sizeof(uint64_t) * RAW_BYTE_CNT), sizeof(uint64_t))) {
             kfree(bulk_write_data);
             return NULL;
         }
@@ -381,13 +375,13 @@ struct user_data* init_user_data(struct file *file, struct user_data *data, cons
     data->first_problem = 0;
     data->problem_count = size;
     data->solved = 0;
-
+    */
     kfree(bulk_write_data);
 
     if(enable_logging){
         log_action("PCI write intialize ended", sizeof("PCI write intialize ended"));
     }
-
+    
     return data;
 };
 
@@ -396,7 +390,7 @@ struct user_data* init_user_data(struct file *file, struct user_data *data, cons
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
     int i;
     //create a temp data structure to store user_data_read
-    struct user_data_read *user_data_read_temp;
+    struct user_data_read *user_data_read_temp = kmalloc(sizeof(user_data_read), GFP_KERNEL);
 
     if(enable_logging){
         log_action("PCI read started", sizeof("PCI read started"));
@@ -404,16 +398,15 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
 
 
     //intialize the user_data_read_temp struct
-    user_data_read_temp->best_spins = kmalloc(len * sizeof(uint64_t), GFP_KERNEL);
-    user_data_read_temp->best_ham = kmalloc(len * sizeof(uint64_t), GFP_KERNEL);
 
-    if (copy_from_user(&user_data_read_temp, buf, sizeof(user_data_read_temp)) != 0) {
+    if (copy_from_user(user_data_read_temp, buf, sizeof(*user_data_read_temp)) != 0) {
         return -EFAULT;
     }
 
     for(i = 0; i < MAX_USER_DATA; i++){
         
         if(processed_data[i]->user_id == user_data_read_temp->user_id){
+            //allocate the memory space to store the solution data
             if (copy_to_user(buf, processed_data[i], sizeof(processed_data[i])) != sizeof(processed_data[i])) {
                 return -EFAULT;
             }
@@ -427,7 +420,7 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
                     log_action("PCI read sucessful", sizeof("PCI read sucessful"));
                 }
 
-            return sizeof(processed_data[i]);
+            return 0;
         }
     }
 
@@ -437,22 +430,22 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
         log_action("PCI read unsucessful", sizeof("PCI read unsucessful"));
     }
 
-    return 0;
+    return -1;
 }
 
 static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
     //initialize variables 
     size_t data_count;
     struct user_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
-
+    
     if(enable_logging){
         log_action("PCI write started", sizeof("PCI write started"));
     }
 
 
 
-    // Determine number of write_data_t structures
-    data_count = len / sizeof(write_data_t);  
+    // Determine number of uint64_t structures
+    data_count = len / sizeof(uint64_t);  
     
     // Log the number of problems passed
     if(enable_logging){
@@ -461,7 +454,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
         log_action(log_message, sizeof(log_message));
     }
 
-
+    
     // Further processing of the user data into a structure user_data that seperates out the problems and ids them
     if(len != sizeof(buf)){
         //check if data was created
@@ -477,7 +470,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
     if(enable_logging){
         log_action("PCI write ended", sizeof("PCI write ended"));
     }
-
+    
     return 0;
 }
 
