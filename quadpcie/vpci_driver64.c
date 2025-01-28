@@ -7,6 +7,7 @@
 #include <linux/slab.h>
 #include <linux/export.h> //used to import EXPORT_SYMBOL() functions
 #include <linux/workqueue.h>
+#include <linux/delay.h>  // Include this header for msleep
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
@@ -180,6 +181,80 @@ static void store_user_data_read(struct user_data *data) {
 
 }
 
+static void bulk_write(struct *user_data, int device_count, int problems_submitted){
+    //WRITE
+    //go through the devices and check if they are avaiable to be written to
+    for (i = 0; i < device_count; i++) {
+
+        //check if device "i" is avaiable to be written to
+        if (device_array[i] && device_array[i]->problems_stored < 16) {
+            
+            //submit as many problems to the device as avaiable slots
+            for (k = 0; k < 17; k++) {
+                //find an open problem id to use and check if there are problems to be submitted
+                if( (problems_submitted != data->problem_count)){
+
+                    printk(KERN_WARNING "VPCI: problems_submitted=%d, problem_count=%d\n", problems_submitted, data->problem_count);
+                    printk(KERN_WARNING "VPCI: id_used[%d]=%d, data->write_data[%d]=%p\n", k, device_array[i]->id_used[k], problems_submitted, data->write_data[problems_submitted]);
+
+                    if((device_array[i]->id_used[k] == false) && (data->write_data[problems_submitted] != NULL)){
+                        timeout = 0;
+                        printk(KERN_WARNING "Found an open chip slot\n");
+                        //set offset
+                        offset = 9 * sizeof(uint64_t);
+                        
+                        //set the problem id in the chip data
+                        problem_id_16 = (uint16_t)k;
+                        printk(KERN_WARNING "VPCI: problem_id_16=%d, k=%d\n", problem_id_16, k);
+                        set_pid_in_rawData(data->write_data[problems_submitted],problem_id_16 );
+                        printk(KERN_WARNING "VPCI: write_data[%d][%d] = 0x%llx\n", problems_submitted, 164, data->write_data[problems_submitted][164]);
+
+                        //swap the bytes of the 
+                        for (size_t i = 0; i < RAW_BYTE_CNT; ++i) {
+                            data->write_data[problems_submitted][i] =  swap_bytes(data->write_data[problems_submitted][i]);   // 64-bit value
+                        }
+
+                        // for (int j = 0; j < RAW_BYTE_CNT; j++) {
+                        //     printk(KERN_WARNING "VPCI: write_data[%d][%d] = 0x%llx\n", problems_submitted, j, data->write_data[problems_submitted][j]);
+                        // }
+
+                        //printk(KERN_WARNING "VPCI: Size of write_data[%d] = 0x%lx\n", problems_submitted, sizeof(data->write_data[problems_submitted][0]));
+                        
+                        // Send the problem to the PCIe device
+                        ret = tpci_fops.write((struct file *)device_array[i]->fd_val, (const char *)data->write_data[problems_submitted], RAW_BYTE_CNT * sizeof(uint64_t), &offset);
+                        if (ret < 0) {
+                            printk(KERN_ERR "Failed to write to underlying device: %d\n", ret);
+                            return;
+                        }
+                        
+                        //set the ids that will identify which problem is being solved on what chip
+                        data->card_id[problems_submitted] = i;
+                        data->problem_id[problems_submitted] = k;
+                        printk(KERN_WARNING "Processing problem %d\n", i);
+
+                        //increment the problems_submitted to sumbit the next problem in the problem set
+                        problems_submitted++;                        
+                        
+                        //indicate how many problems are being stored in the chip
+                        device_array[i]->problems_stored++;
+
+                        //indicate that the problem id is being used
+                        device_array[i]->id_used[k] = true;
+                    }
+                }
+
+            }
+
+            //set the value of the device to the number of problems that have been submitted
+            if (k == 16) {
+                device_array[i]->problems_stored = 16;
+                break;
+            }
+
+        }
+    }
+}
+
 // Add the worker function
 static void process_user_data(struct work_struct *work){
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
@@ -188,14 +263,16 @@ static void process_user_data(struct work_struct *work){
     int i;
     int ret;
     int k;
+    int j;
     int device_count = 0;
     int problems_submitted = 0;
-    uint32_t read_data;
+    uint32_t *read_data = kmalloc(sizeof(uint32_t), GFP_KERNEL);
     uint64_t best_spins;
     uint64_t best_ham;
     int problem_id = 0;
+    uint16_t problem_id_16;
     int card_id = 0;
-    int read_flag = 0 ;
+    uint32_t read_flag = 0 ;
     loff_t offset = 0;
     bool found = false;
     int found_counter = 0;
@@ -209,8 +286,6 @@ static void process_user_data(struct work_struct *work){
     printk(KERN_WARNING "VPCI: ud_work problem_count = %d\n", ud_work->data->problem_count);
 
     printk(KERN_WARNING "VPCI: Entered process_user_data \n");
-
-    
 
     mutex_lock(&process_lock);
     
@@ -230,11 +305,15 @@ static void process_user_data(struct work_struct *work){
     
     //keep trying to read and write to the chips until all the problems are solved
     while(data->solved != data->problem_count){
-        if(timeout > 3){
+
+        //set a timeout to leave the loop
+        if(timeout > 50){
             printk(KERN_WARNING "VPCI: Timeout\n");
             goto out;
         }
+        msleep(100);  // .1 second delay
         timeout++;
+
         //WRITE
         //go through the devices and check if they are avaiable to be written to
         for (i = 0; i < device_count; i++) {
@@ -248,7 +327,7 @@ static void process_user_data(struct work_struct *work){
                     if( (problems_submitted != data->problem_count)){
 
                         printk(KERN_WARNING "VPCI: problems_submitted=%d, problem_count=%d\n", problems_submitted, data->problem_count);
-                        printk(KERN_WARNING "VPCI: id_used[%d]=%d, write_data[%d]=%p\n", k, device_array[i]->id_used[k], problems_submitted, data->write_data[problems_submitted]);
+                        printk(KERN_WARNING "VPCI: id_used[%d]=%d, data->write_data[%d]=%p\n", k, device_array[i]->id_used[k], problems_submitted, data->write_data[problems_submitted]);
 
                         if((device_array[i]->id_used[k] == false) && (data->write_data[problems_submitted] != NULL)){
                             timeout = 0;
@@ -256,19 +335,22 @@ static void process_user_data(struct work_struct *work){
                             //set offset
                             offset = 9 * sizeof(uint64_t);
                             
-                            //set the problem id in the chip data 
-                            set_pid_in_rawData(data->write_data[problems_submitted], (uint16_t)k);
+                            //set the problem id in the chip data
+                            problem_id_16 = (uint16_t)k;
+                            printk(KERN_WARNING "VPCI: problem_id_16=%d, k=%d\n", problem_id_16, k);
+                            set_pid_in_rawData(data->write_data[problems_submitted],problem_id_16 );
+                            printk(KERN_WARNING "VPCI: write_data[%d][%d] = 0x%llx\n", problems_submitted, 164, data->write_data[problems_submitted][164]);
 
                             //swap the bytes of the 
                             for (size_t i = 0; i < RAW_BYTE_CNT; ++i) {
                                 data->write_data[problems_submitted][i] =  swap_bytes(data->write_data[problems_submitted][i]);   // 64-bit value
                             }
 
-                            for (int j = 0; j < RAW_BYTE_CNT; j++) {
-                                printk(KERN_WARNING "VPCI: write_data[%d][%d] = 0x%llx\n", problems_submitted, j, data->write_data[problems_submitted][j]);
-                            }
+                            // for (int j = 0; j < RAW_BYTE_CNT; j++) {
+                            //     printk(KERN_WARNING "VPCI: write_data[%d][%d] = 0x%llx\n", problems_submitted, j, data->write_data[problems_submitted][j]);
+                            // }
 
-                            printk(KERN_WARNING "VPCI: Size of write_data[%d] = 0x%lx\n", problems_submitted, sizeof(data->write_data[problems_submitted][0]));
+                            //printk(KERN_WARNING "VPCI: Size of write_data[%d] = 0x%lx\n", problems_submitted, sizeof(data->write_data[problems_submitted][0]));
                             
                             // Send the problem to the PCIe device
                             ret = tpci_fops.write((struct file *)device_array[i]->fd_val, (const char *)data->write_data[problems_submitted], RAW_BYTE_CNT * sizeof(uint64_t), &offset);
@@ -303,56 +385,88 @@ static void process_user_data(struct work_struct *work){
 
             }
         }
-        
-        /*
+
         //READ 
         //check if any of the devices need to be read from
         for (i = 0; i < device_count; i++) {
+            
             read_flag = 0;
             //check if device "i" is avaiable to be read from by checking the read flag
             offset = 10 * sizeof(uint32_t); //fifo flag offset
-            ret = tpci_fops.read(device_array[i]->fd_val, (char *)&read_data, sizeof(read_data), &offset);
+            
+            ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
+            
             if (ret < 0) {
                 printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
                 goto out;
             }
+            
             //set the read flag from the returned read data 
-            read_flag = read_data;
-
+            read_flag = *read_data;
             //read the data from the device
             if(read_flag == 1){
                 timeout = 0;
+                
                 //read the data from the device. 96-bits need to be read from the device, so 3 reads need to be sent 
                 offset = 4 * sizeof(uint32_t); //fifo flag offset
                 for( k = 0 ; k <3; k++){
 
-                    ret = tpci_fops.read(device_array[i]->fd_val, (char *)&read_data, sizeof(read_data), &offset);
+                    ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
                     if (ret < 0) {
                         printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
                         goto out;
                     }
 
                     if(k == 0){
-                        problem_id = inverse_data(read_data);
-                        card_id = inverse_data(read_data >> 4);
-                        best_spins = read_data;
+                        printk(KERN_WARNING "VPCI: read_data=0x%x\n", *read_data);
+                        problem_id = inverse_data(*read_data);
+                        card_id = inverse_data(*read_data >> 4);
+                        best_spins = *read_data;
                     }
                     if(k == 1){
-                        best_spins = ((uint64_t)read_data << 32) | (best_spins & 0xFFFFFFFF);
-                        best_ham = read_data;
+                        best_spins = ((uint64_t)*read_data << 32) | (best_spins & 0xFFFFFFFF);
+                        best_ham = *read_data;
                     }
                     if(k == 2){
-                        best_ham = ((uint64_t)read_data << 32) | (best_ham & 0xFFFFFFFF);
+                        best_ham = ((uint64_t)*read_data << 32) | (best_ham & 0xFFFFFFFF);
                         device_array[i]->problems_stored = device_array[i]->problems_stored - 1 ;
                     }
                 }
+                printk(KERN_WARNING "VPCI: problem_id = %d\n", problem_id);
+                printk(KERN_WARNING "VPCI: card_id = %d\n", card_id); 
+                printk(KERN_WARNING "VPCI: best_spins = 0x%llx\n", best_spins);
+                printk(KERN_WARNING "VPCI: best_ham = 0x%llx\n", best_ham);
+                
+                for(j = 0; j < data->problem_count; j++){
+                    if(data->card_id[j] == card_id && data->problem_id[j] == problem_id){
+                        printk(KERN_WARNING "VPCI: data->card_id[%d]=%d, card_id=%d, data->problem_id[%d]=%d, problem_id=%d\n", j, data->card_id[j], card_id, j, data->problem_id[j], problem_id);
+                        msleep(100); 
+                        data->best_spins[k] = best_spins;
+                        data->best_ham[k] = best_ham;
+                        data->solved++;
+                        break;
+                    }
+                }
+                
             }
+            
 
+            /*
             //Store the data in the user_data struct
             found_counter = data->first_problem; // used to search through the problems that have been submitted
             first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
             found = false; //track if the problem has been found to break the while loop
-
+           
+           for(k = 0; k < data->problem_count; k++){
+                if(data->card_id[k] == card_id && data->problem_id[k] == problem_id){
+                    data->best_spins[k] = best_spins;
+                    data->best_ham[k] = best_ham;
+                    data->solved++;
+                    found = true;
+                    found_counter++;
+                }
+           }
+            
             while(!found){
                 if(data->card_id[found_counter] == card_id && data->problem_id[found_counter] == problem_id){
                     data->best_spins[found_counter] = best_spins;
@@ -361,7 +475,7 @@ static void process_user_data(struct work_struct *work){
                     found = true;
                     found_counter++;
                 }
-                
+            
                 
 //TODO: track the first problem that has not been solved
                 // if(data->best_spins[found_counter] == 0  && !first_problem_tracker){
@@ -371,10 +485,8 @@ static void process_user_data(struct work_struct *work){
                 
                 
             }
-            
-
+            */
         }
-        */
     }
 
     printk( KERN_WARNING "VPCI: Exiting process_user_data \n");
@@ -391,6 +503,7 @@ out:
     kfree(ud_work);
     mutex_unlock(&process_lock);
 }
+
 
 // Add function to queue work
 int queue_user_data_work(struct user_data *data){
@@ -440,10 +553,10 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     }
 
     // Allocate memory for the user_data structure
-    data->card_id = kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
-    data->problem_id = kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
-    data->best_spins = kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
-    data->best_ham = kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
+    data->card_id = (uint32_t *)kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
+    data->problem_id = (uint32_t *)kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
+    data->best_spins = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
+    data->best_ham = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     data->write_data = (uint64_t **)kmalloc(problem_count * sizeof(uint64_t *), GFP_KERNEL);
 
     if (!data || !buf || problem_count == 0) {
@@ -574,8 +687,6 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
         log_action("PCI write started\n", sizeof("PCI write started\n"));
     }
 
-
-
     // Determine number of uint64_t structures
     // Calculate problem count and ensure it's a whole number
     problem_count = len / (RAW_BYTE_CNT * sizeof(uint64_t));
@@ -584,7 +695,6 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
         return -EINVAL;
     }
 
-    
     // Log the number of problems passed
     if(enable_logging){
         snprintf(log_message, sizeof(log_message), "Problems passed: %zu\n", problem_count);
@@ -607,10 +717,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
 
     }
 
-
-    
-    
-
+    //queue the user data to be processed
     if(queue_user_data_work(data)){
         snprintf(log_message, sizeof(log_message), "Queueing Failed\n");
         log_action(log_message, sizeof(log_message));
@@ -618,9 +725,6 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
         cleanup_user_data(data, problem_count);
         return -ENOMEM;
     }
-
-    
-    
 
     return 0;
 }

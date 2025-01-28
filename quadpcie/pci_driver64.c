@@ -113,26 +113,6 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     // Copy from user space
     memcpy(raw_write_data, buf, len);
 
-    
-    // Print each 64-bit value from raw_write_data
-    for (i = 0; i < RAW_BYTE_CNT; i++) {
-        printk(KERN_DEBUG "PCI: raw_write_data[%d] = 0x%llx\n", i, raw_write_data[i]);
-    }
-    
-
-    //printk(KERN_WARNING "PCI: Problem 64-bit in ID Value = 0x%llx\n", write_data[164].value);
-
-
-    
-    //intialize the solution timing data
-
-    //printk(KERN_WARNING "PCI: Done = %d\n", new_data->done);
-
-    //printk(KERN_WARNING "PCI: Fake data intialized finished\n");
-    //printk(KERN_WARNING "PCI: Offset = %ld\n", write_data->offset);
-    //printk(KERN_WARNING "PCI: Multiple of sizeof(uint64_t) = %lu\n", 9 * sizeof(uint64_t));
-    //check if the offset passed to the driver indicates a write
-
     if(*offset == 9 * sizeof(uint64_t)){
         for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
             printk(KERN_WARNING "PCI: Searching for a open problem index\n");
@@ -141,9 +121,9 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
 
                 //store the problem data in the data_array
                 //intialize the fake data
-                // new_data->problem_id = (0x000000000F000000 & write_data[164].value) >> 24;
-
-                new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
+                new_data->problem_id = (0x000000000F000000 & raw_write_data[164]) >> 24;
+                printk(KERN_WARNING "PCI: Problem ID = %u\n", new_data->problem_id);
+                new_data->time_value = counter + (get_random_int() % 3 + 1); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
                 new_data->done = false;
                 mutex_lock(&problem_lock);
                 data_array[i] = new_data;
@@ -180,18 +160,13 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
 
 //read function of the virtual PCIe device
 static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
-    int ret;
     int i;
+    uint32_t problem_id;
     //printk(KERN_WARNING "PCI: Entered read\n");
     if (*offset == 10 * sizeof(uint32_t)) {
         uint32_t result = (read_flag > 0) ? 1 : 0;
-        //printk(KERN_WARNING "PCI: Sent read flag: %d\n", result);
-        ret = copy_to_user(buf, &result, sizeof(result));
-        //printk(KERN_WARNING "PCI: Problem read flag return copy to user returned %d\n", ret);
+        memcpy(buf, &result, sizeof(result));
 
-        if (ret != 0) {
-            return -EFAULT;
-        }
         return sizeof(result);
     }
 
@@ -200,23 +175,22 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
         if(read_counter == 0 && read_flag > 0){
             for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
                 if (data_array[i] != NULL && data_array[i]->done) {
-                    //copy the problem id to the user
-                    uint32_t problem_id = inverse_data(data_array[i]->problem_id);
-                    ret = copy_to_user(buf, &problem_id, sizeof(problem_id));
+                    printk(KERN_WARNING "PCI: Entered Offset 4 or Send data loop\n");
 
-                    if (ret != 0) {
-                        return -EFAULT;
-                    }
+                    //copy the problem id to the user
+                    problem_id = inverse_data(data_array[i]->problem_id);
+                    memcpy(buf, &problem_id, sizeof(problem_id));
+
+                    //free the data_array
                     mutex_lock(&problem_lock);
                     kfree(data_array[i]);
                     data_array[i] = NULL;
                     mutex_unlock(&problem_lock);
                     
-
                     //increment read counter to simulate the 4 reads required by the PCIe device
                     read_counter++;
-                    //printk(KERN_WARNING "PCI: Sent problem ID, read step 1 \n");
 
+                    //printk(KERN_WARNING "PCI: Sent problem ID, read step 1 \n");
                     return 0;
                 }
             }
@@ -228,13 +202,10 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             //send over a random 32 bit value
             uint32_t random_value;
             get_random_bytes(&random_value, sizeof(random_value));
-            ret = copy_to_user(buf, &random_value, sizeof(random_value));
-            if (ret != 0) {
-                return -EFAULT;
-            }
-            
+            memcpy(buf, &random_value, sizeof(random_value));
+           
             read_counter++;
-            //printk(KERN_WARNING "Second Read of single solution, read step 2  \n");
+            printk(KERN_WARNING "Second Read of single solution, read step 2  \n");
             return 0;
         }
 
@@ -242,14 +213,11 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             //send over a random 32 bit value
             uint32_t random_value;
             get_random_bytes(&random_value, sizeof(random_value));
-            ret = copy_to_user(buf, &random_value, sizeof(random_value));
-            if (ret != 0) {
-                return -EFAULT;
-            }
+            memcpy(buf, &random_value, sizeof(random_value));
             
             read_counter = 0;
             read_flag--;
-            //printk(KERN_WARNING "Third Read of single solution, read step 3 \n");
+            printk(KERN_WARNING "Third Read of single solution, read step 3 \n");
             return 0;
         }
 

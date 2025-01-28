@@ -123,9 +123,7 @@ void perform_operations(const char* device_file) {
     read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count*RAW_BYTE_CNT);  
     close(fd);
 
-    free(read_data->best_spins);
-    free(read_data->best_ham);
-    free(read_data);
+
     /*
 
     //retrieve data from the vdriver
@@ -168,6 +166,10 @@ void perform_operations(const char* device_file) {
     log_message("\n");
 
 */
+    free(read_data->best_spins);
+    free(read_data->best_ham);
+    free(read_data);
+
 }
 
 
