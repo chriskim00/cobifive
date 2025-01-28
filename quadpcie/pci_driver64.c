@@ -16,6 +16,7 @@ MODULE_VERSION("1.1");
 // Define variables
 #define DRIVER_NAME "cobi_chip_testdriver640"
 #define SOLVED_ARRAY_SIZE 16
+#define RAW_BYTE_CNT 166
 
 static int major;
 static struct class *tpci_class;
@@ -95,23 +96,30 @@ static void init_timer_setup(void)
 
 //write function of the virtual PCIe device
 static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
+    int ret = -EINVAL;
+    struct fake_data *new_data = (struct fake_data*)kmalloc(sizeof(struct fake_data), GFP_KERNEL);
+    uint64_t *raw_write_data = (uint64_t*)kmalloc(RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
     int i;
-    //create a new struct to store the passed in problem
-    struct fake_data *new_data = kmalloc(sizeof(struct fake_data), GFP_KERNEL);
-    write_data_t *write_data = (write_data_t*)kmalloc(len, GFP_KERNEL);
-    if (!write_data) 
-        return -ENOMEM;
-    
-    printk(KERN_WARNING "PCI: Write problem\n");
 
-    //no memory was allocated
-    if (!new_data || !write_data)
-        goto out;
-        
-    //intialize the data
-    if (copy_from_user(write_data, buf, len) != 0)
-        goto out;
+
+    // Allocate memory
+    if (!raw_write_data || !new_data) {
+        ret = -ENOMEM;
+        goto cleanup;
+    }
+
+    printk(KERN_WARNING "PCI: Write data len = %zu\n", len);
+
+    // Copy from user space
+    memcpy(raw_write_data, buf, len);
+
     
+    // Print each 64-bit value from raw_write_data
+    for (i = 0; i < RAW_BYTE_CNT; i++) {
+        printk(KERN_DEBUG "PCI: raw_write_data[%d] = 0x%llx\n", i, raw_write_data[i]);
+    }
+    
+
     //printk(KERN_WARNING "PCI: Problem 64-bit in ID Value = 0x%llx\n", write_data[164].value);
 
 
@@ -124,14 +132,17 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     //printk(KERN_WARNING "PCI: Offset = %ld\n", write_data->offset);
     //printk(KERN_WARNING "PCI: Multiple of sizeof(uint64_t) = %lu\n", 9 * sizeof(uint64_t));
     //check if the offset passed to the driver indicates a write
-    if(write_data->offset == 9 * sizeof(uint64_t)){
+
+    if(*offset == 9 * sizeof(uint64_t)){
         for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
             printk(KERN_WARNING "PCI: Searching for a open problem index\n");
             if (data_array[i] == NULL) {
+
+
                 //store the problem data in the data_array
                 //intialize the fake data
-                new_data->problem_id = (0x000000000F000000 & write_data[164].value) >> 24;
-                //printk(KERN_WARNING "PCI: Problem ID = %x\n", new_data->problem_id);
+                // new_data->problem_id = (0x000000000F000000 & write_data[164].value) >> 24;
+
                 new_data->time_value = counter + (get_random_int() % 51 + 50); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
                 new_data->done = false;
                 mutex_lock(&problem_lock);
@@ -140,7 +151,7 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
 
 
                 //write was successful, clean up the structures in memory
-                kfree(write_data);
+                kfree(raw_write_data);
                 return 0;
             }
         }
@@ -149,15 +160,22 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     printk(KERN_WARNING "PCI: Failed to find an open problem index\n");
     //write has failed, free up the structures in memory
     kfree(new_data);
-    kfree(write_data);
+    kfree(raw_write_data);
     printk(KERN_WARNING "PCI: Wiped data structures after failure\n");
     return -ENOSPC;
+    ret = len;  // Success case
 
     out:
         kfree(new_data);
-        kfree(write_data);
+        kfree(raw_write_data);
         printk(KERN_WARNING "PCI: Wiped data structures after failure\n");
         return -EFAULT;
+    cleanup:
+        if (ret < 0) {
+            kfree(raw_write_data);
+            kfree(new_data);
+        }
+        return ret;
 }
 
 //read function of the virtual PCIe device
@@ -272,7 +290,7 @@ struct file_operations tpci_fops = {
     .owner = THIS_MODULE,
     .open = pci_open,
     .release = pci_release,
-    .read = pci_read, 
+    .read = pci_read,
     .write = pci_write
 };
 EXPORT_SYMBOL(tpci_fops); //export the functions to be used by the virtual driver

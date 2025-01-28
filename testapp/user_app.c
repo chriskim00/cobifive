@@ -58,13 +58,8 @@ uint64_t  rawData1[166] = {
 
 };
 
-typedef struct {
-    off_t offset;
-    uint64_t value;  // Change to 64-bit
-} write_data_t;
-
 struct user_read_data {
-    int *user_id;
+    int user_id;
     uint64_t *best_spins;
     uint64_t *best_ham;
 };
@@ -77,14 +72,13 @@ uint64_t swap_bytes(uint64_t val) {;
 }
 
 static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
-    int user_id = 0; //used to track the problems sent to the device
+    int user_id = -1; //used to track the problems sent to the device
     //create a temp structure to store the problem data
 
-    /*
     //write the data to the device
-    user_id = write(fd, data, count * sizeof(write_data_t));
-    */
-
+    log_message("User ID before write operation: %d\n", user_id);
+    user_id = write(fd, data, count * sizeof(uint64_t));
+    log_message("User ID from write operation: %d\n", user_id);
     return user_id;
     
 }
@@ -102,7 +96,7 @@ void perform_operations(const char* device_file) {
     }
 
     // Allocate main structure
-    struct user_read_data *read_data = malloc(sizeof(struct user_read_data));
+    struct user_read_data *read_data = (user_read_data*)malloc(sizeof(user_read_data));
     if (read_data == NULL) {
         log_message("Failed to allocate read_data\n");
         return;
@@ -125,8 +119,13 @@ void perform_operations(const char* device_file) {
     }
     
     //send data to the vdriver
+    log_message("Writing data to the COBI chips\n");
     read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count*RAW_BYTE_CNT);  
     close(fd);
+
+    free(read_data->best_spins);
+    free(read_data->best_ham);
+    free(read_data);
     /*
 
     //retrieve data from the vdriver
@@ -174,18 +173,21 @@ void perform_operations(const char* device_file) {
 
 int main() {
 
+    // Clear the output log file
+    
+    FILE* clear_log = fopen("output_logs", "w");
+    if (clear_log) {
+        fclose(clear_log);
+    }
+    
     char device_file[256];
     snprintf(device_file, sizeof(device_file), DEVICE_FILE_TEMPLATE);
     if (access(device_file, F_OK) == 0) {
         log_message("Accessing device file: %s\n", device_file);
-        //for (int k = 0; k < 5; ++k) {
-        //    printf("Outer loop : %d\n", k);
-            perform_operations(device_file);
-        //}
+        perform_operations(device_file);
     } else {
         log_message("No device found at %s\n", device_file);
     }
-    
     
     return 0;
 }

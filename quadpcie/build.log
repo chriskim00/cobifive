@@ -1,68 +1,32 @@
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c: In function ‘init_user_data’:
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:390:16: error: invalid storage class for function ‘vpci_read’
-  390 | static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
-      |                ^~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:390:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-  390 | static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
-      | ^~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:436:16: error: invalid storage class for function ‘vpci_write’
-  436 | static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
-      |                ^~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:477:12: error: invalid storage class for function ‘vpci_open’
-  477 | static int vpci_open(struct inode *inode, struct file *file){
-      |            ^~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:494:12: error: invalid storage class for function ‘vpci_release’
-  494 | static int vpci_release(struct inode *inode, struct file *file){
-      |            ^~~~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:502:13: error: initializer element is not constant
-  502 |     .read = vpci_read,
-      |             ^~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:502:13: note: (near initialization for ‘vpci_fops.read’)
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:503:14: error: initializer element is not constant
-  503 |     .write = vpci_write,
+/home/willammoy/cobifive/quadpcie/pci_driver64.c: In function ‘pci_write’:
+/home/willammoy/cobifive/quadpcie/pci_driver64.c:168:5: warning: label ‘out’ defined but not used [-Wunused-label]
+  168 |     out:
+      |     ^~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:202:10: warning: unused variable ‘first_problem_tracker’ [-Wunused-variable]
+  202 |     bool first_problem_tracker;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:201:9: warning: unused variable ‘found_counter’ [-Wunused-variable]
+  201 |     int found_counter = 0;
+      |         ^~~~~~~~~~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:200:10: warning: unused variable ‘found’ [-Wunused-variable]
+  200 |     bool found = false;
+      |          ^~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:198:9: warning: unused variable ‘read_flag’ [-Wunused-variable]
+  198 |     int read_flag = 0 ;
+      |         ^~~~~~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:197:9: warning: unused variable ‘card_id’ [-Wunused-variable]
+  197 |     int card_id = 0;
+      |         ^~~~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:196:9: warning: unused variable ‘problem_id’ [-Wunused-variable]
+  196 |     int problem_id = 0;
+      |         ^~~~~~~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:195:14: warning: unused variable ‘best_ham’ [-Wunused-variable]
+  195 |     uint64_t best_ham;
+      |              ^~~~~~~~
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:194:14: warning: unused variable ‘best_spins’ [-Wunused-variable]
+  194 |     uint64_t best_spins;
       |              ^~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:503:14: note: (near initialization for ‘vpci_fops.write’)
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:504:13: error: initializer element is not constant
-  504 |     .open = vpci_open,
-      |             ^~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:504:13: note: (near initialization for ‘vpci_fops.open’)
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:505:16: error: initializer element is not constant
-  505 |     .release = vpci_release
-      |                ^~~~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:505:16: note: (near initialization for ‘vpci_fops.release’)
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:508:19: error: invalid storage class for function ‘vpci_init’
-  508 | static int __init vpci_init(void) {
-      |                   ^~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:594:20: error: invalid storage class for function ‘vpci_exit’
-  594 | static void __exit vpci_exit(void) {
-      |                    ^~~~~~~~~
-In file included from /home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:2:
-./include/linux/module.h:131:49: error: invalid storage class for function ‘__inittest’
-  131 |         static inline initcall_t __maybe_unused __inittest(void)                \
-      |                                                 ^~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:631:1: note: in expansion of macro ‘module_init’
-  631 | module_init(vpci_init);
-      | ^~~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:631:1: warning: ‘alias’ attribute ignored [-Wattributes]
-./include/linux/module.h:139:49: error: invalid storage class for function ‘__exittest’
-  139 |         static inline exitcall_t __maybe_unused __exittest(void)                \
-      |                                                 ^~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:632:1: note: in expansion of macro ‘module_exit’
-  632 | module_exit(vpci_exit);
-      | ^~~~~~~~~~~
-./include/linux/module.h:139:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-  139 |         static inline exitcall_t __maybe_unused __exittest(void)                \
-      |         ^~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:632:1: note: in expansion of macro ‘module_exit’
-  632 | module_exit(vpci_exit);
-      | ^~~~~~~~~~~
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:632:1: warning: ‘alias’ attribute ignored [-Wattributes]
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:632:1: error: expected declaration or statement at end of input
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:633: error: control reaches end of non-void function [-Werror=return-type]
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c: At top level:
-/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:61:12: warning: ‘user_id_counter’ defined but not used [-Wunused-variable]
-   61 | static int user_id_counter = 0;
-      |            ^~~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
-make[2]: *** [scripts/Makefile.build:289: /home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.o] Error 1
-make[1]: *** [Makefile:1906: /home/cobidev/vdriver/cobifive/quadpcie] Error 2
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:193:14: warning: unused variable ‘read_data’ [-Wunused-variable]
+  193 |     uint32_t read_data;
+      |              ^~~~~~~~~

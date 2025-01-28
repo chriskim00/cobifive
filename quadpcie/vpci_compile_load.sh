@@ -5,6 +5,7 @@ make clean
 
 # Build the module
 make all
+touch /tmp/pci_driver.log
 
 # Check if the build was successful
 if [ $? -ne 0 ]; then
