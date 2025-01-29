@@ -76,6 +76,9 @@ GRTAGS
 GSYMS
 GTAGS
 
+
+*.log
+
 *.orig
 *~
 \#*#
