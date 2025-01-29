@@ -1,0 +1,1 @@
+cmd_/home/cobidev/vdriver/cobifive/quadpcie/Module.symvers := sed 's/\.ko$$/\.o/' /home/cobidev/vdriver/cobifive/quadpcie/modules.order | scripts/mod/modpost -m -a -E -o /home/cobidev/vdriver/cobifive/quadpcie/Module.symvers -e -i Module.symvers   -T -

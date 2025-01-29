@@ -102,10 +102,6 @@ void perform_operations(const char* device_file) {
         return;
     }
 
-    // Initialize pointers to NULL
-    read_data->best_spins = NULL;
-    read_data->best_ham = NULL;
-
     // Allocate arrays
     read_data->best_spins = (uint64_t *)malloc(problem_count * sizeof(uint64_t));
     read_data->best_ham = (uint64_t *)malloc(problem_count * sizeof(uint64_t));
@@ -122,9 +118,6 @@ void perform_operations(const char* device_file) {
     log_message("Writing data to the COBI chips\n");
     read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count*RAW_BYTE_CNT);  
     close(fd);
-
-
-    /*
 
     //retrieve data from the vdriver
     time_t start_time_wr = time(NULL); // Record the start time
@@ -165,7 +158,6 @@ void perform_operations(const char* device_file) {
     }
     log_message("\n");
 
-*/
     free(read_data->best_spins);
     free(read_data->best_ham);
     free(read_data);

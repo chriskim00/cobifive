@@ -1,0 +1,14 @@
+/home/cobidev/vdriver/cobifive/quadpcie/pci_driver64.c: In function ‘pci_write’:
+/home/cobidev/vdriver/cobifive/quadpcie/pci_driver64.c:148:5: warning: label ‘out’ defined but not used [-Wunused-label]
+  148 |     out:
+      |     ^~~
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:289:14: warning: unused variable ‘problem_id_16’ [-Wunused-variable]
+  289 |     uint16_t problem_id_16;
+      |              ^~~~~~~~~~~~~
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:285:9: warning: unused variable ‘found_counter’ [-Wunused-variable]
+  285 |     int found_counter = 0;
+      |         ^~~~~~~~~~~~~
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:284:10: warning: unused variable ‘found’ [-Wunused-variable]
+  284 |     bool found = false;
+      |          ^~~~~
