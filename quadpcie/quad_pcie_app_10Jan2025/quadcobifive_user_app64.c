@@ -56,15 +56,11 @@ void perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 int read_empty_status(int fd, uint32_t* read_status) {
     off_t read_offset = 10 * sizeof(uint32_t); // Read FIFO empty status
 
-    // Write read offset to device
-    if (write(fd, &read_offset, sizeof(read_offset)) != sizeof(read_offset)) {
-        perror("Failed to set read offset in device");
-        return -1;
-    }
+
 
     // Read data from device
     uint32_t read_data;
-    if (read(fd, &read_data, sizeof(read_data)) != sizeof(read_data)) {
+    if (pread(fd, &read_data, sizeof(read_data),read_offset) != sizeof(read_data)) {
         perror("Failed to read from device");
         return -1;
     }
@@ -87,15 +83,9 @@ uint8_t inverse_data(uint8_t data) {
 int fwid_read(int fd,uint32_t* fwid_val) {
     off_t read_offset = 1 * sizeof(uint32_t); // Read FIFO empty status
 
-    // Write read offset to device
-    if (write(fd, &read_offset, sizeof(read_offset)) != sizeof(read_offset)) {
-        perror("Failed to set read offset in device");
-        return -1;
-    }
-
     // Read data from device
     uint32_t read_data;
-    if (read(fd, &read_data, sizeof(read_data)) != sizeof(read_data)) {
+    if (pread(fd, &read_data, sizeof(read_data),read_offset) != sizeof(read_data)) {
         perror("Failed to read from device");
         return -1;
     }
@@ -331,15 +321,10 @@ void perform_operations(const char* device_file) {
                         for (i = 0; i < 3; ++i) {
                             read_offset = 4 * sizeof(uint32_t);
 
-                            // Write read offset to device
-                            if (write(fd, &read_offset, sizeof(read_offset)) != sizeof(read_offset)) {
-                                perror("Failed to set read offset in device");
-                                close(fd);
-                                return;
-                            }
+                         
 
                             // Read data from device
-                            if (read(fd, &read_data, sizeof(read_data)) != sizeof(read_data)) {
+                            if (pread(fd, &read_data, sizeof(read_data),read_offset) != sizeof(read_data)) {
                                 perror("Failed to read from device");
                                 close(fd);
                                 return;

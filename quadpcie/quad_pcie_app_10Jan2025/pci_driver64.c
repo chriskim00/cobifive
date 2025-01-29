@@ -52,12 +52,16 @@ static ssize_t pci_mmap_read(struct file *file, char __user *buf, size_t count, 
 
     mutex_lock(&dev->dev_lock);  // Lock the device for this operation
 
+    dev->offset = *ppos;
+    //printk("COBI READ called with offset %ld\n",dev->offset);
+
     if (dev->offset >= pci_resource_len(dev->pdev, BAR0)) {
         mutex_unlock(&dev->dev_lock);  // Unlock if there's an error
         return 0;
     }
 
     data = ioread32(dev->hw_addr + dev->offset);
+    //data = ioread32(dev->hw_addr + *ppos);
     data = ((data & 0xFF000000) >> 24) |
            ((data & 0x00FF0000) >> 8) |
            ((data & 0x0000FF00) << 8) |
