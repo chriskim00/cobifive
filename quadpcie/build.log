@@ -1,4 +1,4 @@
 /home/willammoy/cobifive/quadpcie/pci_driver64.c: In function ‘pci_write’:
-/home/willammoy/cobifive/quadpcie/pci_driver64.c:149:5: warning: label ‘out’ defined but not used [-Wunused-label]
-  149 |     out:
+/home/willammoy/cobifive/quadpcie/pci_driver64.c:148:5: warning: label ‘out’ defined but not used [-Wunused-label]
+  148 |     out:
       |     ^~~

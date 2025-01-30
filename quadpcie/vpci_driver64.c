@@ -129,7 +129,9 @@ uint64_t swap_bytes(uint64_t val) {;
 
 //clean up the user data struct
 static void cleanup_user_data(struct user_data *data, size_t problem_count) {
-    if (!data) return;
+
+    if (!data)
+        return;
 
     // Free write_data arrays first
     if (data->write_data) {
@@ -195,7 +197,7 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
         if (device_array[i] && device_array[i]->problems_stored < 16) {
             
             //submit as many problems to the device as avaiable slots
-            for (k = 0; k < 17; k++) {
+            for (k = 0; k < 16; k++) {
                 //find an open problem id to use and check if there are problems to be submitted
                 if( (*problems_submitted != data->problem_count)){
                     
@@ -205,7 +207,8 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
 
                     if((device_array[i]->id_used[k] == false) && (data->write_data[*problems_submitted] != NULL)){
                         //DEBUG
-                        //printk(KERN_WARNING "Found an open chip slot\n");
+                        printk(KERN_WARNING "Found an open chip slot at slot: %d\n", k);
+
 
                         //set offset
                         offset = 9 * sizeof(uint64_t);
@@ -247,6 +250,8 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
 
                         //indicate that the problem id is being used
                         device_array[i]->id_used[k] = true;
+                    }else{
+                        printk(KERN_ERR "Waiting for a open slot on the chip\n");
                     }
                 }
 
@@ -325,8 +330,8 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
             }
 
             //clear id spot for a new problem
-            device_array[i]->id_used[problem_id] = false;
-            
+
+
             j = first_problem; // used to search through the problems that have been solved
             first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
             
@@ -336,8 +341,15 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                     //store the problem solution in the data struct
                     data->best_spins[j] = best_spins;
                     data->best_ham[j] = best_ham;
+
+                    //indicate another problem has been solved
                     *solved = *solved + 1;
 
+                    //clear the problem id from the dataset so it can be used by another problem
+                    data->problem_id[j] = 20;
+                    
+                    printk(KERN_ERR "VPCI: Cleared problem_id: %d from card: %d\n", j, i);
+                    device_array[i]->id_used[problem_id] = false;
                     //indicate that the problem has been solved and see if we can reduce the number of problems that need to be iterated through in the for loop
                     solved_array[j] = 1;
                     if(!first_problem_tracker && (j-1) == first_problem)
@@ -413,7 +425,7 @@ static void process_user_data(struct work_struct *work){
        
         msleep(100);
         timeout++;
-        if ( timeout  == 10) {
+        if ( timeout  == 30) {
             printk(KERN_WARNING "VPCI: Timeout occurred after 10 seconds\n");
             goto out;
         }
@@ -425,13 +437,13 @@ static void process_user_data(struct work_struct *work){
 
     // Free the user_data structure
     if(ud_work) kfree(ud_work);
-    cleanup_user_data(data, data->problem_count);
+    if(data)   cleanup_user_data(data, data->problem_count);
     mutex_unlock(&process_lock);
     return;
 
 out:
     if(ud_work) kfree(ud_work);
-    cleanup_user_data(data, data->problem_count);
+    if(data) cleanup_user_data(data, data->problem_count);
     mutex_unlock(&process_lock);
 }
 
@@ -488,27 +500,7 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     data->best_spins = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     data->best_ham = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     data->write_data = (uint64_t **)kmalloc(problem_count * sizeof(uint64_t *), GFP_KERNEL);
-    
-    temp_data_storage = kmalloc(problem_count * RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
-
-    if(!temp_data_storage){
-        printk(KERN_ERR "VPCI: Failed to allocate space for temp_data_storage \n");
-    }  
-
-    if (!access_ok(buf, RAW_BYTE_CNT * sizeof(uint64_t) * problem_count)) {
-        printk(KERN_ERR "VPCI: Failed to access user_buffer \n");
-        goto cleanup;
-    }
-
-    ret = copy_from_user(temp_data_storage, buf, RAW_BYTE_CNT * sizeof(uint64_t) * problem_count);
-    if (ret != 0) {
-        printk(KERN_ERR "VPCI: Copy ret = %d\n", ret);
-        printk(KERN_ERR "VPCI: Failed to copy user data \n");
-        goto cleanup;
-    } else {
-        printk(KERN_WARNING "VPCI: Copied user data\n");
-    }
-
+        
     printk(KERN_ERR "VPCI: Problem count = %zu\n", problem_count);
     //divide the problems from the user space into the user_data structs 
     for (i = 0; i < problem_count; i++) {
@@ -533,17 +525,19 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
             printk(KERN_ERR "VPCI: Failed to access user_buffer \n");
             goto cleanup;
         }
+        
 
         //copy the data from the user space to the kernel space
+        
         ret = copy_from_user(data->write_data[i], buf + (i * sizeof(uint64_t) * RAW_BYTE_CNT), RAW_BYTE_CNT * sizeof(uint64_t));
-
         if (ret != 0) {
             printk(KERN_ERR "VPCI: Copy ret = %d\n", ret);
             printk(KERN_ERR "VPCI: Failed to copy user data \n");
             goto cleanup;
         } else {
-            printk(KERN_WARNING "VPCI: Copied user data\n");
+            //printk(KERN_WARNING "VPCI: Copied user data\n");
         }
+        
 
         //intialize the problem id to NULL
         data->problem_id[i] = 0;
@@ -663,14 +657,14 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
 
     }
 
-    /*
+    
     //queue the user data to be processed
     if(queue_user_data_work(data)){
         printk( KERN_WARNING "VPCI:  Queue work failed");
         cleanup_user_data(data, problem_count);
         return -ENOMEM;
     }
-    */
+    
 
     printk(KERN_INFO "VPCI: User ID: %llu\n", data->user_id);
     return data->user_id;
@@ -694,6 +688,7 @@ static int vpci_open(struct inode *inode, struct file *file){
 }
 
 static int vpci_release(struct inode *inode, struct file *file){
+    //printk( KERN_WARNING "VPCI:  closed device");
     busy = false;
     return 0;
 }

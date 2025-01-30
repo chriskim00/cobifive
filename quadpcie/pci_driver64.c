@@ -142,9 +142,8 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
     //write has failed, free up the structures in memory
     kfree(new_data);
     kfree(raw_write_data);
-    printk(KERN_WARNING "PCI: Wiped data structures after failure\n");
+    printk(KERN_WARNING "PCI: Wiped user data structures after failure\n");
     return -ENOSPC;
-    ret = len;  // Success case
 
     out:
         kfree(new_data);

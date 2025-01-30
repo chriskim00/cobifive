@@ -87,11 +87,13 @@ static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 int perform_operations(const char* device_file) {
     int fd; // File descriptor for using the virtual driver
     uint64_t user_id; //used to track the problems submitted to the device
-    uint64_t problem_count = 4; //how many problems were sent to the device
+    uint64_t problem_count = 20; //how many problems were sent to the device
     uint64_t* read_data = NULL;
     uint64_t* write_data = NULL;
     int result = -1;
-    
+    size_t count = 0;
+    time_t start_time_wr = time(NULL); // Record the start time
+
     // Open device file
     fd = open(device_file, O_RDWR);
     if (fd < 0) {
@@ -113,8 +115,17 @@ int perform_operations(const char* device_file) {
         goto cleanup;
     }
 
+    
     // Initialize all memory to zero first
     memset(write_data, 0, problem_count * RAW_BYTE_CNT * sizeof(uint64_t));
+
+
+    for (size_t i = 0; i < problem_count * RAW_BYTE_CNT * 2; i++) {
+        if (write_data[i] == 0) {
+            count++;
+        }
+    }
+    log_message("Number of non-zero indices in write_data: %zu\n", count);
 
     // Copy data for each problem
     for (int i = 0; i < problem_count; i++) {
@@ -124,9 +135,11 @@ int perform_operations(const char* device_file) {
         }
     }
 
+
+
     //send data to the vdriver
     log_message("Writing data to the COBI chips\n");
-    read_data[0] = (uint64_t)perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count);
+    read_data[0] = (uint64_t)perform_bulk_write(fd, write_data, problem_count);
     
     //Break if write was not successful
     if ((int)read_data[0] < 0) {
@@ -136,12 +149,12 @@ int perform_operations(const char* device_file) {
 
     //set the problem_count
     read_data[1] = problem_count;
+    close(fd);
 
-    /*
+    
     //retrieve data from the vdriver
-    time_t start_time_wr = time(NULL); // Record the start time
     // Wait for up to 2 seconds before breaking the loop
-    while (difftime(time(NULL), start_time_wr) < 2) {
+    while (difftime(time(NULL), start_time_wr) < 10) {
         //open the device file
         log_message("Checking if read is done:");
         fd = open(device_file, O_RDWR);
@@ -161,11 +174,11 @@ int perform_operations(const char* device_file) {
         // Check every 100ms
         usleep(100000); 
     }
-    */
+    
 
     //Log the data from the user_read_data struct
     for (size_t i = 0; i < 2*problem_count + 2; i++) {
-        log_message("read_data[%d]: %lu\n", i, read_data[0]);
+        log_message("read_data[%d]: %lu\n", i, read_data[i]);
     }
     result = 0;  // Mark success
     goto cleanup;  // Always go to cleanup

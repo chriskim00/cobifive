@@ -1,5 +1,74 @@
 Accessing device file: /dev/cobi_chip_vdriver64
+Number of non-zero indices in write_data: 6639
 Writing data to the COBI chips
 User ID before write operation: -1
-Failed to write data to the COBI chips
-Failed to write data to the COBI chips and exiting perform_operations 
+User ID from write operation: 1
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read is not done
+Checking if read is done: Read done
+read_data[0]: 1
+read_data[1]: 20
+read_data[2]: 11974467867488813056
+read_data[3]: 16099887717411717128
+read_data[4]: 11089131256443568132
+read_data[5]: 4195046380802146316
+read_data[6]: 6860782614056271874
+read_data[7]: 12306332959589269514
+read_data[8]: 17083655207830683654
+read_data[9]: 8805369859509583886
+read_data[10]: 11410578003424444417
+read_data[11]: 5884927402584309769
+read_data[12]: 8838093906827542533
+read_data[13]: 4422776408808357901
+read_data[14]: 14980427495554154499
+read_data[15]: 17023490983825768459
+read_data[16]: 14163605315211231239
+read_data[17]: 6167053324538347535
+read_data[18]: 8211099810564931584
+read_data[19]: 1074474253362921480
+read_data[20]: 18289946890885660672
+read_data[21]: 7873985688608178184
+read_data[22]: 5316037112748694293
+read_data[23]: 1898554489803000468
+read_data[24]: 15489007529276768800
+read_data[25]: 12010416121962810485
+read_data[26]: 13294830812621333872
+read_data[27]: 13073743128899936416
+read_data[28]: 6721359376786216422
+read_data[29]: 7890244181983163708
+read_data[30]: 15155188557843956797
+read_data[31]: 8193654741405496907
+read_data[32]: 10999425291656837013
+read_data[33]: 4174768651521547190
+read_data[34]: 10130343402385255280
+read_data[35]: 2926749749212059355
+read_data[36]: 2375821455831022590
+read_data[37]: 9281342616339072595
+read_data[38]: 2149511076338970566
+read_data[39]: 5700298020183690404
+read_data[40]: 8367493691628253643
+read_data[41]: 5037465099183719492
