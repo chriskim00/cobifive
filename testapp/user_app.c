@@ -58,12 +58,6 @@ uint64_t  rawData1[166] = {
 
 };
 
-struct user_read_data {
-    int user_id;
-    uint64_t *best_spins;
-    uint64_t *best_ham;
-};
-typedef struct user_read_data user_read_data;
 
 uint64_t swap_bytes(uint64_t val) {;
 
@@ -77,91 +71,112 @@ static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 
     //write the data to the device
     log_message("User ID before write operation: %d\n", user_id);
-    user_id = write(fd, data, count * sizeof(uint64_t));
+    user_id = write(fd, data, count * sizeof(uint64_t) * RAW_BYTE_CNT);
+    
+    //check if the write was successful
+    if(user_id < 0){
+        log_message("Failed to write data to the COBI chips\n");
+        return -1;
+    }
+
     log_message("User ID from write operation: %d\n", user_id);
     return user_id;
     
 }
 
-void perform_operations(const char* device_file) {
+int perform_operations(const char* device_file) {
     int fd; // File descriptor for using the virtual driver
-    int user_id; //used to track the problems submitted to the device
-    size_t problem_count = 1; //how many problems were sent to the device
+    uint64_t user_id; //used to track the problems submitted to the device
+    uint64_t problem_count = 4; //how many problems were sent to the device
+    uint64_t* read_data = NULL;
+    uint64_t* write_data = NULL;
+    int result = -1;
     
     // Open device file
     fd = open(device_file, O_RDWR);
     if (fd < 0) {
         log_message("Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
-        return;
+        goto cleanup;
     }
 
-    // Allocate main structure
-    struct user_read_data *read_data = (user_read_data*)malloc(sizeof(user_read_data));
-    if (read_data == NULL) {
-        log_message("Failed to allocate read_data\n");
-        return;
+    // Allocate read_data
+    read_data = (uint64_t *)malloc((2 + 2 * problem_count) * sizeof(uint64_t));
+    if (!read_data) {
+        log_message("Failed to allocate memory for read_data\n");
+        goto cleanup;
     }
 
-    // Allocate arrays
-    read_data->best_spins = (uint64_t *)malloc(problem_count * sizeof(uint64_t));
-    read_data->best_ham = (uint64_t *)malloc(problem_count * sizeof(uint64_t));
-    
-    if (!read_data->best_spins || !read_data->best_ham) {
-        log_message("Failed to allocate arrays\n");
-        free(read_data->best_spins);
-        free(read_data->best_ham);
-        free(read_data);
-        return;
+    // Allocate write_data
+    write_data = (uint64_t *)malloc(problem_count * RAW_BYTE_CNT * sizeof(uint64_t));
+    if (!write_data) {
+        log_message("Failed to allocate memory for write_data\n");
+        goto cleanup;
     }
-    
+
+    // Initialize all memory to zero first
+    memset(write_data, 0, problem_count * RAW_BYTE_CNT * sizeof(uint64_t));
+
+    // Copy data for each problem
+    for (int i = 0; i < problem_count; i++) {
+        if (memcpy(write_data + i * RAW_BYTE_CNT, &rawData1, RAW_BYTE_CNT * sizeof(uint64_t)) == NULL) {
+            log_message("Failed to copy data for problem %d\n", i);
+            goto cleanup;
+        }
+    }
+
     //send data to the vdriver
     log_message("Writing data to the COBI chips\n");
-    read_data->user_id = perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count*RAW_BYTE_CNT);  
-    close(fd);
+    read_data[0] = (uint64_t)perform_bulk_write(fd, (const uint64_t*)rawData1, problem_count);
+    
+    //Break if write was not successful
+    if ((int)read_data[0] < 0) {
+        log_message("Failed to write data to the COBI chips and exiting perform_operations \n");
+        goto cleanup;
+    }
 
+    //set the problem_count
+    read_data[1] = problem_count;
+
+    /*
     //retrieve data from the vdriver
     time_t start_time_wr = time(NULL); // Record the start time
-    
     // Wait for up to 2 seconds before breaking the loop
     while (difftime(time(NULL), start_time_wr) < 2) {
         //open the device file
+        log_message("Checking if read is done:");
         fd = open(device_file, O_RDWR);
-
-        //check if the r
-        if (read(fd, &user_id, problem_count) != sizeof(user_id)) {
-            log_message("Read is not done");
+        
+        //check if the read worked
+        if (read(fd, read_data, sizeof(read_data)) != 0) {
+            log_message(" Read is not done\n");
         }
         else{
             //read the data from the device
+            log_message(" Read done\n");
             break;
         }
-
         //close the device file
         close(fd);
 
         // Check every 100ms
         usleep(100000); 
     }
-
-    //close the driver
-    close(fd);
+    */
 
     //Log the data from the user_read_data struct
-    log_message("User ID: %d\n", read_data->user_id);
-    log_message("Best Spins: ");
-    for (size_t i = 0; i < problem_count; i++) {
-        printf("%" PRIu64 " ", read_data->best_spins[i]);
+    for (size_t i = 0; i < 2*problem_count + 2; i++) {
+        log_message("read_data[%d]: %lu\n", i, read_data[0]);
     }
-    log_message("\nBest Hamiltonian Values: ");
-    for (size_t i = 0; i < problem_count; i++) {
-        printf("%" PRIu64 " ", read_data->best_ham[i]);
-    }
-    log_message("\n");
+    result = 0;  // Mark success
+    goto cleanup;  // Always go to cleanup
 
-    free(read_data->best_spins);
-    free(read_data->best_ham);
-    free(read_data);
-
+cleanup:
+    // Close the device file
+    close(fd);
+    //free the memory allocated for the write_data
+    if(write_data) free(write_data);
+    if(read_data) free(read_data);
+    return result;
 }
 
 

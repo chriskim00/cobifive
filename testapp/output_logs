@@ -1,4 +1,5 @@
 Accessing device file: /dev/cobi_chip_vdriver64
 Writing data to the COBI chips
 User ID before write operation: -1
-User ID from write operation: 0
+Failed to write data to the COBI chips
+Failed to write data to the COBI chips and exiting perform_operations 

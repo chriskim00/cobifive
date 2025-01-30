@@ -71,7 +71,7 @@ static void timer_callback(struct timer_list *t){
         if (data_array[i] != NULL && !(data_array[i]->done)) {
             if (counter == data_array[i]->time_value) {
                 mutex_lock(&problem_lock);
-                printk(KERN_WARNING "PCI: Problem %u Finished\n", data_array[i]->problem_id);
+                //printk(KERN_WARNING "PCI: Problem %u Finished\n", data_array[i]->problem_id);
                 data_array[i]->done = true;
                 mutex_unlock(&problem_lock);
                 read_flag++;
@@ -108,21 +108,22 @@ static ssize_t pci_write(struct file *file, const char __user *buf, size_t len, 
         goto cleanup;
     }
 
-    printk(KERN_WARNING "PCI: Write data len = %zu\n", len);
+    //printk(KERN_WARNING "PCI: Write data len = %zu\n", len);
 
     // Copy from user space
     memcpy(raw_write_data, buf, len);
 
     if(*offset == 9 * sizeof(uint64_t)){
         for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
-            printk(KERN_WARNING "PCI: Searching for a open problem index\n");
+            //printk(KERN_WARNING "PCI: Searching for a open problem index\n");
             if (data_array[i] == NULL) {
 
 
                 //store the problem data in the data_array
                 //intialize the fake data
-                new_data->problem_id = (0x000000000F000000 & raw_write_data[164]) >> 24;
-                printk(KERN_WARNING "PCI: Problem ID = %u\n", new_data->problem_id);
+                new_data->problem_id = (0x00000000000F0000 & raw_write_data[164]) >> 16;
+                //printk(KERN_WARNING "PCI: Raw Write Data[164] = %llx\n", raw_write_data[164]);
+                //printk(KERN_WARNING "PCI: Problem ID = %u\n", new_data->problem_id);
                 new_data->time_value = counter + (get_random_int() % 3 + 1); // set the time value to a random number between 50 and 100 in the future from counter to simulate a COBI solve time of between 50-100us
                 new_data->done = false;
                 mutex_lock(&problem_lock);
@@ -175,7 +176,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
         if(read_counter == 0 && read_flag > 0){
             for (i = 0; i < SOLVED_ARRAY_SIZE; i++) {
                 if (data_array[i] != NULL && data_array[i]->done) {
-                    printk(KERN_WARNING "PCI: Entered Offset 4 or Send data loop\n");
+                    //printk(KERN_WARNING "PCI: Entered Offset 4 or Send data loop\n");
 
                     //copy the problem id to the user
                     problem_id = inverse_data(data_array[i]->problem_id);
@@ -205,7 +206,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             memcpy(buf, &random_value, sizeof(random_value));
            
             read_counter++;
-            printk(KERN_WARNING "Second Read of single solution, read step 2  \n");
+            //printk(KERN_WARNING "Second Read of single solution, read step 2  \n");
             return 0;
         }
 
@@ -217,7 +218,7 @@ static ssize_t pci_read(struct file *file, char __user *buf, size_t len, loff_t 
             
             read_counter = 0;
             read_flag--;
-            printk(KERN_WARNING "Third Read of single solution, read step 3 \n");
+            //printk(KERN_WARNING "Third Read of single solution, read step 3 \n");
             return 0;
         }
 
