@@ -363,7 +363,7 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
 // Add the worker function
 static void process_user_data(struct work_struct *work){
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
-    struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL);
+    struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL); // maybe this can be removed: kmalloc(sizeof(user_data), GFP_KERNEL)
     int i;
     int device_count = 0;
     int *problems_submitted = kmalloc(sizeof(int), GFP_KERNEL);
@@ -510,7 +510,6 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     }
 
     printk(KERN_ERR "VPCI: Problem count = %zu\n", problem_count);
-    (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     //divide the problems from the user space into the user_data structs 
     for (i = 0; i < problem_count; i++) {
         // Allocate memory for the write_data array
