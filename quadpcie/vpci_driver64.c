@@ -8,6 +8,7 @@
 #include <linux/export.h> //used to import EXPORT_SYMBOL() functions
 #include <linux/workqueue.h>
 #include <linux/delay.h>  // Include this header for msleep
+#include <time.h>
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
@@ -59,6 +60,7 @@ static struct device *vpci_device = NULL;
 static int device_number;
 static uint32_t user_id_counter = 0;
 static bool busy = false;
+time_t start_time_wr;
 
 //Define mutexes
 static DEFINE_MUTEX(open_lock);
@@ -383,8 +385,9 @@ static void process_user_data(struct work_struct *work){
     int *solved_array; 
 
     //won't be used in offical version of driver
-    int timeout = 0;
-
+    int *timeout = kmalloc(sizeof(int), GFP_KERNEL);
+    timeout = 0;
+    start_time_wr = time(NULL); 
     
     //intialize variables
     //set the pointers from the work struct to the data struct 
@@ -413,7 +416,7 @@ static void process_user_data(struct work_struct *work){
     }
     
 
-    while(*solved != data->problem_count){
+    while((*solved != data->problem_count) || (difftime(time(NULL), start_time_wr) < 10)){
 
         //WRITE
         bulk_write(data, device_count, problems_submitted);
@@ -424,7 +427,7 @@ static void process_user_data(struct work_struct *work){
         bulk_read(data, device_count, solved, solved_array);
        
         msleep(100);
-        timeout++;
+        timeout* = timeout* + 1; 
         if ( timeout  == 30) {
             printk(KERN_WARNING "VPCI: Timeout occurred after 10 seconds\n");
             goto out;

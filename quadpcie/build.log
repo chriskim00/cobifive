@@ -1,4 +1,10 @@
-/home/willammoy/cobifive/quadpcie/pci_driver64.c: In function ‘pci_write’:
-/home/willammoy/cobifive/quadpcie/pci_driver64.c:148:5: warning: label ‘out’ defined but not used [-Wunused-label]
+/home/cobidev/vdriver/cobifive/quadpcie/pci_driver64.c: In function ‘pci_write’:
+/home/cobidev/vdriver/cobifive/quadpcie/pci_driver64.c:148:5: warning: label ‘out’ defined but not used [-Wunused-label]
   148 |     out:
       |     ^~~
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:11:10: fatal error: time.h: No such file or directory
+   11 | #include <time.h>
+      |          ^~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.build:289: /home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.o] Error 1
+make[1]: *** [Makefile:1906: /home/cobidev/vdriver/cobifive/quadpcie] Error 2
