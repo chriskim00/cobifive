@@ -87,7 +87,7 @@ static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 int perform_operations(const char* device_file) {
     int fd; // File descriptor for using the virtual driver
     uint64_t user_id; //used to track the problems submitted to the device
-    uint64_t problem_count = 200; //how many problems were sent to the device
+    uint64_t problem_count = 10; //how many problems were sent to the device
     uint64_t* read_data = NULL;
     uint64_t* write_data = NULL;
     int result = -1;

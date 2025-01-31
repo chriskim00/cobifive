@@ -8,7 +8,8 @@
 #include <linux/export.h> //used to import EXPORT_SYMBOL() functions
 #include <linux/workqueue.h>
 #include <linux/delay.h>  // Include this header for msleep
-#include <time.h>
+#include <linux/time.h>
+#include <linux/vmalloc.h>  // Add at top with other includes
 
 MODULE_AUTHOR("William Moy");
 MODULE_DESCRIPTION("Virtual PCIe Queue and Scheduler Driver");
@@ -60,7 +61,8 @@ static struct device *vpci_device = NULL;
 static int device_number;
 static uint32_t user_id_counter = 0;
 static bool busy = false;
-time_t start_time_wr;
+//Variables for timeout
+struct timespec64 ts_start, ts_current;
 
 //Define mutexes
 static DEFINE_MUTEX(open_lock);
@@ -138,9 +140,9 @@ static void cleanup_user_data(struct user_data *data, size_t problem_count) {
     // Free write_data arrays first
     if (data->write_data) {
         for (int i = 0; i < problem_count; i++) {
-            if(data->write_data[i]) kfree(data->write_data[i]);
+            if(data->write_data[i]) vfree(data->write_data[i]);
         }
-        if(data->write_data) kfree(data->write_data);
+        if(data->write_data) vfree(data->write_data);
     }
 
     // Free other arrays
@@ -252,6 +254,10 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
 
                         //indicate that the problem id is being used
                         device_array[i]->id_used[k] = true;
+
+                        //restart timeout
+                        ktime_get_real_ts64(&ts_start);
+                        
                     }else{
                         printk(KERN_ERR "Waiting for a open slot on the chip\n");
                     }
@@ -286,6 +292,11 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
     int i;
     int k;
     int j;
+
+    if(!read_data){
+        printk(KERN_ERR "Failed to allocate memory for read_data\n");
+        return;
+    }
 
     for (i = 0; i < device_count; i++) {
         
@@ -357,6 +368,8 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                     if(!first_problem_tracker && (j-1) == first_problem)
                         first_problem = j;
                     
+                    //restart timeout
+                    ktime_get_real_ts64(&ts_start);
                     break;
                 }
                 
@@ -382,29 +395,25 @@ static void process_user_data(struct work_struct *work){
     int device_count = 0;
     int *problems_submitted = kmalloc(sizeof(int), GFP_KERNEL);
     int *solved = kmalloc(sizeof(int), GFP_KERNEL);
-    int *solved_array; 
-
-    //won't be used in offical version of driver
-    int *timeout = kmalloc(sizeof(int), GFP_KERNEL);
-    timeout = 0;
-    start_time_wr = time(NULL); 
+    int *solved_array; //keep track of which problems are solved
     
+    data = ud_work->data;
+    solved_array = (int *)kmalloc(data->problem_count * sizeof(int), GFP_KERNEL); //array of ints the same size as the number of problems
+    
+    //check memory allocation
+    if(!problems_submitted || !solved || !solved_array || !data || !ud_work){
+            printk(KERN_ERR "VPCI: Failed to allocate data structure\n");
+        goto out;
+    }
+
     //intialize variables
     //set the pointers from the work struct to the data struct 
-    data = ud_work->data;
+
     *problems_submitted = 0;
     *solved = 0;
-    //array to keep track of what problems have been solved
-    solved_array = (int *)kmalloc(data->problem_count * sizeof(int), GFP_KERNEL);
     for (i = 0; i < data->problem_count; i++) {
         solved_array[i] = 0;
     }
-
-    mutex_lock(&process_lock);
-    
-    //if the data is NULL then return
-    if (!data)
-        goto out;
 
     //Check if there are any free chips avaiable
 
@@ -414,9 +423,12 @@ static void process_user_data(struct work_struct *work){
             device_count++;
         }
     }
-    
 
-    while((*solved != data->problem_count) || (difftime(time(NULL), start_time_wr) < 10)){
+    mutex_lock(&process_lock);
+    ktime_get_real_ts64(&ts_current);
+    ktime_get_real_ts64(&ts_start);
+
+    while((*solved != data->problem_count) || (timespec64_sub(ts_start, ts_current).tv_sec  < 10)){
 
         //WRITE
         bulk_write(data, device_count, problems_submitted);
@@ -425,29 +437,25 @@ static void process_user_data(struct work_struct *work){
         //READ 
         //check if any of the devices need to be read from
         bulk_read(data, device_count, solved, solved_array);
-       
-        msleep(100);
-        timeout* = timeout* + 1; 
-        if ( timeout  == 30) {
-            printk(KERN_WARNING "VPCI: Timeout occurred after 10 seconds\n");
-            goto out;
-        }
+        ktime_get_real_ts64(&ts_current);
+
     }
 
 
     //transfer the data that is solved to a queue that will store the problems until they are ready to be sent back to the user
     store_user_data_read(data);
 
-    // Free the user_data structure
-    if(ud_work) kfree(ud_work);
-    if(data)   cleanup_user_data(data, data->problem_count);
-    mutex_unlock(&process_lock);
-    return;
+    // Free the memory structs and unlock the process lock
+    goto out;
 
 out:
+    if(problems_submitted) kfree(problems_submitted);
+    if(solved) kfree(solved);
+    if(solved_array) kfree(solved_array);
     if(ud_work) kfree(ud_work);
     if(data) cleanup_user_data(data, data->problem_count);
     mutex_unlock(&process_lock);
+    return;
 }
 
 // Add function to queue work
@@ -488,12 +496,10 @@ int queue_user_data_work(struct user_data *data){
 //intailize the user data struct
 static struct user_data* init_user_data(struct file *file, struct user_data *data, const char __user *buf, size_t problem_count) {
     //declare funciton variables
-    char log_message[512];
     int i;    
     int ret;
-    uint64_t *temp_data_storage;
-    if (!data || !buf || problem_count == 0 || problem_count > 1000) {
-        printk(KERN_ERR "VPCI: Unitialized Internal data storage or user buffer or problem_count = 0 or over 1000 \n");
+    if (!data || !buf || problem_count == 0 || problem_count > 100) {
+        printk(KERN_ERR "VPCI: Unitialized Internal data storage or user buffer or problem_count = 0 or over 100 \n");
         return NULL;
     }
 
@@ -502,13 +508,19 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     data->problem_id = (uint32_t *)kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
     data->best_spins = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     data->best_ham = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
-    data->write_data = (uint64_t **)kmalloc(problem_count * sizeof(uint64_t *), GFP_KERNEL);
-        
+    data->write_data = (uint64_t **)vmalloc(problem_count * sizeof(uint64_t *));
+    
+    if(!data->card_id || !data->problem_id || !data->best_spins || !data->best_ham || !data->write_data){
+        printk(KERN_ERR "VPCI: Unitialized card_id or problem_id or best_spins or best_ham or write_data \n");
+        goto cleanup;
+        return NULL;
+    }
+
     printk(KERN_ERR "VPCI: Problem count = %zu\n", problem_count);
     //divide the problems from the user space into the user_data structs 
     for (i = 0; i < problem_count; i++) {
         // Allocate memory for the write_data array
-        data->write_data[i] = (uint64_t*)kmalloc(RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
+        data->write_data[i] = (uint64_t*)vmalloc(RAW_BYTE_CNT * sizeof(uint64_t));
 
         //check if allocation failed
         if (!data->write_data[i]) {
@@ -551,13 +563,9 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     user_id_counter = user_id_counter + 1;
     data->user_id = user_id_counter;
     data->problem_count = problem_count;
-    if(temp_data_storage) kfree(temp_data_storage);
     return data;
-    
+
 cleanup:
-    snprintf(log_message, sizeof(log_message), "Cleanup error \n");
-    log_action(log_message, strlen(log_message));
-    if(temp_data_storage) kfree(temp_data_storage);
     cleanup_user_data(data, problem_count); 
     return NULL;
 }
@@ -571,8 +579,13 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
     //create a temp data structure to store user_data_read
     uint64_t  *user_data_read_temp = (uint64_t *)kmalloc(2 * sizeof(uint64_t), GFP_KERNEL);
 
+    if(!user_data_read_temp){
+        return -ENOMEM;
+    }
+
     //copy the data from the user that contains the user_id and problem_count 
     if (copy_from_user(user_data_read_temp, buf, 2 * sizeof(uint64_t)) != 0) {
+        printk(KERN_INFO "VPCI: Copy Failed \n");
         return -EFAULT;
     }
 
@@ -607,8 +620,6 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
                 }
 
 
-
-                
                 // Free the processed data
                 kfree(processed_data[i]);
                 kfree(user_data_read_temp);
@@ -624,13 +635,17 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
     }
     kfree(user_data_read_temp);
 
-    return -1;
+    return -EFAULT;
 }
 
 static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
     //initialize variables 
     size_t problem_count;
     struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL);
+
+    if (!data) {
+        return -ENOMEM;
+    }
 
     //printk( KERN_WARNING "VPCI:  Entered write");
 

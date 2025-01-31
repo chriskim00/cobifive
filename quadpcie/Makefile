@@ -7,8 +7,8 @@ KERNEL := $(shell uname -r)
 KERNEL_BUILD := /lib/modules/$(KERNEL)/build
 CROSS_COMPILE :=
 CC := x86_64-linux-gnu-gcc-12
-EXTRA_CFLAGS :=  -std=gnu99 
-
+EXTRA_CFLAGS :=  -std=gnu99 -I$(KERNEL_BUILD)/include
+CFLAGS += -I/usr/src/linux-headers-$(uname -r)/include
 # WSL2 Kernel directories
 KVERSION := $(shell uname -r)
 
