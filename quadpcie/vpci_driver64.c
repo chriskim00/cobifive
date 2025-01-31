@@ -67,6 +67,7 @@ struct timespec64 ts_start, ts_current;
 //Define mutexes
 static DEFINE_MUTEX(open_lock);
 static DEFINE_MUTEX(process_lock);
+static DEFINE_MUTEX(read_lock);
 
 
 //store device data 
@@ -133,7 +134,6 @@ uint64_t swap_bytes(uint64_t val) {;
 
 //clean up the user data struct
 static void cleanup_user_data(struct user_data *data, size_t problem_count) {
-
     if (!data)
         return;
 
@@ -142,7 +142,7 @@ static void cleanup_user_data(struct user_data *data, size_t problem_count) {
         for (int i = 0; i < problem_count; i++) {
             if(data->write_data[i]) vfree(data->write_data[i]);
         }
-        if(data->write_data) vfree(data->write_data);
+        vfree(data->write_data);
     }
 
     // Free other arrays
@@ -152,7 +152,7 @@ static void cleanup_user_data(struct user_data *data, size_t problem_count) {
     if(data->best_ham) kfree(data->best_ham);
 
     // Finally free the main structure
-    if(data) kfree(data);
+    kfree(data);
 }
 
 // Store the processed data in an array
@@ -174,7 +174,8 @@ static void store_user_data_read(struct user_data *data) {
         read_data[2 + data->problem_count + i] = data->best_ham[i];
     }
     
-
+    //store the read_data in the processed_data array
+    mutex_lock(&read_lock);
     for (int i = 0; i < MAX_USER_DATA; i++) {
         if (processed_data[i] == NULL) {
             processed_data[i] = read_data;
@@ -182,7 +183,7 @@ static void store_user_data_read(struct user_data *data) {
             return;
         }
     }
-    
+    mutex_unlock(&read_lock);
     //printk(KERN_WARNING "VPCI: Failed to Store User Data\n");
 
 }
@@ -193,6 +194,12 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
     int k;
     uint16_t problem_id_16;
     int ret;
+
+    if(!data || !problems_submitted){
+        printk(KERN_ERR "VPCI: NULL data pointer in bulk_write\n");
+        return;
+    }
+    
     //WRITE
     //go through the devices and check if they are avaiable to be written to
     for (i = 0; i < device_count; i++) {
@@ -294,6 +301,7 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
     int j;
 
     if(!read_data){
+        kfree(read_data);  
         printk(KERN_ERR "Failed to allocate memory for read_data\n");
         return;
     }
@@ -314,7 +322,7 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
         
         //set the read flag from the returned read data 
         read_flag = *read_data;
-        //read the data from the device
+        //read the data from the device if the read_flag is set
         if(read_flag == 1){                
             //read the data from the device. 96-bits need to be read from the device, so 3 reads need to be sent 
             offset = 4 * sizeof(uint32_t); //fifo flag offset
@@ -342,9 +350,7 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                 }
             }
 
-            //clear id spot for a new problem
-
-
+            
             j = first_problem; // used to search through the problems that have been solved
             first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
             
@@ -362,7 +368,10 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                     data->problem_id[j] = 20;
                     
                     printk(KERN_ERR "VPCI: Cleared problem_id: %d from card: %d\n", j, i);
+
+                    //clear id spot for a new problem
                     device_array[i]->id_used[problem_id] = false;
+
                     //indicate that the problem has been solved and see if we can reduce the number of problems that need to be iterated through in the for loop
                     solved_array[j] = 1;
                     if(!first_problem_tracker && (j-1) == first_problem)
@@ -374,6 +383,7 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                 }
                 
                 //if the problem has been solved then set the first problem to the problem that has been solved to avoid going over it again
+                //check if the problem j is solved, the first_problem_tracker hasn't been set yet, and problem j is adjacent to the current first problem
                 if(solved_array[j] == 1 && !first_problem_tracker && (j-1) == first_problem){
                     first_problem = j;
                     first_problem_tracker = true;
@@ -381,6 +391,9 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                 
             }
             
+        } else{
+            //printk(KERN_ERR "VPCI: No data to read\n");
+            kfree(read_data);  
         }
         
     }
@@ -389,26 +402,64 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
 
 // Add the worker function
 static void process_user_data(struct work_struct *work){
+    mutex_lock(&process_lock);
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
+    mutex_unlock(&process_lock);
     struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL); // maybe this can be removed: kmalloc(sizeof(user_data), GFP_KERNEL)
     int i;
     int device_count = 0;
-    int *problems_submitted = kmalloc(sizeof(int), GFP_KERNEL);
-    int *solved = kmalloc(sizeof(int), GFP_KERNEL);
+    int *problems_submitted; 
+    int *solved; 
     int *solved_array; //keep track of which problems are solved
-    
     data = ud_work->data;
-    solved_array = (int *)kmalloc(data->problem_count * sizeof(int), GFP_KERNEL); //array of ints the same size as the number of problems
-    
-    //check memory allocation
-    if(!problems_submitted || !solved || !solved_array || !data || !ud_work){
-            printk(KERN_ERR "VPCI: Failed to allocate data structure\n");
+
+    //check if ud_work was created
+    if(!ud_work){
+        printk(KERN_ERR "VPCI: ud_work is NULL\n");
         goto out;
     }
 
+    //intialize the data structures
+    //check if data was created
+    if (!data) {
+        printk(KERN_ERR "VPCI: data is NULL\n");
+        goto out;
+    }
+
+    //intialize local variables
+    problems_submitted = kmalloc(sizeof(int), GFP_KERNEL);
+    solved = kmalloc(sizeof(int), GFP_KERNEL);
+    solved_array = (int *)kmalloc(data->problem_count * sizeof(int), GFP_KERNEL); //array of ints the same size as the number of problems
+    
+    //check memory allocation
+    if(!solved){
+        printk(KERN_ERR "VPCI: Failed to allocate solved data structure\n");
+        goto out;
+    }
+
+    if(!data){
+        printk(KERN_ERR "VPCI: Failed to allocate data structure\n");
+        goto out;
+    }
+
+    if(!solved_array){
+        printk(KERN_ERR "VPCI: Failed to allocate solved_array data structure\n");
+        goto out;
+    }
+
+    if(!ud_work){
+        printk(KERN_ERR "VPCI: Failed to allocate ud_work data structure\n");
+        goto out;
+    }
+
+    if(!problems_submitted){
+        printk(KERN_ERR "VPCI: Failed to allocate problems_submitted data structure\n");
+        goto out;
+    }
+
+
     //intialize variables
     //set the pointers from the work struct to the data struct 
-
     *problems_submitted = 0;
     *solved = 0;
     for (i = 0; i < data->problem_count; i++) {
@@ -416,7 +467,6 @@ static void process_user_data(struct work_struct *work){
     }
 
     //Check if there are any free chips avaiable
-
     // Count non-NULL entries in the device array
     for (int i = 0; i < MAX_DEVICES; i++) {
         if (device_array[i] != NULL) {
@@ -424,26 +474,31 @@ static void process_user_data(struct work_struct *work){
         }
     }
 
-    mutex_lock(&process_lock);
+
     ktime_get_real_ts64(&ts_current);
     ktime_get_real_ts64(&ts_start);
-
-    while((*solved != data->problem_count) || (timespec64_sub(ts_start, ts_current).tv_sec  < 10)){
+    
+    // Calculate and print time difference
+    while((*solved != data->problem_count)){
 
         //WRITE
         bulk_write(data, device_count, problems_submitted);
-
         
         //READ 
         //check if any of the devices need to be read from
         bulk_read(data, device_count, solved, solved_array);
+
+        //update ts_current to the current time
         ktime_get_real_ts64(&ts_current);
-
-    }
-
+        if(timespec64_sub(ts_current, ts_start).tv_sec  > 5){
+            printk(KERN_ERR "VPCI: Driver Timeout at 10 seconds of no chip writing or reading\n");
+            goto out;
+        }
+    }  
 
     //transfer the data that is solved to a queue that will store the problems until they are ready to be sent back to the user
     store_user_data_read(data);
+    
 
     // Free the memory structs and unlock the process lock
     goto out;
@@ -453,7 +508,11 @@ out:
     if(solved) kfree(solved);
     if(solved_array) kfree(solved_array);
     if(ud_work) kfree(ud_work);
-    if(data) cleanup_user_data(data, data->problem_count);
+    if(data){
+        if(data->problem_count){
+            cleanup_user_data(data, data->problem_count);
+        }
+    }
     mutex_unlock(&process_lock);
     return;
 }
@@ -463,12 +522,9 @@ int queue_user_data_work(struct user_data *data){
     char log_message[512]; //used to log messgages
     int ret;
     struct user_data_work *workq = kmalloc(sizeof(user_data_work), GFP_KERNEL);
-
-    snprintf(log_message, sizeof(log_message), "Entering queue_user_data_work\n");
-    log_action(log_message, strlen(log_message));
-
+    //check if workq was created
     if (!workq)
-        return -ENOMEM;
+        goto out;
 
     //copy the pointer of data to the workq struct data pointer
     workq->data = data;
@@ -476,21 +532,27 @@ int queue_user_data_work(struct user_data *data){
     //create a work struct to be stored in the queue
     INIT_WORK(&workq->work, process_user_data);
 
-    //log queueing work has been entered
-    snprintf(log_message, sizeof(log_message), "Queueing work\n");
-    log_action(log_message, strlen(log_message));
-
     //queue the work
+    mutex_lock(&process_lock);
     ret = queue_work(user_data_wq, &workq->work);
     if (!ret) {
         // Work was already queued or has failed
         snprintf(log_message, sizeof(log_message), "Queued user data failed\n");
         log_action(log_message, strlen(log_message));
-        kfree(workq);
-        return -EBUSY;
+        goto out;
     }
 
-    return 0;
+    //the queuing was sucessful
+    goto sucess;
+
+    out:
+        if(workq) kfree(workq);
+        mutex_unlock(&process_lock);
+        return -ENOMEM;
+    sucess:
+        if(workq) kfree(workq);
+        mutex_unlock(&process_lock);
+        return 0;
 }
 
 //intailize the user data struct
@@ -580,62 +642,68 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
     uint64_t  *user_data_read_temp = (uint64_t *)kmalloc(2 * sizeof(uint64_t), GFP_KERNEL);
 
     if(!user_data_read_temp){
+        kfree(user_data_read_temp);
         return -ENOMEM;
     }
 
     //copy the data from the user that contains the user_id and problem_count 
     if (copy_from_user(user_data_read_temp, buf, 2 * sizeof(uint64_t)) != 0) {
-        printk(KERN_INFO "VPCI: Copy Failed \n");
+        printk(KERN_WARNING "VPCI: Copy Failed \n");
+        kfree(user_data_read_temp);
         return -EFAULT;
     }
 
 
     // Print the user_data_read_temp structure contents
-    // printk(KERN_INFO "VPCI: user_id = %llu\n", user_data_read_temp[0] );
-    // printk(KERN_INFO "VPCI: problem_count = %llu\n", user_data_read_temp[1] );
+    // printk(KERN_WARNING "VPCI: user_id = %llu\n", user_data_read_temp[0] );
+    // printk(KERN_WARNING "VPCI: problem_count = %llu\n", user_data_read_temp[1] );
 
+    mutex_lock(&read_lock);
     for(i = 0; i < MAX_USER_DATA; i++){
 
         // Check if entry exists and data was intialized
-       if (processed_data[i] != NULL && user_data_read_temp != NULL) {
+        if (processed_data[i] != NULL && user_data_read_temp != NULL) { //check if the data is stored in the processed_data array
             problem_count = processed_data[i][1];
 
             // debug print
-            printk(KERN_INFO "VPCI: Found stored problem User ID: %llu\n", processed_data[i][0]);
-            printk(KERN_INFO "VPCI: Found stored problem problem count: %llu\n", processed_data[i][1]);
+            printk(KERN_WARNING "VPCI: Found stored problem User ID: %llu\n", processed_data[i][0]);
+            printk(KERN_WARNING "VPCI: Found stored problem problem count: %llu\n", processed_data[i][1]);
 
-            // DEBUG: Print the best_spins and best_ham values
+            //DEBUG: Print the best_spins and best_ham values
             for(j = 0; j < (2 + 2 * problem_count); j++){
-                printk(KERN_INFO "VPCI: read_data: %llu\n", processed_data[i][j]);
+                printk(KERN_WARNING "VPCI: read_data: %llu\n", processed_data[i][j]);
             }
 
+            //check if the user_id and problem_count match the data stored in the processed_data array
             if(processed_data[i][0] == user_data_read_temp[0] && processed_data[i][1] == user_data_read_temp[1]){
                 // Copy the processed data to the user
 
                 ret = copy_to_user(buf, processed_data[i], (2 * problem_count + 2) * sizeof(uint64_t));
-                //printk(KERN_INFO "VPCI: Return value from copy_to_user: %d\n", ret); //DEBUG
+                //printk(KERN_WARNING "VPCI: Return value from copy_to_user: %d\n", ret); //DEBUG
                 if (ret != 0) {
-                    printk(KERN_INFO "VPCI: Copy Failed \n");
-                    return -EFAULT;
+                    printk(KERN_WARNING "VPCI: Copy Failed \n");
+                    goto out;
                 }
 
-
-                // Free the processed data
+                // Free the processed data after it has been read by the user and return 0 to indicate a successful read
                 kfree(processed_data[i]);
-                kfree(user_data_read_temp);
                 processed_data[i] = NULL;
-                
-
-                return 0;
+                goto sucess;
             }
-        } else{
-            //printk(KERN_INFO "VPCI: processed_data[%d] null \n",i);
-            return -EFAULT;
         }
     }
-    kfree(user_data_read_temp);
 
-    return -EFAULT;
+    //failed to find the user data in the processed_data array
+    goto out;
+
+    out:
+        kfree(user_data_read_temp);
+        mutex_unlock(&read_lock);
+        return -EFAULT;
+    sucess:
+        kfree(user_data_read_temp);
+        mutex_unlock(&read_lock);
+        return 0;
 }
 
 static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len, loff_t *offset){
@@ -654,6 +722,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
     problem_count = len / (RAW_BYTE_CNT * sizeof(uint64_t));
     if (len % (RAW_BYTE_CNT * sizeof(uint64_t)) != 0) {
         printk(KERN_ERR "VPCI: Invalid data length - must be multiple of %zu bytes\n", RAW_BYTE_CNT * sizeof(uint64_t));
+        kfree(data); // Free the data structure
         return -EINVAL;
     }
     
@@ -662,17 +731,16 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
         //check if data was created
         if (!data){
             printk( KERN_WARNING "VPCI:  Data Intializing Failed");
+            kfree(data); // Free the data structure
             return -EFAULT;
         }
 
         //intialize the data struct with the user data
         if(init_user_data(file, data, buf, problem_count) == NULL){
             printk( KERN_WARNING "VPCI:  Data Intializing Failed");
+            cleanup_user_data(data, problem_count);
             return -EFAULT;
         }
-        
-
-
     }
 
     
@@ -684,17 +752,15 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
     }
     
 
-    printk(KERN_INFO "VPCI: User ID: %llu\n", data->user_id);
+    printk(KERN_WARNING "VPCI: User ID: %llu\n", data->user_id);
     return data->user_id;
 }
 
-static int vpci_open(struct inode *inode, struct file *file){
-    
-    int ret = 0;
+static int vpci_open(struct inode *inode, struct file *file){ 
     mutex_lock(&open_lock);
     if (busy) {
         printk( KERN_WARNING "PCI:  device busy");
-        ret = -EBUSY;
+        return -EBUSY;
     } else {
         // claim device
         busy = true;
@@ -702,7 +768,7 @@ static int vpci_open(struct inode *inode, struct file *file){
     }
     mutex_unlock(&open_lock);
 
-    return ret;
+    return 0;
 }
 
 static int vpci_release(struct inode *inode, struct file *file){

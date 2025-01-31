@@ -87,7 +87,7 @@ static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 int perform_operations(const char* device_file) {
     int fd; // File descriptor for using the virtual driver
     uint64_t user_id; //used to track the problems submitted to the device
-    uint64_t problem_count = 10; //how many problems were sent to the device
+    uint64_t problem_count = 20; //how many problems were sent to the device
     uint64_t* read_data = NULL;
     uint64_t* write_data = NULL;
     int result = -1;
@@ -136,7 +136,6 @@ int perform_operations(const char* device_file) {
     }
 
 
-
     //send data to the vdriver
     log_message("Writing data to the COBI chips\n");
     read_data[0] = (uint64_t)perform_bulk_write(fd, write_data, problem_count);
@@ -154,7 +153,7 @@ int perform_operations(const char* device_file) {
     
     //retrieve data from the vdriver
     // Wait for up to 2 seconds before breaking the loop
-    while (difftime(time(NULL), start_time_wr) < 10) {
+    while (difftime(time(NULL), start_time_wr) < 1) {
         //open the device file
         log_message("Checking if read is done:");
         fd = open(device_file, O_RDWR);
@@ -172,7 +171,7 @@ int perform_operations(const char* device_file) {
         close(fd);
 
         // Check every 100ms
-        usleep(100000); 
+        usleep(1000000); 
     }
     
 

@@ -2,3 +2,10 @@
 /home/cobidev/vdriver/cobifive/quadpcie/pci_driver64.c:148:5: warning: label ‘out’ defined but not used [-Wunused-label]
   148 |     out:
       |     ^~~
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c: In function ‘process_user_data’:
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:406:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  406 |     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
+      |     ^~~~~~
+/home/cobidev/vdriver/cobifive/quadpcie/vpci_driver64.c:408:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  408 |     struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL); // maybe this can be removed: kmalloc(sizeof(user_data), GFP_KERNEL)
+      |     ^~~~~~
