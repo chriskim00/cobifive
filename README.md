@@ -1,4 +1,5 @@
-Revisiont date: 2/1/25
+Revision date: 2/1/25
+
 DMA version (previous version was memory mapped)
 
 # Cobifive chip
