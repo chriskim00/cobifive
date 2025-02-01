@@ -142,9 +142,9 @@ static void cleanup_user_data(struct user_data *data, size_t problem_count) {
     // Free write_data arrays first
     if (data->write_data) {
         for (int i = 0; i < problem_count; i++) {
-            if(data->write_data[i]) kfree(data->write_data[i]);
+            if(data->write_data[i]) vfree(data->write_data[i]);
         }
-        kfree(data->write_data);
+        vfree(data->write_data);
     }
 
     // Free other arrays
@@ -556,7 +556,7 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     data->problem_id = (uint32_t *)kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
     data->best_spins = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     data->best_ham = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
-    data->write_data = (uint64_t **)kmalloc(problem_count * sizeof(uint64_t *), GFP_KERNEL);
+    data->write_data = (uint64_t **)vmalloc(problem_count * sizeof(uint64_t *));
     
     if(!data->card_id || !data->problem_id || !data->best_spins || !data->best_ham || !data->write_data){
         printk(KERN_ERR "VPCI: Unitialized card_id or problem_id or best_spins or best_ham or write_data \n");
@@ -568,7 +568,7 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     //divide the problems from the user space into the user_data structs 
     for (i = 0; i < problem_count; i++) {
         // Allocate memory for the write_data array
-        data->write_data[i] = (uint64_t*)kmalloc(RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
+        data->write_data[i] = (uint64_t*)vmalloc(RAW_BYTE_CNT * sizeof(uint64_t));
 
         //check if allocation failed
         if (!data->write_data[i]) {
