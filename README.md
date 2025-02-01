@@ -1,5 +1,5 @@
 # Cobifive chip
-Unified driver, user app, cobisolv (decomposing QUBO solver, M.2 card only), and binary for M.2 PCIe and quad PCIe cards
+Driver, binary files, and user app for quad PCIe card (DMA version, revision date: 2/1/25)
 
 # Quad card write and read test user app instructions
 
