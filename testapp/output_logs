@@ -1,0 +1,12 @@
+Accessing device file: /dev/cobi_chip_vdriver64
+Number of non-zero indices in write_data: 662
+Writing data to the COBI chips
+User ID before write operation: -1
+User ID from write operation: 2
+Checking if read is done: Read is not done
+read_data[0]: 2
+read_data[1]: 2
+read_data[2]: 3395778326322308640
+read_data[3]: 7593754393488811364
+read_data[4]: 7239078387454075743
+read_data[5]: 735272504124664178

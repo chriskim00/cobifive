@@ -405,57 +405,33 @@ static void process_user_data(struct work_struct *work){
     mutex_lock(&process_lock);
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
     mutex_unlock(&process_lock);
-    struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL); // maybe this can be removed: kmalloc(sizeof(user_data), GFP_KERNEL)
+    // Remove redundant data allocation since we get it from ud_work
+    struct user_data *data = ud_work->data; // Don't allocate new memory
+    
     int i;
     int device_count = 0;
-    int *problems_submitted; 
-    int *solved; 
-    int *solved_array; //keep track of which problems are solved
-    data = ud_work->data;
+    int *problems_submitted = NULL; 
+    int *solved = NULL;
+    int *solved_array = NULL;
 
-    //check if ud_work was created
-    if(!ud_work){
-        printk(KERN_ERR "VPCI: ud_work is NULL\n");
-        goto out;
+    // Check ud_work first before accessing data
+    if (!ud_work || !ud_work->data) {
+        printk(KERN_ERR "VPCI: ud_work or ud_work->data is NULL\n");
+        //goto out;
+        return;
     }
 
-    //intialize the data structures
-    //check if data was created
-    if (!data) {
-        printk(KERN_ERR "VPCI: data is NULL\n");
-        goto out;
-    }
-
-    //intialize local variables
+    // Allocate memory for tracking arrays
+    solved_array = kmalloc(data->problem_count * sizeof(int), GFP_KERNEL);
     problems_submitted = kmalloc(sizeof(int), GFP_KERNEL);
     solved = kmalloc(sizeof(int), GFP_KERNEL);
-    solved_array = (int *)kmalloc(data->problem_count * sizeof(int), GFP_KERNEL); //array of ints the same size as the number of problems
     
-    //check memory allocation
-    if(!solved){
-        printk(KERN_ERR "VPCI: Failed to allocate solved data structure\n");
-        goto out;
+    if (!solved_array || !problems_submitted || !solved) {
+        printk(KERN_ERR "VPCI: Failed to allocate tracking arrays\n");
+        //goto out;
+        return;
     }
 
-    if(!data){
-        printk(KERN_ERR "VPCI: Failed to allocate data structure\n");
-        goto out;
-    }
-
-    if(!solved_array){
-        printk(KERN_ERR "VPCI: Failed to allocate solved_array data structure\n");
-        goto out;
-    }
-
-    if(!ud_work){
-        printk(KERN_ERR "VPCI: Failed to allocate ud_work data structure\n");
-        goto out;
-    }
-
-    if(!problems_submitted){
-        printk(KERN_ERR "VPCI: Failed to allocate problems_submitted data structure\n");
-        goto out;
-    }
 
 
     //intialize variables
@@ -492,7 +468,8 @@ static void process_user_data(struct work_struct *work){
         ktime_get_real_ts64(&ts_current);
         if(timespec64_sub(ts_current, ts_start).tv_sec  > 5){
             printk(KERN_ERR "VPCI: Driver Timeout at 10 seconds of no chip writing or reading\n");
-            goto out;
+            //goto out;
+            return;
         }
     }  
 
@@ -501,8 +478,8 @@ static void process_user_data(struct work_struct *work){
     
 
     // Free the memory structs and unlock the process lock
-    goto out;
-
+    //goto out;
+    return;
 out:
     if(problems_submitted) kfree(problems_submitted);
     if(solved) kfree(solved);
