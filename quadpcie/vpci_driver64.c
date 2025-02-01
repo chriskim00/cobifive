@@ -134,15 +134,17 @@ uint64_t swap_bytes(uint64_t val) {;
 
 //clean up the user data struct
 static void cleanup_user_data(struct user_data *data, size_t problem_count) {
+    printk(KERN_WARNING "VPCI: Cleaning up user_data structure\n");
+
     if (!data)
         return;
 
     // Free write_data arrays first
     if (data->write_data) {
         for (int i = 0; i < problem_count; i++) {
-            if(data->write_data[i]) vfree(data->write_data[i]);
+            if(data->write_data[i]) kfree(data->write_data[i]);
         }
-        vfree(data->write_data);
+        kfree(data->write_data);
     }
 
     // Free other arrays
@@ -158,11 +160,14 @@ static void cleanup_user_data(struct user_data *data, size_t problem_count) {
 // Store the processed data in an array
 static void store_user_data_read(struct user_data *data) {
     //store user_id and problem_count at the front of the array followed by the spins and ham 
-    uint64_t *read_data = (uint64_t *)kmalloc((2 + 2 * data->problem_count) * sizeof(uint64_t),GFP_KERNEL);
+    uint64_t *read_data = (uint64_t *)kmalloc((2 + 2 * data->problem_count) * sizeof(uint64_t), GFP_KERNEL);
     int i;
     
-    if (!read_data)
+    if (!read_data){
+        printk(KERN_WARNING "VPCI: Failed to allocate data for read_data struct\n");
         return;
+    }
+
     
     //set the user_id
     read_data[0] = data->user_id;
@@ -179,12 +184,14 @@ static void store_user_data_read(struct user_data *data) {
     for (int i = 0; i < MAX_USER_DATA; i++) {
         if (processed_data[i] == NULL) {
             processed_data[i] = read_data;
-            //printk(KERN_WARNING "VPCI: Stored User Data\n");
+            printk(KERN_WARNING "VPCI: Stored User Data\n");
+            mutex_unlock(&read_lock);
             return;
         }
     }
+    
+    printk(KERN_WARNING "VPCI: Failed to Store User Data\n");
     mutex_unlock(&read_lock);
-    //printk(KERN_WARNING "VPCI: Failed to Store User Data\n");
 
 }
 
@@ -402,96 +409,95 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
 
 // Add the worker function
 static void process_user_data(struct work_struct *work){
-    mutex_lock(&process_lock);
     struct user_data_work *ud_work = container_of(work, struct user_data_work, work);
-    mutex_unlock(&process_lock);
-    // Remove redundant data allocation since we get it from ud_work
-    struct user_data *data = ud_work->data; // Don't allocate new memory
-    
-    int i;
+    struct user_data *data = kmalloc(sizeof(user_data), GFP_KERNEL);
     int device_count = 0;
-    int *problems_submitted = NULL; 
-    int *solved = NULL;
+    int *problems_submitted = NULL;
+    int *solved = NULL; 
     int *solved_array = NULL;
-
-    // Check ud_work first before accessing data
-    if (!ud_work || !ud_work->data) {
-        printk(KERN_ERR "VPCI: ud_work or ud_work->data is NULL\n");
-        //goto out;
+    int i;
+    // Validate work pointer
+    if (!work) {
+        printk(KERN_ERR "VPCI: NULL work pointer\n");
         return;
     }
 
-    // Allocate memory for tracking arrays
-    solved_array = kmalloc(data->problem_count * sizeof(int), GFP_KERNEL);
+    // Get the container
+    if (!ud_work || !ud_work->data) {
+        printk(KERN_ERR "VPCI: Invalid work container\n");
+        return;
+    }
+
+    data = ud_work->data;
+    printk(KERN_WARNING "VPCI: Problem count in process queue = %d\n", data->problem_count);
+
+    // Allocate tracking arrays
     problems_submitted = kmalloc(sizeof(int), GFP_KERNEL);
     solved = kmalloc(sizeof(int), GFP_KERNEL);
-    
-    if (!solved_array || !problems_submitted || !solved) {
+    solved_array = (int *)kmalloc(data->problem_count * sizeof(int), GFP_KERNEL);
+
+    if (!problems_submitted || !solved || !solved_array) {
         printk(KERN_ERR "VPCI: Failed to allocate tracking arrays\n");
-        //goto out;
-        return;
+        goto out;
     }
 
-
-
-    //intialize variables
-    //set the pointers from the work struct to the data struct 
+    // Initialize counters
     *problems_submitted = 0;
     *solved = 0;
-    for (i = 0; i < data->problem_count; i++) {
-        solved_array[i] = 0;
-    }
 
-    //Check if there are any free chips avaiable
-    // Count non-NULL entries in the device array
-    for (int i = 0; i < MAX_DEVICES; i++) {
+    // Count the number of devices
+    for (i = 0; i < MAX_DEVICES; i++) {
         if (device_array[i] != NULL) {
             device_count++;
         }
     }
 
-
     ktime_get_real_ts64(&ts_current);
     ktime_get_real_ts64(&ts_start);
-    
-    // Calculate and print time difference
-    while((*solved != data->problem_count)){
+
+    // Initialize solved array
+    for (i = 0; i < data->problem_count; i++) {
+        solved_array[i] = 0;
+    }
+
+    while(*solved != data->problem_count ){
 
         //WRITE
         bulk_write(data, device_count, problems_submitted);
-        
+
+
         //READ 
         //check if any of the devices need to be read from
         bulk_read(data, device_count, solved, solved_array);
 
-        //update ts_current to the current time
+        msleep(100);
         ktime_get_real_ts64(&ts_current);
         if(timespec64_sub(ts_current, ts_start).tv_sec  > 5){
-            printk(KERN_ERR "VPCI: Driver Timeout at 10 seconds of no chip writing or reading\n");
+            printk(KERN_ERR "VPCI: Driver Timeout at 5 seconds of no chip writing or reading\n");
             //goto out;
             return;
         }
-    }  
+    }
+
 
     //transfer the data that is solved to a queue that will store the problems until they are ready to be sent back to the user
     store_user_data_read(data);
-    
 
-    // Free the memory structs and unlock the process lock
-    //goto out;
-    return;
-out:
+    // Free the user_data structure
+    if(ud_work) kfree(ud_work);
+    if(data)   cleanup_user_data(data, data->problem_count);
     if(problems_submitted) kfree(problems_submitted);
     if(solved) kfree(solved);
     if(solved_array) kfree(solved_array);
-    if(ud_work) kfree(ud_work);
-    if(data){
-        if(data->problem_count){
-            cleanup_user_data(data, data->problem_count);
-        }
-    }
     mutex_unlock(&process_lock);
     return;
+
+out:
+    if(problems_submitted) kfree(problems_submitted);
+    if(solved) kfree(solved);
+    //if(solved_array) kfree(solved_array);
+    if (ud_work) kfree(ud_work);
+    mutex_unlock(&process_lock);
 }
 
 // Add function to queue work
@@ -499,6 +505,8 @@ int queue_user_data_work(struct user_data *data){
     char log_message[512]; //used to log messgages
     int ret;
     struct user_data_work *workq = kmalloc(sizeof(user_data_work), GFP_KERNEL);
+
+    mutex_lock(&process_lock);
     //check if workq was created
     if (!workq)
         goto out;
@@ -510,7 +518,6 @@ int queue_user_data_work(struct user_data *data){
     INIT_WORK(&workq->work, process_user_data);
 
     //queue the work
-    mutex_lock(&process_lock);
     ret = queue_work(user_data_wq, &workq->work);
     if (!ret) {
         // Work was already queued or has failed
@@ -518,6 +525,7 @@ int queue_user_data_work(struct user_data *data){
         log_action(log_message, strlen(log_message));
         goto out;
     }
+    mutex_unlock(&process_lock);
 
     //the queuing was sucessful
     goto sucess;
@@ -527,7 +535,6 @@ int queue_user_data_work(struct user_data *data){
         mutex_unlock(&process_lock);
         return -ENOMEM;
     sucess:
-        if(workq) kfree(workq);
         mutex_unlock(&process_lock);
         return 0;
 }
@@ -547,7 +554,7 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     data->problem_id = (uint32_t *)kmalloc( problem_count * sizeof(uint32_t), GFP_KERNEL);
     data->best_spins = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
     data->best_ham = (uint64_t *)kmalloc( problem_count * sizeof(uint64_t), GFP_KERNEL);
-    data->write_data = (uint64_t **)vmalloc(problem_count * sizeof(uint64_t *));
+    data->write_data = (uint64_t **)kmalloc(problem_count * sizeof(uint64_t *), GFP_KERNEL);
     
     if(!data->card_id || !data->problem_id || !data->best_spins || !data->best_ham || !data->write_data){
         printk(KERN_ERR "VPCI: Unitialized card_id or problem_id or best_spins or best_ham or write_data \n");
@@ -559,18 +566,12 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     //divide the problems from the user space into the user_data structs 
     for (i = 0; i < problem_count; i++) {
         // Allocate memory for the write_data array
-        data->write_data[i] = (uint64_t*)vmalloc(RAW_BYTE_CNT * sizeof(uint64_t));
+        data->write_data[i] = (uint64_t*)kmalloc(RAW_BYTE_CNT * sizeof(uint64_t), GFP_KERNEL);
 
         //check if allocation failed
         if (!data->write_data[i]) {
             // Handle allocation failure
             printk(KERN_ERR "VPCI: Unitialized write_data[i] \n");
-            goto cleanup;
-        }
-
-        // Before access_ok check:
-        if (IS_ERR(buf + ((size_t)i * sizeof(uint64_t) * RAW_BYTE_CNT))) {
-            printk(KERN_ERR "VPCI: Invalid user buffer pointer\n");
             goto cleanup;
         }
 
@@ -602,6 +603,27 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     user_id_counter = user_id_counter + 1;
     data->user_id = user_id_counter;
     data->problem_count = problem_count;
+    
+    // Debug: Print values stored in data structure
+    printk(KERN_WARNING "VPCI: Debug - Data structure values:\n");
+    printk(KERN_WARNING "VPCI: user_id: %llu\n", data->user_id);
+    printk(KERN_WARNING "VPCI: problem_count: %u\n", data->problem_count);
+
+    for (i = 0; i < problem_count; i++) {
+        printk(KERN_WARNING "VPCI: Problem %d:\n", i);
+        printk(KERN_WARNING "  card_id: %u\n", data->card_id[i]);
+        printk(KERN_WARNING "  problem_id: %u\n", data->problem_id[i]);
+        printk(KERN_WARNING "  best_spins: %llu\n", data->best_spins[i]);
+        printk(KERN_WARNING "  best_ham: %llu\n", data->best_ham[i]);
+        
+        if (data->write_data[i]) {
+            printk(KERN_WARNING "  First few write_data values:\n");
+            for (int j = 0; j < 3 && j < RAW_BYTE_CNT; j++) {
+                printk(KERN_WARNING "    write_data[%d]: 0x%llx\n", j, data->write_data[i][j]);
+            }
+        }
+    }
+
     return data;
 
 cleanup:
@@ -632,8 +654,8 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
 
 
     // Print the user_data_read_temp structure contents
-    // printk(KERN_WARNING "VPCI: user_id = %llu\n", user_data_read_temp[0] );
-    // printk(KERN_WARNING "VPCI: problem_count = %llu\n", user_data_read_temp[1] );
+    printk(KERN_WARNING "VPCI: user_id = %llu\n", user_data_read_temp[0] );
+    printk(KERN_WARNING "VPCI: problem_count = %llu\n", user_data_read_temp[1] );
 
     mutex_lock(&read_lock);
     for(i = 0; i < MAX_USER_DATA; i++){
@@ -655,7 +677,7 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
             if(processed_data[i][0] == user_data_read_temp[0] && processed_data[i][1] == user_data_read_temp[1]){
                 // Copy the processed data to the user
 
-                ret = copy_to_user(buf, processed_data[i], (2 * problem_count + 2) * sizeof(uint64_t));
+                ret = copy_to_user(buf, processed_data[i], ((2 * problem_count) + 2) * sizeof(uint64_t));
                 //printk(KERN_WARNING "VPCI: Return value from copy_to_user: %d\n", ret); //DEBUG
                 if (ret != 0) {
                     printk(KERN_WARNING "VPCI: Copy Failed \n");
@@ -704,17 +726,17 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
     }
     
     // Further processing of the user data into a structure user_data that seperates out the problems and ids them
-    if(len != sizeof(buf)){
+    if(len == (problem_count * sizeof(uint64_t) * RAW_BYTE_CNT)){
         //check if data was created
         if (!data){
-            printk( KERN_WARNING "VPCI:  Data Intializing Failed");
+            printk( KERN_WARNING "VPCI:  Data Intializing Failed\n");
             kfree(data); // Free the data structure
             return -EFAULT;
         }
 
         //intialize the data struct with the user data
         if(init_user_data(file, data, buf, problem_count) == NULL){
-            printk( KERN_WARNING "VPCI:  Data Intializing Failed");
+            printk( KERN_WARNING "VPCI:  Data Intializing Failed\n");
             cleanup_user_data(data, problem_count);
             return -EFAULT;
         }
@@ -723,7 +745,7 @@ static ssize_t vpci_write(struct file *file, const char __user *buf, size_t len,
     
     //queue the user data to be processed
     if(queue_user_data_work(data)){
-        printk( KERN_WARNING "VPCI:  Queue work failed");
+        printk( KERN_WARNING "VPCI:  Queue work failed\n");
         cleanup_user_data(data, problem_count);
         return -ENOMEM;
     }
@@ -853,40 +875,40 @@ static int __init vpci_init(void) {
 
 static void __exit vpci_exit(void) {
     // Unregister the character device with the Linux kernel
-    
-
-    if( !IS_ERR( vpci_class ) )
-    {
-        device_destroy( vpci_class, device_number );
-    }
-    if( !IS_ERR( vpci_class ) && !IS_ERR( vpci_device ) )
-    {
-        class_destroy( vpci_class );
-    }
-    if( major != 0 )
-    {
-        unregister_chrdev( major, DRIVER_NAME );
+    // Clean up workqueue first
+    if (user_data_wq) {
+        flush_workqueue(user_data_wq);
+        destroy_workqueue(user_data_wq);
+        log_action("Workqueue destroyed\n", sizeof("Workqueue destroyed\n"));
     }
 
-    // close the devices
+    // Clean up processed data array
+    for (int i = 0; i < MAX_USER_DATA; i++) {
+        if (processed_data[i]) {
+            kfree(processed_data[i]);
+            processed_data[i] = NULL;
+        }
+    }
+
+    // Clean up device array
     for (int i = 0; i < MAX_DEVICES; i++) {
-        if (device_array[i]  != NULL) {
-            filp_close(device_array[i]->fd_val, NULL);
+        if (device_array[i]) {
+            if (device_array[i]->fd_val)
+                filp_close(device_array[i]->fd_val, NULL);
             kfree(device_array[i]);
             device_array[i] = NULL;
         }
     }
 
-    // Destroy the workqueue
-    flush_workqueue(user_data_wq);
-    destroy_workqueue(user_data_wq);
-    log_action("Workqueue destroyed\n", sizeof("Workqueue destroyed\n"));
+    // Clean up device class
+    if (vpci_device)
+        device_destroy(vpci_class, MKDEV(major, 0));
+    if (vpci_class)
+        class_destroy(vpci_class);
+    if (major)
+        unregister_chrdev(major, DRIVER_NAME);
 
-    
     printk(KERN_WARNING "VPCI: Module unloaded\n");
-
-
-
 }
 
 module_init(vpci_init);

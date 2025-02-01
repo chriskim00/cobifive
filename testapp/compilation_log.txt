@@ -1,0 +1,4 @@
+user_app.c: In function ‘int perform_operations(const char*)’:
+user_app.c:161:9: error: continue statement not within a loop
+  161 |         continue;
+      |         ^~~~~~~~

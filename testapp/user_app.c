@@ -1,17 +1,18 @@
+#include <features.h>
 #include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <stdint.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <time.h>
+#include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/select.h>
 #include <math.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <inttypes.h>
-#include <cerrno>
-#include <stdarg.h>
-#include <stdio.h>
 
 //#include "cobi_input_data.h"
 
@@ -86,20 +87,14 @@ static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 
 int perform_operations(const char* device_file) {
     int fd; // File descriptor for using the virtual driver
-    uint64_t user_id; //used to track the problems submitted to the device
-    uint64_t problem_count = 2; //how many problems were sent to the device
+    uint64_t problem_count = 20; //how many problems were sent to the device
     uint64_t* read_data = NULL;
     uint64_t* write_data = NULL;
     int result = -1;
     size_t count = 0;
     time_t start_time_wr = time(NULL); // Record the start time
-
-    // Open device file
-    fd = open(device_file, O_RDWR);
-    if (fd < 0) {
-        log_message("Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
-        goto cleanup;
-    }
+    int read_flag = -1;
+    int loop_finished = 0;
 
     // Allocate read_data
     read_data = (uint64_t *)malloc((2 + 2 * problem_count) * sizeof(uint64_t));
@@ -135,11 +130,21 @@ int perform_operations(const char* device_file) {
         }
     }
 
+    // Open device file
+    fd = open(device_file, O_RDWR);
+    if (fd < 0) {
+        log_message("Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
+        close(fd);
+        goto cleanup;
+    }
 
     //send data to the vdriver
     log_message("Writing data to the COBI chips\n");
     read_data[0] = (uint64_t)perform_bulk_write(fd, write_data, problem_count);
     
+    //close device file
+    close(fd);
+
     //Break if write was not successful
     if ((int)read_data[0] < 0) {
         log_message("Failed to write data to the COBI chips and exiting perform_operations \n");
@@ -148,18 +153,30 @@ int perform_operations(const char* device_file) {
 
     //set the problem_count
     read_data[1] = problem_count;
-    close(fd);
 
-    
+    //try to open the device and check if it is available
+    fd = open(device_file, O_RDWR);
+    if (fd < 0) {
+        log_message("Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
+        continue;
+    }
+
     //retrieve data from the vdriver
     // Wait for up to 2 seconds before breaking the loop
-    while (difftime(time(NULL), start_time_wr) < 1) {
+    while ((difftime(time(NULL), start_time_wr) < 15) || (loop_finished != 1)) {
+        loop_finished = 0;
         //open the device file
         log_message("Checking if read is done:");
-        fd = open(device_file, O_RDWR);
-        
+
+
+
+        read_flag = read(fd, read_data, sizeof(read_data));
+
+        //close device
+
+        loop_finished = 1;
         //check if the read worked
-        if (read(fd, read_data, sizeof(read_data)) != 0) {
+        if ( read_flag != 0) {
             log_message(" Read is not done\n");
         }
         else{
@@ -167,14 +184,12 @@ int perform_operations(const char* device_file) {
             log_message(" Read done\n");
             break;
         }
-        //close the device file
-        close(fd);
-
         // Check every 100ms
-        usleep(1000000); 
+        //usleep(10000); 
     }
     
-
+    
+    close(fd);
     //Log the data from the user_read_data struct
     for (size_t i = 0; i < 2*problem_count + 2; i++) {
         log_message("read_data[%d]: %lu\n", i, read_data[i]);
@@ -183,8 +198,6 @@ int perform_operations(const char* device_file) {
     goto cleanup;  // Always go to cleanup
 
 cleanup:
-    // Close the device file
-    close(fd);
     //free the memory allocated for the write_data
     if(write_data) free(write_data);
     if(read_data) free(read_data);
