@@ -633,7 +633,7 @@ cleanup:
     return NULL;
 }
 
-//TODO: ADD FUNCTION TO cleanup any problems on the PCIe cards 
+//cleans up the read fifo of the PCIe card before using the cobi chips
 static void clean_pciecard_read_fifo(void){
     uint32_t read_flag = 0 ;
     loff_t offset = 1;
