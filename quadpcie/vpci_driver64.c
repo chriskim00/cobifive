@@ -273,7 +273,7 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
                         ktime_get_real_ts64(&ts_start);
                         
                     }else{
-                        printk(KERN_ERR "Waiting for a open slot on the chip\n");
+                        //printk(KERN_ERR "Waiting for a open slot on the chip\n");
                     }
                 }
 
@@ -289,6 +289,7 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
     }
 }
 
+//TODO: Add function to bulk read from the devices (don't stop reading if there are problems to still be read)
 static void bulk_read(struct user_data *data, int device_count, int *solved, int *solved_array){
     uint32_t read_flag = 0 ;
     loff_t offset = 0;
@@ -374,7 +375,7 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
                     //clear the problem id from the dataset so it can be used by another problem
                     data->problem_id[j] = 20;
                     
-                    printk(KERN_ERR "VPCI: Cleared problem_id: %d from card: %d\n", j, i);
+                    //printk(KERN_ERR "VPCI: Cleared problem_id: %d from card: %d\n", j, i);
 
                     //clear id spot for a new problem
                     device_array[i]->id_used[problem_id] = false;
@@ -539,6 +540,7 @@ int queue_user_data_work(struct user_data *data){
         return 0;
 }
 
+//TODO switch to vmalloc instead of kmalloc storage of the users data
 //intailize the user data struct
 static struct user_data* init_user_data(struct file *file, struct user_data *data, const char __user *buf, size_t problem_count) {
     //declare funciton variables
@@ -631,6 +633,84 @@ cleanup:
     return NULL;
 }
 
+//TODO: ADD FUNCTION TO cleanup any problems on the PCIe cards 
+static void clean_pciecard_read_fifo(void){
+    uint32_t read_flag = 0 ;
+    loff_t offset = 1;
+    uint32_t *read_data = kmalloc(sizeof(uint32_t), GFP_KERNEL);
+
+    int i;
+    int k;
+    int ret;
+    int device_count;
+
+    for (i = 0; i < MAX_DEVICES; i++) {
+        if (device_array[i] != NULL) {
+            device_count++;
+        }
+    }
+
+    if(!read_data){
+        kfree(read_data);  
+        printk(KERN_ERR "Failed to allocate memory for read_data\n");
+        return;
+    }
+
+    for (i = 0; i < device_count; i++) {
+        
+        ktime_get_real_ts64(&ts_current);
+        ktime_get_real_ts64(&ts_start);
+
+        while(read_flag == 1){
+            //check if device "i" is avaiable to be read from by checking the read flag
+            offset = 10 * sizeof(uint32_t); //fifo flag offset
+            
+            ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
+            
+            if (ret < 0) {
+                printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                kfree(read_data);
+                break;
+            }
+            
+            //set the read flag from the returned read data 
+            read_flag = *read_data;
+            //read the data from the device if the read_flag is set
+            if(read_flag == 1){                
+                //read the data from the device. 96-bits need to be read from the device, so 3 reads need to be sent 
+                offset = 4 * sizeof(uint32_t); //fifo flag offset
+                for( k = 0 ; k <3; k++){
+
+                    ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
+                    if (ret < 0) {
+                        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                        kfree(read_data);
+                        break;
+                    }
+                }
+
+            } else{
+                printk(KERN_ERR "VPCI: No data to clean out\n");
+                break; 
+            }
+
+            //timeout of the loop
+            ktime_get_real_ts64(&ts_current);
+            if(timespec64_sub(ts_current, ts_start).tv_sec  > 1 ){
+                printk(KERN_ERR "VPCI: FIFO Cleaning Timed Out\n");
+                break;
+            }
+        }
+    }
+
+    return;
+
+}
+
+//TODO: ADD FUNCTION TO cleanup any unclaimed solutions
+static void clean_solutions(struct user_data *data, int device_count, int *solved, int *solved_array){
+    return;
+}
 //read function of the virtual PCIe device
 static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t *offset){
     int i;
@@ -654,8 +734,8 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
 
 
     // Print the user_data_read_temp structure contents
-    printk(KERN_WARNING "VPCI: user_id = %llu\n", user_data_read_temp[0] );
-    printk(KERN_WARNING "VPCI: problem_count = %llu\n", user_data_read_temp[1] );
+    //printk(KERN_WARNING "VPCI: user_id = %llu\n", user_data_read_temp[0] );
+    //printk(KERN_WARNING "VPCI: problem_count = %llu\n", user_data_read_temp[1] );
 
     mutex_lock(&read_lock);
     for(i = 0; i < MAX_USER_DATA; i++){
@@ -664,14 +744,12 @@ static ssize_t vpci_read(struct file *file, char __user *buf, size_t len, loff_t
         if (processed_data[i] != NULL && user_data_read_temp != NULL) { //check if the data is stored in the processed_data array
             problem_count = processed_data[i][1];
 
-            // debug print
-            printk(KERN_WARNING "VPCI: Found stored problem User ID: %llu\n", processed_data[i][0]);
-            printk(KERN_WARNING "VPCI: Found stored problem problem count: %llu\n", processed_data[i][1]);
-
             //DEBUG: Print the best_spins and best_ham values
-            for(j = 0; j < (2 + 2 * problem_count); j++){
-                printk(KERN_WARNING "VPCI: read_data: %llu\n", processed_data[i][j]);
-            }
+            //printk(KERN_WARNING "VPCI: Found stored problem User ID: %llu\n", processed_data[i][0]);
+            //printk(KERN_WARNING "VPCI: Found stored problem problem count: %llu\n", processed_data[i][1]);
+            // for(j = 0; j < (2 + 2 * problem_count); j++){
+            //     printk(KERN_WARNING "VPCI: read_data: %llu\n", processed_data[i][j]);
+            // }
 
             //check if the user_id and problem_count match the data stored in the processed_data array
             if(processed_data[i][0] == user_data_read_temp[0] && processed_data[i][1] == user_data_read_temp[1]){
@@ -825,6 +903,9 @@ static int __init vpci_init(void) {
 
     }
     
+    //printk(KERN_WARNING "VPCI: Checking for empty Read FIFOS on PCIe chips\n");
+    clean_pciecard_read_fifo();
+
     //create a queue to process the users data
     user_data_wq = create_singlethread_workqueue("user_data_worker");
 

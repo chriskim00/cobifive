@@ -87,7 +87,7 @@ static int perform_bulk_write(int fd, const uint64_t* data, size_t count) {
 
 int perform_operations(const char* device_file) {
     int fd; // File descriptor for using the virtual driver
-    uint64_t problem_count = 20; //how many problems were sent to the device
+    uint64_t problem_count = 50; //how many problems were sent to the device
     uint64_t* read_data = NULL;
     uint64_t* write_data = NULL;
     int result = -1;
@@ -158,7 +158,7 @@ int perform_operations(const char* device_file) {
     fd = open(device_file, O_RDWR);
     if (fd < 0) {
         log_message("Failed to open device file '%s': %s (errno: %d)\n", device_file, strerror(errno), errno);
-        continue;
+        goto cleanup;   
     }
 
     //retrieve data from the vdriver
@@ -166,7 +166,7 @@ int perform_operations(const char* device_file) {
     while ((difftime(time(NULL), start_time_wr) < 15) || (loop_finished != 1)) {
         loop_finished = 0;
         //open the device file
-        log_message("Checking if read is done:");
+        //log_message("Checking if read is done:");
 
 
 
@@ -177,11 +177,13 @@ int perform_operations(const char* device_file) {
         loop_finished = 1;
         //check if the read worked
         if ( read_flag != 0) {
-            log_message(" Read is not done\n");
+            //log_message(" Read is not done\n");
+            loop_finished = 1;
+
         }
         else{
             //read the data from the device
-            log_message(" Read done\n");
+            //log_message(" Read done\n");
             break;
         }
         // Check every 100ms
