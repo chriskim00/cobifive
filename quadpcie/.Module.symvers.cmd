@@ -1,0 +1,1 @@
+cmd_/home/willammoy/cobifive/quadpcie/Module.symvers := sed 's/\.ko$$/\.o/' /home/willammoy/cobifive/quadpcie/modules.order | scripts/mod/modpost -m -a -E -o /home/willammoy/cobifive/quadpcie/Module.symvers -e -i Module.symvers   -T -

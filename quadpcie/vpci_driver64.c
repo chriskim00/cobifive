@@ -289,7 +289,6 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
     }
 }
 
-//TODO: Add function to bulk read from the devices (don't stop reading if there are problems to still be read)
 static void bulk_read(struct user_data *data, int device_count, int *solved, int *solved_array){
     uint32_t read_flag = 0 ;
     loff_t offset = 0;
