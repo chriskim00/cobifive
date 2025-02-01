@@ -3,10 +3,10 @@
   148 |     out:
       |     ^~~
 /home/willammoy/cobifive/quadpcie/vpci_driver64.c: In function ‘vpci_read’:
-/home/willammoy/cobifive/quadpcie/vpci_driver64.c:717:9: warning: unused variable ‘j’ [-Wunused-variable]
-  717 |     int j;
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:732:9: warning: unused variable ‘j’ [-Wunused-variable]
+  732 |     int j;
       |         ^
 /home/willammoy/cobifive/quadpcie/vpci_driver64.c: At top level:
-/home/willammoy/cobifive/quadpcie/vpci_driver64.c:711:13: warning: ‘clean_solutions’ defined but not used [-Wunused-function]
-  711 | static void clean_solutions(struct user_data *data, int device_count, int *solved, int *solved_array){
+/home/willammoy/cobifive/quadpcie/vpci_driver64.c:726:13: warning: ‘clean_solutions’ defined but not used [-Wunused-function]
+  726 | static void clean_solutions(struct user_data *data, int device_count, int *solved, int *solved_array){
       |             ^~~~~~~~~~~~~~~

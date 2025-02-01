@@ -62,7 +62,7 @@ static int device_number;
 static uint32_t user_id_counter = 0;
 static bool busy = false;
 //Variables for timeout
-struct timespec64 ts_start, ts_current;
+struct timespec64 ts_start, ts_current, tread_current, tread_start;
 
 //Define mutexes
 static DEFINE_MUTEX(open_lock);
@@ -220,12 +220,12 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
                 if( (*problems_submitted != data->problem_count)){
                     
                     //DEBUG
-                    //printk(KERN_WARNING "VPCI: problems_submitted=%d, problem_count=%d\n", *problems_submitted, data->problem_count);
-                    //printk(KERN_WARNING "VPCI: id_used[%d]=%d, data->write_data[%d]=%p\n", k, device_array[i]->id_used[k], *problems_submitted, data->write_data[*problems_submitted]);
+                    printk(KERN_WARNING "VPCI: problems_submitted=%d, problem_count=%d\n", *problems_submitted, data->problem_count);
+                    printk(KERN_WARNING "VPCI: id_used[%d]=%d, data->write_data[%d]=%p\n", k, device_array[i]->id_used[k], *problems_submitted, data->write_data[*problems_submitted]);
 
                     if((device_array[i]->id_used[k] == false) && (data->write_data[*problems_submitted] != NULL)){
                         //DEBUG
-                        printk(KERN_WARNING "Found an open chip slot at slot: %d\n", k);
+                        //printk(KERN_WARNING "Found an open chip slot at slot: %d\n", k);
 
 
                         //set offset
@@ -258,7 +258,7 @@ static void bulk_write(struct user_data *data, int device_count, int *problems_s
                         //set the ids that will identify which problem is being solved on what chip
                         data->card_id[*problems_submitted] = i;
                         data->problem_id[*problems_submitted] = k;
-                        //printk(KERN_WARNING "Processing problem %d\n", i);
+                        printk(KERN_WARNING "Processing problem %d\n", i);
 
                         //increment the problems_submitted to sumbit the next problem in the problem set
                         *problems_submitted = *problems_submitted + 1;                        
@@ -315,96 +315,109 @@ static void bulk_read(struct user_data *data, int device_count, int *solved, int
     }
 
     for (i = 0; i < device_count; i++) {
-        
-        read_flag = 0;
-        //check if device "i" is avaiable to be read from by checking the read flag
-        offset = 10 * sizeof(uint32_t); //fifo flag offset
-        
-        ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
-        
-        if (ret < 0) {
-            printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
-            kfree(read_data);
-            return;
-        }
-        
-        //set the read flag from the returned read data 
-        read_flag = *read_data;
-        //read the data from the device if the read_flag is set
-        if(read_flag == 1){                
-            //read the data from the device. 96-bits need to be read from the device, so 3 reads need to be sent 
-            offset = 4 * sizeof(uint32_t); //fifo flag offset
-            for( k = 0 ; k <3; k++){
+        read_flag = 1;
+        ktime_get_real_ts64(&tread_current);
+        ktime_get_real_ts64(&tread_start);
 
-                ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
-                if (ret < 0) {
-                    printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
-                    kfree(read_data);
-                    return;
-                }
-
-                if(k == 0){
-                    problem_id = inverse_data(*read_data);
-                    card_id = inverse_data(*read_data >> 4);
-                    best_spins = *read_data;
-                }
-                if(k == 1){
-                    best_spins = ((uint64_t)*read_data << 32) | (best_spins & 0xFFFFFFFF);
-                    best_ham = *read_data;
-                }
-                if(k == 2){
-                    best_ham = ((uint64_t)*read_data << 32) | (best_ham & 0xFFFFFFFF);
-                    device_array[i]->problems_stored = device_array[i]->problems_stored - 1 ;
-                }
+        while(read_flag == 1){
+            //check if device "i" is avaiable to be read from by checking the read flag
+            offset = 10 * sizeof(uint32_t); //fifo flag offset
+            
+            ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
+            
+            if (ret < 0) {
+                printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                kfree(read_data);
+                return;
             }
-
             
-            j = first_problem; // used to search through the problems that have been solved
-            first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
-            
-            for(j = 0; j < data->problem_count; j++){
-                //printk(KERN_WARNING "VPCI: card_id[%d]=%d, card_id=%d, problem_id[%d]=%d, problem_id=%d\n", j, data->card_id[j], card_id, j, data->problem_id[j], problem_id);
-                if(data->card_id[j] == card_id && data->problem_id[j] == problem_id){
-                    //store the problem solution in the data struct
-                    data->best_spins[j] = best_spins;
-                    data->best_ham[j] = best_ham;
+            //set the read flag from the returned read data 
+            read_flag = *read_data;
+            printk(KERN_ERR "Check if read flag: %d\n", read_flag);
+            //read the data from the device if the read_flag is set
+            if(read_flag == 1){                
+                //read the data from the device. 96-bits need to be read from the device, so 3 reads need to be sent 
+                offset = 4 * sizeof(uint32_t); //fifo flag offset
+                for( k = 0 ; k <3; k++){
 
-                    //indicate another problem has been solved
-                    *solved = *solved + 1;
+                    ret = tpci_fops.read(device_array[i]->fd_val, (char *)read_data, sizeof(read_data), &offset);
+                    if (ret < 0) {
+                        printk(KERN_ERR "Failed to read from underlying device: %d\n", ret);
+                        kfree(read_data);
+                        return;
+                    }
 
-                    //clear the problem id from the dataset so it can be used by another problem
-                    data->problem_id[j] = 20;
+                    if(k == 0){
+                        problem_id = inverse_data(*read_data);
+                        card_id = inverse_data(*read_data >> 4);
+                        best_spins = *read_data;
+                    }
+                    if(k == 1){
+                        best_spins = ((uint64_t)*read_data << 32) | (best_spins & 0xFFFFFFFF);
+                        best_ham = *read_data;
+                    }
+                    if(k == 2){
+                        best_ham = ((uint64_t)*read_data << 32) | (best_ham & 0xFFFFFFFF);
+                        device_array[i]->problems_stored = device_array[i]->problems_stored - 1 ;
+                    }
+                }
+
+                
+                j = first_problem; // used to search through the problems that have been solved
+                first_problem_tracker = false; //track which problems have been solved so they do not need to be searched through
+                
+                for(j = 0; j < data->problem_count; j++){
+                    printk(KERN_WARNING "VPCI: card_id[%d]=%d, card_id=%d, problem_id[%d]=%d, problem_id=%d\n", j, data->card_id[j], card_id, j, data->problem_id[j], problem_id);
+                    if(data->card_id[j] == card_id && data->problem_id[j] == problem_id){
+                        //store the problem solution in the data struct
+                        data->best_spins[j] = best_spins;
+                        data->best_ham[j] = best_ham;
+
+                        //indicate another problem has been solved
+                        *solved = *solved + 1;
+
+                        //clear the problem id from the dataset so it can be used by another problem
+                        data->problem_id[j] = 20;
+                        
+                        printk(KERN_ERR "VPCI: Cleared problem_id: %d from card: %d\n", j, i);
+
+                        //clear id spot for a new problem
+                        device_array[i]->id_used[problem_id] = false;
+
+                        //indicate that the problem has been solved and see if we can reduce the number of problems that need to be iterated through in the for loop
+                        solved_array[j] = 1;
+                        if(!first_problem_tracker && (j-1) == first_problem)
+                            first_problem = j;
+                        
+                        //restart timeout
+                        ktime_get_real_ts64(&ts_start);
+                        ktime_get_real_ts64(&tread_start);
+                    }
                     
-                    //printk(KERN_ERR "VPCI: Cleared problem_id: %d from card: %d\n", j, i);
-
-                    //clear id spot for a new problem
-                    device_array[i]->id_used[problem_id] = false;
-
-                    //indicate that the problem has been solved and see if we can reduce the number of problems that need to be iterated through in the for loop
-                    solved_array[j] = 1;
-                    if(!first_problem_tracker && (j-1) == first_problem)
+                    //if the problem has been solved then set the first problem to the problem that has been solved to avoid going over it again
+                    //check if the problem j is solved, the first_problem_tracker hasn't been set yet, and problem j is adjacent to the current first problem
+                    if(solved_array[j] == 1 && !first_problem_tracker && (j-1) == first_problem){
                         first_problem = j;
+                        first_problem_tracker = true;
+                    }
                     
-                    //restart timeout
-                    ktime_get_real_ts64(&ts_start);
-                    break;
                 }
-                
-                //if the problem has been solved then set the first problem to the problem that has been solved to avoid going over it again
-                //check if the problem j is solved, the first_problem_tracker hasn't been set yet, and problem j is adjacent to the current first problem
-                if(solved_array[j] == 1 && !first_problem_tracker && (j-1) == first_problem){
-                    first_problem = j;
-                    first_problem_tracker = true;
-                }
-                
+            } else{
+                printk(KERN_ERR "VPCI: No data to read\n");
+                break;  
             }
-            
-        } else{
-            //printk(KERN_ERR "VPCI: No data to read\n");
-            kfree(read_data);  
+
+            //TODO add timeout incase of issues with the device
+            ktime_get_real_ts64(&tread_current);
+            if(timespec64_sub(tread_current, tread_start).tv_sec  > 1 ){
+                printk(KERN_ERR "VPCI: Reading Chips Timeout\n");
+                break;
+            }
         }
-        
     }
+    
+    kfree(read_data);
+    return;
 
 }
 
@@ -462,7 +475,7 @@ static void process_user_data(struct work_struct *work){
     }
 
     while(*solved != data->problem_count ){
-
+        
         //WRITE
         bulk_write(data, device_count, problems_submitted);
 
@@ -471,7 +484,7 @@ static void process_user_data(struct work_struct *work){
         //check if any of the devices need to be read from
         bulk_read(data, device_count, solved, solved_array);
 
-        msleep(100);
+        //msleep(100);
         ktime_get_real_ts64(&ts_current);
         if(timespec64_sub(ts_current, ts_start).tv_sec  > 5){
             printk(KERN_ERR "VPCI: Driver Timeout at 5 seconds of no chip writing or reading\n");
@@ -597,7 +610,9 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
         
 
         //intialize the problem id to NULL
-        data->problem_id[i] = 0;
+        data->problem_id[i] = 20;
+        data->card_id[i] = 20;
+
     }
 
     
@@ -611,20 +626,20 @@ static struct user_data* init_user_data(struct file *file, struct user_data *dat
     printk(KERN_WARNING "VPCI: user_id: %llu\n", data->user_id);
     printk(KERN_WARNING "VPCI: problem_count: %u\n", data->problem_count);
 
-    for (i = 0; i < problem_count; i++) {
-        printk(KERN_WARNING "VPCI: Problem %d:\n", i);
-        printk(KERN_WARNING "  card_id: %u\n", data->card_id[i]);
-        printk(KERN_WARNING "  problem_id: %u\n", data->problem_id[i]);
-        printk(KERN_WARNING "  best_spins: %llu\n", data->best_spins[i]);
-        printk(KERN_WARNING "  best_ham: %llu\n", data->best_ham[i]);
+    // for (i = 0; i < problem_count; i++) {
+    //     printk(KERN_WARNING "VPCI: Problem %d:\n", i);
+    //     printk(KERN_WARNING "  card_id: %u\n", data->card_id[i]);
+    //     printk(KERN_WARNING "  problem_id: %u\n", data->problem_id[i]);
+    //     printk(KERN_WARNING "  best_spins: %llu\n", data->best_spins[i]);
+    //     printk(KERN_WARNING "  best_ham: %llu\n", data->best_ham[i]);
         
-        if (data->write_data[i]) {
-            printk(KERN_WARNING "  First few write_data values:\n");
-            for (int j = 0; j < 3 && j < RAW_BYTE_CNT; j++) {
-                printk(KERN_WARNING "    write_data[%d]: 0x%llx\n", j, data->write_data[i][j]);
-            }
-        }
-    }
+    //     if (data->write_data[i]) {
+    //         printk(KERN_WARNING "  First few write_data values:\n");
+    //         for (int j = 0; j < 3 && j < RAW_BYTE_CNT; j++) {
+    //             printk(KERN_WARNING "    write_data[%d]: 0x%llx\n", j, data->write_data[i][j]);
+    //         }
+    //     }
+    // }
 
     return data;
 
