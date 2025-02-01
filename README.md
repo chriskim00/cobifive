@@ -1,5 +1,8 @@
+Revisiont date: 2/1/25
+DMA version (previous version was memory mapped)
+
 # Cobifive chip
-Driver, binary files, and user app for quad PCIe card (DMA version, revision date: 2/1/25)
+Driver, binary files, and user app for quad PCIe card 
 
 # Quad card write and read test user app instructions
 
